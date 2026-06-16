@@ -2,15 +2,15 @@
 
 ## Now
 
-- [ ] `TASK-0001` — Document the AI-assisted project workflow (`approved`).
+- [ ] `TASK-0001` — Document the AI-assisted project workflow (`ready_for_pr`).
 
 ## Next
 
-- [ ] Implement the approved plan for `TASK-0001`.
+- [ ] Create and validate the Pull Request for `TASK-0001`.
 
 ## Later
 
-Capture concise follow-up ideas after `TASK-0001` is planned.
+Capture concise follow-up ideas after `TASK-0001` is completed.
 
 ## Completed
 
