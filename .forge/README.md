@@ -14,4 +14,6 @@ The four core role contracts live under `.forge/roles/`. They define role-specif
 
 `.forge/workflows/feature.yaml` defines the machine-readable feature-stage order and human approval gates. Task and workflow files reference role contracts rather than duplicating them.
 
-Formal schema validation, runtime orchestration, artifact persistence, additional workflow types, additional policy files, and CI validation are intentionally deferred.
+The local validator lives in `tools/forge-validator`. It verifies the current v1 project, workflow, role references, task template, and active task contracts, and it is read-only. `.forge/project.yaml` exposes reproducible install, test, and verify commands for it.
+
+Formal external schemas, runtime orchestration, artifact persistence, additional workflows, and CI integration are intentionally deferred.
