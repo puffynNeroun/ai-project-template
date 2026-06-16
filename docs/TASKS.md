@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0002` — Define persistent stage artifact contracts (`ready_for_pr`).
+No active task.
 
 ## Next
 
-- [ ] Open a pull request for TASK-0002 when ready.
+- [ ] Define the next bounded Forge task.
 
 ## Later
 
@@ -14,4 +14,5 @@ Capture concise follow-up ideas when they become relevant.
 
 ## Completed
 
+- [x] `TASK-0002` — Define persistent stage artifact contracts (`completed`, 2026-06-17).
 - [x] `TASK-0001` — Document the AI-assisted project workflow (`completed`, 2026-06-16).
