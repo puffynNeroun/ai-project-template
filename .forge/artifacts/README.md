@@ -81,7 +81,7 @@ The first artifact for a type uses suffix `001`; later attempts use `002`, `003`
 
 Existing artifacts are append-only. Roles must not edit, rename, replace, or delete existing artifacts. A correction or retry creates the next attempt for that artifact type.
 
-This append-only rule is a repository policy. The Forge Validator does not technically enforce artifact append-only behavior yet.
+This append-only rule is a repository policy. The Forge Validator structurally validates existing live artifacts, but it does not enforce append-only behavior through Git history.
 
 ## Input Artifacts
 
@@ -104,6 +104,12 @@ Input rules:
 
 Artifacts should reference these sources rather than duplicating their authority.
 
+## Structural Validation
+
+The Forge Validator validates existing live artifacts under `.forge/artifacts/TASK-<number>/`. It checks artifact paths, filenames, YAML front matter metadata, role/type/outcome consistency, safe input references, and minimal input composition.
+
+Artifact absence is not an error based on task status. `.forge/artifacts/README.md` and `.forge/artifacts/templates/` are documentation and templates, not live artifacts.
+
 ## Deferred Enforcement
 
-This contract does not add runtime orchestration, automatic status transitions, artifact validator enforcement, human approval artifacts, delivery evidence artifacts, GitHub automation, a database, an event stream, or a web interface.
+This contract does not add status-aware artifact requirements, latest-attempt selection, retry-chain validation, append-only Git-history enforcement, human approval artifacts, delivery evidence artifacts, runtime orchestration, automatic status transitions, GitHub automation, a database, an event stream, or a web interface.

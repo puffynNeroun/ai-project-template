@@ -2,15 +2,15 @@
 
 ## Now
 
-No active task.
+- [ ] `TASK-0003` — Validate persistent stage artifact structure (`ready_for_pr`).
 
 ## Next
 
-- [ ] Define the next bounded Forge task.
+- [ ] Open a pull request for TASK-0003 when ready.
 
 ## Later
 
-Capture concise follow-up ideas when they become relevant.
+- [ ] Evaluate status-aware artifact validation after structural validation is proven.
 
 ## Completed
 

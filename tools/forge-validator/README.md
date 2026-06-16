@@ -1,8 +1,12 @@
 # Forge Validator
 
-This package validates the current v1 Forge contracts for this repository. It checks `.forge/project.yaml`, `.forge/workflows/feature.yaml`, referenced role files, `.forge/tasks/task.template.yaml`, and active `.forge/tasks/TASK-*.yaml` files.
+This package validates the current v1 Forge contracts for this repository. It checks `.forge/project.yaml`, `.forge/workflows/feature.yaml`, referenced role files, `.forge/tasks/task.template.yaml`, active `.forge/tasks/TASK-*.yaml` files, and existing live persistent stage artifacts under `.forge/artifacts/TASK-*/`.
 
 The validator is read-only. It does not execute project commands, run workflows, persist artifacts, mutate files, or act as a general YAML linter.
+
+Artifact validation is structural only. Existing live artifacts are validated strictly when present, but missing artifacts are not an error based on task status. The validator ignores `.forge/artifacts/README.md` and `.forge/artifacts/templates/` as live artifacts.
+
+The validator does not enforce latest-attempt selection, retry-chain semantics, append-only Git history, human approval evidence, status-aware artifact requirements, runtime orchestration, or automatic status transitions.
 
 ## Install
 
