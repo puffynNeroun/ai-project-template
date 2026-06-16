@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0002` — Define persistent stage artifact contracts (`proposed`).
+- [ ] `TASK-0002` — Define persistent stage artifact contracts (`approved`).
 
 ## Next
 
-- [ ] Run Planner for TASK-0002 after the task definition is committed.
+- [ ] Run Builder for TASK-0002 using the human-approved plan.
 
 ## Later
 

@@ -2,7 +2,7 @@ schema_version: 1
 
 id: TASK-0002
 title: Define persistent stage artifact contracts
-status: proposed
+status: approved
 workflow: .forge/workflows/feature.yaml
 
 goal: Define a minimal repository-tracked contract for persistent Planner, Builder, Tester, and Reviewer handoff artifacts without adding runtime orchestration.
@@ -76,7 +76,7 @@ acceptance_criteria:
   - id: AC-6
     description: The contract explicitly excludes runtime orchestration, automatic status transitions, artifact validator enforcement, human approval artifacts, and delivery evidence from this task.
   - id: AC-7
-    description: docs/TASKS.md tracks TASK-0002 as the current proposed task.
+    description: docs/TASKS.md tracks TASK-0002 as the current task and shows the same lifecycle status as .forge/tasks/TASK-0002.yaml.
   - id: AC-8
     description: Forge contract verification passes, no protected file is modified, and no file outside allowed_files is changed.
 
