@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0001` — Document the AI-assisted project workflow (`proposed`).
+- [ ] `TASK-0001` — Document the AI-assisted project workflow (`approved`).
 
 ## Next
 
-- [ ] Produce and approve the bounded implementation plan for `TASK-0001`.
+- [ ] Implement the approved plan for `TASK-0001`.
 
 ## Later
 

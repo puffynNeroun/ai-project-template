@@ -2,7 +2,7 @@ schema_version: 1
 
 id: TASK-0001
 title: Document the AI-assisted project workflow
-status: proposed
+status: approved
 workflow: .forge/workflows/feature.yaml
 
 goal: Add one practical document that explains how a human and the four Forge roles move a bounded change from proposal to a reviewed pull request.
