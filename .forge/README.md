@@ -8,4 +8,6 @@
 
 A `null` command means the command is not configured. Agents must not guess, infer, or invent a command when its value is `null`; maintainers should replace `null` only when a real reproducible project command exists.
 
-Roles, workflows, structured tasks, formal schema validation, and additional policy files are intentionally deferred.
+The four core role contracts live under `.forge/roles/`. They define role-specific responsibilities and handoff boundaries, supplement `AGENTS.md`, and remain human-readable contracts rather than a machine-readable workflow.
+
+Workflows, structured tasks, formal schema validation, and additional policy files are intentionally deferred.
