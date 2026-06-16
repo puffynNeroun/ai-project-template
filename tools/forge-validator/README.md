@@ -32,4 +32,6 @@ pnpm -C tools/forge-validator verify
 
 Validation exits `0` when the Forge contracts are valid. It exits `1` when contract errors are found.
 
-CI integration is intentionally deferred.
+## CI
+
+The repository workflow runs the same frozen install command and `verify` command documented above for pull requests targeting `main` and pushes to `main`.
