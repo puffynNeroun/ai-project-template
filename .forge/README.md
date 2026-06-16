@@ -12,10 +12,12 @@ The four core role contracts live under `.forge/roles/`. They define role-specif
 
 `.forge/tasks/` contains task contract documentation and an inactive task template. Active task files follow the `TASK-<number>.yaml` convention.
 
+`.forge/artifacts/` contains repository-tracked stage handoff artifacts for Planner, Builder, Tester, and Reviewer outputs. Artifacts use YAML front matter for minimal metadata and Markdown bodies for human-readable evidence. Task YAML remains the source of task status, goal, scope, file boundaries, acceptance criteria, and required checks; artifact files are handoffs; `docs/TASKS.md` is the human-readable board; Git history is the audit trail; and GitHub pull requests are delivery history.
+
 `.forge/workflows/feature.yaml` defines the machine-readable feature-stage order and human approval gates. Task and workflow files reference role contracts rather than duplicating them.
 
 The local validator lives in `tools/forge-validator`. It verifies the current v1 project, workflow, role references, task template, and active task contracts, and it is read-only. `.forge/project.yaml` exposes reproducible install, test, and verify commands for it.
 
 `.github/workflows/forge-contracts.yml` runs the local validator for pull requests targeting `main` and pushes to `main`. CI uses the reproducible install and verify commands already exposed by the Forge project manifest.
 
-Formal external schemas, runtime orchestration, artifact persistence, additional workflows, and additional policies are intentionally deferred.
+Formal external schemas, runtime orchestration, artifact validator enforcement, automatic status transitions, additional workflows, and additional policies are intentionally deferred.

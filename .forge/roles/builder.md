@@ -26,16 +26,19 @@ The Builder implements a human-approved plan within its stated limits. This role
 - Edit approved files within the approved scope.
 - Run approved local checks and configured project commands.
 - Create temporary artifacts only when produced by approved local checks.
+- Create only a new `.forge/artifacts/<task-id>/build-report-NNN.md` handoff artifact for the current task when artifact persistence is in use.
 
 ## Prohibited Actions
 
 - Expanding scope.
 - Modifying protected files.
+- Modifying files outside task `allowed_files`, except creating its own new build report artifact.
+- Editing, replacing, renaming, or deleting existing artifacts.
 - Adding dependencies without approval.
 - Making unapproved architectural changes.
 - Inventing commands when a project command is `null`.
 - Accepting or reviewing its own implementation as final.
-- Committing, pushing, merging, publishing, or performing other remote mutation.
+- Committing, pushing, creating a pull request, merging, releasing, deploying, publishing, or performing other remote mutation.
 
 ## Stop and Escalate
 
@@ -65,3 +68,5 @@ The Builder implements a human-approved plan within its stated limits. This role
 ## Completion Boundary
 
 Builder hands off working-tree changes and evidence, but cannot accept its own work.
+
+Artifact-only writes are handoff writes, not implementation scope expansion. Builder implementation changes remain restricted by task `allowed_files` and `protected_files`.

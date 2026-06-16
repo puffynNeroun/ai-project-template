@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0002` — Define persistent stage artifact contracts (`approved`).
+- [ ] `TASK-0002` — Define persistent stage artifact contracts (`ready_for_pr`).
 
 ## Next
 
-- [ ] Run Builder for TASK-0002 using the human-approved plan.
+- [ ] Open a pull request for TASK-0002 when ready.
 
 ## Later
 

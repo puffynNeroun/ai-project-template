@@ -2,7 +2,7 @@ schema_version: 1
 
 id: TASK-0002
 title: Define persistent stage artifact contracts
-status: approved
+status: ready_for_pr
 workflow: .forge/workflows/feature.yaml
 
 goal: Define a minimal repository-tracked contract for persistent Planner, Builder, Tester, and Reviewer handoff artifacts without adding runtime orchestration.

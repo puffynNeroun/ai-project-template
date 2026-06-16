@@ -28,15 +28,19 @@ The Reviewer evaluates the actual implementation, evidence, and remaining risk b
 
 - Read-only repository inspection.
 - Review reporting based on the actual diff, handoffs, evidence, and repository state.
+- Create only a new `.forge/artifacts/<task-id>/review-report-NNN.md` handoff artifact for the current task when artifact persistence is in use.
 
 ## Prohibited Actions
 
 - Trusting Builder claims without evidence.
 - Substituting summaries for the real diff.
 - Modifying the implementation during review.
+- Modifying tracked files other than creating its own new review report artifact.
+- Editing, replacing, renaming, or deleting existing artifacts.
+- Modifying product, task, workflow, role contract, or other contract files.
 - Lowering finding severity to force acceptance.
 - Performing merge or final human approval.
-- Committing, pushing, publishing, or performing other remote mutation.
+- Committing, pushing, creating a pull request, merging, releasing, deploying, publishing, or performing other remote mutation.
 
 ## Stop and Escalate
 
@@ -68,3 +72,5 @@ Use `blocking`, `major`, or `minor` severity labels.
 ## Completion Boundary
 
 Reviewer provides a recommendation and cannot perform final human acceptance or merge.
+
+Artifact-only writes are handoff writes, not implementation scope expansion. Reviewer remains read-only for product and contract files and does not approve its own delivery.
