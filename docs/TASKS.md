@@ -2,16 +2,15 @@
 
 ## Now
 
-- [ ] Define the first concrete task.
-- [ ] Identify the smallest useful milestone.
+- [ ] `TASK-0001` — Document the AI-assisted project workflow (`ready_for_pr`).
 
 ## Next
 
-- [ ] Add follow-up work after the current milestone is clear.
+- [ ] Create and validate the Pull Request for `TASK-0001`.
 
 ## Later
 
-- [ ] Capture ideas that are useful but not urgent.
+Capture concise follow-up ideas after `TASK-0001` is completed.
 
 ## Completed
 

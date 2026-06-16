@@ -1,0 +1,62 @@
+schema_version: 1
+
+id: TASK-0001
+title: Document the AI-assisted project workflow
+status: ready_for_pr
+workflow: .forge/workflows/feature.yaml
+
+goal: Add one practical document that explains how a human and the four Forge roles move a bounded change from proposal to a reviewed pull request.
+
+in_scope:
+  - Create docs/AI_WORKFLOW.md after the human approves the plan.
+  - Explain the Planner, Builder, Tester, and Reviewer responsibilities.
+  - Explain the feature workflow stages and task status changes.
+  - Explain both human approval gates.
+  - Explain failure, rejection, and blocked return paths.
+  - Explain that commit, push, pull request, merge, and completion remain human-controlled.
+  - Update docs/TASKS.md to track TASK-0001.
+
+out_of_scope:
+  - Modify Forge workflow or role contracts.
+  - Modify validator behavior or tests.
+  - Modify GitHub Actions.
+  - Add runtime orchestration or artifact persistence.
+  - Add dependencies, scripts, schemas, or additional workflows.
+  - Automate commit, push, pull request, merge, release, or deployment actions.
+
+allowed_files:
+  - .forge/tasks/TASK-0001.yaml
+  - docs/AI_WORKFLOW.md
+  - docs/TASKS.md
+
+protected_files:
+  - .forge/project.yaml
+  - .forge/README.md
+  - .forge/tasks/task.template.yaml
+  - .forge/workflows/feature.yaml
+  - .forge/roles/planner.md
+  - .forge/roles/builder.md
+  - .forge/roles/tester.md
+  - .forge/roles/reviewer.md
+  - .github/workflows/forge-contracts.yml
+  - tools/forge-validator/package.json
+  - tools/forge-validator/pnpm-lock.yaml
+  - tools/forge-validator/src/validate.mjs
+  - tools/forge-validator/test/validate.test.mjs
+
+acceptance_criteria:
+  - id: AC-1
+    description: docs/AI_WORKFLOW.md explains the responsibilities and boundaries of the Planner, Builder, Tester, Reviewer, and human operator.
+  - id: AC-2
+    description: The document explains the stages from plan through approve_delivery and the statuses from proposed through ready_for_pr.
+  - id: AC-3
+    description: The document explains that Tester FAIL and Reviewer REJECT return work to Builder, while blocked outcomes stop automatic continuation.
+  - id: AC-4
+    description: The document states that commit, push, pull request creation, merge, and final completion require explicit human action.
+  - id: AC-5
+    description: docs/TASKS.md tracks TASK-0001 as the current proposed task.
+  - id: AC-6
+    description: Forge contract verification passes and no protected file is modified.
+
+required_checks:
+  - verify
