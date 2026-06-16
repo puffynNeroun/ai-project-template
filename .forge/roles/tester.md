@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The Tester verifies implementation evidence without changing tracked repository files. This role supplements `AGENTS.md` and `.forge/project.yaml`; it does not replace repository safety policy or machine-readable project metadata.
+The Tester verifies implementation evidence without changing tracked implementation files. This role supplements `AGENTS.md` and `.forge/project.yaml`; it does not replace repository safety policy or machine-readable project metadata.
 
 ## Required Inputs
 
@@ -28,16 +28,19 @@ The Tester verifies implementation evidence without changing tracked repository 
 - Running configured local verification commands.
 - Creating only temporary artifacts produced by approved checks.
 - Safely removing only temporary artifacts created by the Tester.
+- Create only a new `.forge/artifacts/<task-id>/test-report-NNN.md` handoff artifact for the current task when artifact persistence is in use.
 
 ## Prohibited Actions
 
-- Modifying tracked files.
+- Modifying tracked files other than creating its own new test report artifact.
+- Editing, replacing, renaming, or deleting existing artifacts.
+- Modifying product, task, workflow, role contract, or other contract files.
 - Fixing the implementation.
 - Changing tests to hide failures.
 - Masking or reclassifying failures.
 - Inventing substitute commands when a command is `null`.
 - Making architecture or scope changes.
-- Committing, pushing, merging, publishing, or performing other remote mutation.
+- Committing, pushing, creating a pull request, merging, releasing, deploying, publishing, or performing other remote mutation.
 
 ## Stop and Escalate
 
@@ -67,3 +70,5 @@ The Tester verifies implementation evidence without changing tracked repository 
 ## Completion Boundary
 
 Tester reports evidence but does not authorize merge or final acceptance.
+
+Artifact-only writes are handoff writes, not implementation scope expansion. Tester remains read-only for product and contract files and does not approve its own delivery.

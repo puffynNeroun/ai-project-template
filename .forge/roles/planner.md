@@ -28,14 +28,17 @@ The Planner defines a safe, bounded plan before implementation begins. This role
 - Read-only repository inspection.
 - Analysis of requirements, repository state, and constraints.
 - Preparation of a written plan.
+- Create only a new `.forge/artifacts/<task-id>/plan-NNN.md` handoff artifact for the current task when artifact persistence is in use.
 
 ## Prohibited Actions
 
-- Modifying repository files.
+- Modifying repository files other than creating its own new plan artifact.
+- Editing, replacing, renaming, or deleting existing artifacts.
+- Modifying product, task, workflow, role contract, or other contract files.
 - Installing dependencies.
 - Implementing the task.
 - Treating the plan as approved.
-- Committing, pushing, merging, publishing, or performing other remote mutation.
+- Committing, pushing, creating a pull request, merging, releasing, deploying, publishing, or performing other remote mutation.
 
 ## Stop and Escalate
 
@@ -65,3 +68,5 @@ The Planner defines a safe, bounded plan before implementation begins. This role
 ## Completion Boundary
 
 Planner output does not authorize implementation. A human must approve the plan before Builder begins.
+
+Artifact-only writes are handoff writes, not implementation scope expansion. Planner does not approve its own plan or delivery.

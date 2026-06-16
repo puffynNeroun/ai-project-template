@@ -1,0 +1,84 @@
+schema_version: 1
+
+id: TASK-0002
+title: Define persistent stage artifact contracts
+status: ready_for_pr
+workflow: .forge/workflows/feature.yaml
+
+goal: Define a minimal repository-tracked contract for persistent Planner, Builder, Tester, and Reviewer handoff artifacts without adding runtime orchestration.
+
+in_scope:
+  - Define the artifact directory and filename convention under .forge/artifacts/TASK-XXXX/.
+  - Define YAML front matter fields for machine-readable artifact metadata.
+  - Define Markdown sections for human-readable artifact content.
+  - Define append-only attempt numbering and handoff input references.
+  - Create templates for plan, build report, test report, and review report artifacts.
+  - Document the source-of-truth boundaries between task contracts, artifacts, docs/TASKS.md, Git history, and GitHub pull requests.
+  - Update the four role contracts with narrowly scoped artifact-only write permissions.
+  - Document the persistent artifact contract in Forge documentation.
+  - Record the architectural decision in docs/DECISIONS.md.
+  - Update docs/TASKS.md to track TASK-0002.
+
+out_of_scope:
+  - Modify Forge Validator behavior, tests, dependencies, or package metadata.
+  - Enforce artifact requirements automatically based on task status.
+  - Add JSON Schema or another schema validation framework.
+  - Modify the feature workflow structure or task status model.
+  - Build an Orchestrator or execute agent roles automatically.
+  - Automatically update task status.
+  - Add human approval, delivery evidence, or completion artifact types.
+  - Add a database, event stream, checkpoint runtime, or web interface.
+  - Modify application-specific CI or GitHub repository rules.
+  - Automate commit, push, pull request creation, merge, release, or deployment.
+
+allowed_files:
+  - .forge/tasks/TASK-0002.yaml
+  - .forge/artifacts/README.md
+  - .forge/artifacts/templates/plan.md
+  - .forge/artifacts/templates/build-report.md
+  - .forge/artifacts/templates/test-report.md
+  - .forge/artifacts/templates/review-report.md
+  - .forge/README.md
+  - .forge/roles/planner.md
+  - .forge/roles/builder.md
+  - .forge/roles/tester.md
+  - .forge/roles/reviewer.md
+  - docs/DECISIONS.md
+  - docs/TASKS.md
+
+protected_files:
+  - .forge/project.yaml
+  - .forge/tasks/TASK-0001.yaml
+  - .forge/tasks/task.template.yaml
+  - .forge/tasks/README.md
+  - .forge/workflows/feature.yaml
+  - .github/workflows/forge-contracts.yml
+  - tools/forge-validator/package.json
+  - tools/forge-validator/pnpm-lock.yaml
+  - tools/forge-validator/src/validate.mjs
+  - tools/forge-validator/test/validate.test.mjs
+  - AGENTS.md
+  - README.md
+  - docs/PRODUCT_SPEC.md
+  - docs/AI_WORKFLOW.md
+
+acceptance_criteria:
+  - id: AC-1
+    description: The artifact documentation defines the exact directory, filename, artifact type, and append-only attempt numbering conventions.
+  - id: AC-2
+    description: Four artifact templates exist and combine machine-readable YAML front matter with human-readable Markdown sections.
+  - id: AC-3
+    description: Artifact metadata defines task identity, artifact type, attempt number, producing role, outcome, and references to required input artifacts where applicable.
+  - id: AC-4
+    description: The role contracts permit each role to create only its own new artifact while preserving product read-only boundaries and prohibitions on commit, push, pull request, merge, release, deployment, and other remote mutation.
+  - id: AC-5
+    description: Forge documentation defines task YAML as the source of task status and scope, artifact files as stage handoffs, docs/TASKS.md as the human-readable board, Git history as the audit trail, and GitHub pull requests as delivery history.
+  - id: AC-6
+    description: The contract explicitly excludes runtime orchestration, automatic status transitions, artifact validator enforcement, human approval artifacts, and delivery evidence from this task.
+  - id: AC-7
+    description: docs/TASKS.md tracks TASK-0002 as the current task and shows the same lifecycle status as .forge/tasks/TASK-0002.yaml.
+  - id: AC-8
+    description: Forge contract verification passes, no protected file is modified, and no file outside allowed_files is changed.
+
+required_checks:
+  - verify

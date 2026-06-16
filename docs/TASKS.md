@@ -2,11 +2,11 @@
 
 ## Now
 
-No active task.
+- [ ] `TASK-0002` — Define persistent stage artifact contracts (`ready_for_pr`).
 
 ## Next
 
-- [ ] Define the next bounded Forge task.
+- [ ] Open a pull request for TASK-0002 when ready.
 
 ## Later
 
