@@ -1,0 +1,98 @@
+schema_version: 1
+
+id: TASK-0003
+title: Validate persistent stage artifact structure
+status: proposed
+workflow: .forge/workflows/feature.yaml
+
+goal: Extend Forge Validator to structurally validate existing live persistent stage artifacts without requiring artifacts from task lifecycle status and without adding runtime orchestration.
+
+in_scope:
+  - Discover live artifact directories under .forge/artifacts/TASK-<number>/ while ignoring README.md and templates/.
+  - Require each live artifact task directory to reference an existing task contract.
+  - Validate supported artifact filenames, filename slugs, and three-digit positive attempt suffixes.
+  - Parse artifact YAML front matter using the existing yaml dependency.
+  - Enforce the exact artifact metadata key set.
+  - Validate consistency between task directory, filename, task_id, artifact_type, attempt, producing_role, and outcome.
+  - Validate input_artifacts as safe repository-relative paths to existing artifacts for the same task.
+  - Reject duplicate, self-referencing, unsafe, malformed, and unsupported artifact inputs.
+  - Validate the minimal input composition for plan, build_report, test_report, and review_report.
+  - Add focused tests for valid artifacts and each major invalid artifact contract class.
+  - Update Forge Validator and artifact documentation to describe structural validation and deferred lifecycle enforcement.
+  - Update docs/TASKS.md to track TASK-0003.
+
+out_of_scope:
+  - Require artifacts based on task status.
+  - Determine the latest or currently active artifact attempt.
+  - Enforce append-only history through Git history.
+  - Validate human plan approval or delivery approval evidence.
+  - Validate whether referenced test reports passed or review reports accepted.
+  - Validate complete retry-chain or latest-chain semantics.
+  - Validate Markdown headings, writing quality, or report completeness.
+  - Automatically create, modify, rename, or delete artifacts.
+  - Automatically update task status or execute agent roles.
+  - Add an Orchestrator, database, event stream, checkpoint runtime, or web interface.
+  - Add new dependencies or modify package metadata or the lockfile.
+  - Refactor Forge Validator into a plugin system or multi-module architecture.
+  - Modify workflow stages, role contracts, GitHub Actions, or repository rules.
+  - Automate commit, push, pull request creation, merge, release, or deployment.
+
+allowed_files:
+  - .forge/tasks/TASK-0003.yaml
+  - tools/forge-validator/src/validate.mjs
+  - tools/forge-validator/test/validate.test.mjs
+  - tools/forge-validator/README.md
+  - .forge/artifacts/README.md
+  - .forge/README.md
+  - docs/TASKS.md
+
+protected_files:
+  - .forge/project.yaml
+  - .forge/workflows/feature.yaml
+  - .forge/tasks/task.template.yaml
+  - .forge/tasks/README.md
+  - .forge/tasks/TASK-0001.yaml
+  - .forge/tasks/TASK-0002.yaml
+  - .forge/roles/planner.md
+  - .forge/roles/builder.md
+  - .forge/roles/tester.md
+  - .forge/roles/reviewer.md
+  - .forge/artifacts/templates/plan.md
+  - .forge/artifacts/templates/build-report.md
+  - .forge/artifacts/templates/test-report.md
+  - .forge/artifacts/templates/review-report.md
+  - .github/workflows/forge-contracts.yml
+  - tools/forge-validator/package.json
+  - tools/forge-validator/pnpm-lock.yaml
+  - AGENTS.md
+  - README.md
+  - docs/PRODUCT_SPEC.md
+  - docs/AI_WORKFLOW.md
+  - docs/DECISIONS.md
+
+acceptance_criteria:
+  - id: AC-1
+    description: Forge Validator discovers live artifacts only under .forge/artifacts/TASK-<number>/ and ignores README.md and templates/.
+  - id: AC-2
+    description: Forge Validator rejects unsupported artifact task directories, unsupported filenames, and artifact directories whose task contract does not exist.
+  - id: AC-3
+    description: Forge Validator parses YAML front matter and enforces the exact required artifact metadata key set independently of key order.
+  - id: AC-4
+    description: Forge Validator verifies consistency between the artifact directory, filename slug, task_id, artifact_type, attempt, producing_role, and role-specific outcome.
+  - id: AC-5
+    description: Forge Validator validates input_artifacts as unique, non-self-referencing, safe, same-task, repository-relative paths to existing artifact files.
+  - id: AC-6
+    description: Forge Validator validates the minimal input composition for plan, build_report, test_report, and review_report without evaluating latest-attempt or task-status semantics.
+  - id: AC-7
+    description: Forge Validator remains read-only and does not create artifacts, change statuses, execute agents, or perform Git or GitHub operations.
+  - id: AC-8
+    description: Tests cover valid live artifacts and every major invalid artifact contract class while all existing Validator tests continue to pass.
+  - id: AC-9
+    description: Documentation distinguishes implemented structural artifact validation from deferred lifecycle, append-only, approval, and orchestration enforcement.
+  - id: AC-10
+    description: docs/TASKS.md tracks TASK-0003 as the current task and shows the same lifecycle status as .forge/tasks/TASK-0003.yaml.
+  - id: AC-11
+    description: Forge contract verification passes and no protected file or file outside the approved implementation scope is modified.
+
+required_checks:
+  - verify

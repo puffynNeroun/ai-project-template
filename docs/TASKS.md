@@ -2,15 +2,15 @@
 
 ## Now
 
-No active task.
+- [ ] `TASK-0003` — Validate persistent stage artifact structure (`proposed`).
 
 ## Next
 
-- [ ] Define the next bounded Forge task.
+- [ ] Run Planner and create `.forge/artifacts/TASK-0003/plan-001.md`.
 
 ## Later
 
-Capture concise follow-up ideas when they become relevant.
+- [ ] Evaluate status-aware artifact validation after structural validation is proven.
 
 ## Completed
 
