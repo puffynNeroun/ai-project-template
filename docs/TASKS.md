@@ -2,11 +2,11 @@
 
 ## Now
 
-No active task.
+- [ ] `TASK-0002` — Define persistent stage artifact contracts (`proposed`).
 
 ## Next
 
-- [ ] Define the next bounded Forge task.
+- [ ] Run Planner for TASK-0002 after the task definition is committed.
 
 ## Later
 
