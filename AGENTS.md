@@ -9,6 +9,14 @@ Follow this workflow for all repository work.
 - Plan work that is complex, risky, or spans multiple files.
 - Ask for clarification when requirements are ambiguous.
 
+## Project Metadata
+
+- Inspect `.forge/project.yaml` when it exists.
+- Treat the manifest as the machine-readable source for document paths and project commands.
+- Do not invent or infer commands when a manifest command value is `null`.
+- Treat `AGENTS.md` as the authoritative operational and safety policy.
+- Treat the referenced product spec, tasks, and decisions documents as authoritative for their respective purposes.
+
 ## Safety Rules
 
 - Stay inside this repository unless explicitly instructed otherwise.
