@@ -22,7 +22,8 @@ Then update the project name, product details, and tasks before adding applicati
 1. `docs/PRODUCT_SPEC.md` - define the problem, users, goals, requirements, constraints, risks, and acceptance criteria.
 2. `docs/TASKS.md` - capture the first useful work in `Now`, `Next`, and `Later`.
 3. `docs/DECISIONS.md` - record important choices as they are made.
-4. `AGENTS.md` - review the repository workflow before using automation or AI agents.
+4. `.forge/project.yaml` - verify the referenced document paths, replace command values only with real reproducible commands, and leave unavailable commands as `null`.
+5. `AGENTS.md` - review the repository workflow before using automation or AI agents.
 
 ## Expected Workflow
 

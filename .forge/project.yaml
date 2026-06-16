@@ -1,0 +1,14 @@
+schema_version: 1
+
+documents:
+  product_spec: docs/PRODUCT_SPEC.md
+  tasks: docs/TASKS.md
+  decisions: docs/DECISIONS.md
+  agent_instructions: AGENTS.md
+
+commands:
+  install: null
+  build: null
+  typecheck: null
+  test: null
+  verify: null
