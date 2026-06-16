@@ -2,16 +2,16 @@
 
 ## Now
 
-- [ ] `TASK-0001` — Document the AI-assisted project workflow (`ready_for_pr`).
+No active task.
 
 ## Next
 
-- [ ] Create and validate the Pull Request for `TASK-0001`.
+- [ ] Define the next bounded Forge task.
 
 ## Later
 
-Capture concise follow-up ideas after `TASK-0001` is completed.
+Capture concise follow-up ideas when they become relevant.
 
 ## Completed
 
-Move finished work here with a completion date.
+- [x] `TASK-0001` — Document the AI-assisted project workflow (`completed`, 2026-06-16).
