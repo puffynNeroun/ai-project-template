@@ -10,4 +10,8 @@ A `null` command means the command is not configured. Agents must not guess, inf
 
 The four core role contracts live under `.forge/roles/`. They define role-specific responsibilities and handoff boundaries, supplement `AGENTS.md`, and remain human-readable contracts rather than a machine-readable workflow.
 
-Workflows, structured tasks, formal schema validation, and additional policy files are intentionally deferred.
+`.forge/tasks/` contains task contract documentation and an inactive task template. Active task files follow the `TASK-<number>.yaml` convention.
+
+`.forge/workflows/feature.yaml` defines the machine-readable feature-stage order and human approval gates. Task and workflow files reference role contracts rather than duplicating them.
+
+Formal schema validation, runtime orchestration, artifact persistence, additional workflow types, additional policy files, and CI validation are intentionally deferred.
