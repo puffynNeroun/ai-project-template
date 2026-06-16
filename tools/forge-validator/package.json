@@ -1,0 +1,16 @@
+{
+  "name": "@local/forge-validator",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "validate": "node ./src/validate.mjs ../..",
+    "test": "node --test ./test/validate.test.mjs",
+    "verify": "pnpm run test && pnpm run validate"
+  },
+  "dependencies": {
+    "yaml": "2.9.0"
+  }
+}

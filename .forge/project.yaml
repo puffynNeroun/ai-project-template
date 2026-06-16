@@ -7,8 +7,8 @@ documents:
   agent_instructions: AGENTS.md
 
 commands:
-  install: null
+  install: pnpm -C tools/forge-validator install --frozen-lockfile
   build: null
   typecheck: null
-  test: null
-  verify: null
+  test: pnpm -C tools/forge-validator test
+  verify: pnpm -C tools/forge-validator verify
