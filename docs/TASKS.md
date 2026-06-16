@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0003` — Validate persistent stage artifact structure (`approved`).
+- [ ] `TASK-0003` — Validate persistent stage artifact structure (`ready_for_pr`).
 
 ## Next
 
-- [ ] Run Builder using the approved `.forge/artifacts/TASK-0003/plan-002.md`.
+- [ ] Open a pull request for TASK-0003 when ready.
 
 ## Later
 

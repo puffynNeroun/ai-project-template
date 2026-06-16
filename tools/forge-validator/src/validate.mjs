@@ -10,6 +10,7 @@ const projectPath = '.forge/project.yaml';
 const workflowPath = '.forge/workflows/feature.yaml';
 const taskTemplatePath = '.forge/tasks/task.template.yaml';
 const taskDir = '.forge/tasks';
+const artifactRoot = '.forge/artifacts';
 
 const requiredProjectDocuments = [
   'product_spec',
@@ -74,6 +75,43 @@ const expectedTaskKeys = [
   'acceptance_criteria',
   'required_checks',
 ];
+
+const expectedArtifactKeys = [
+  'schema_version',
+  'task_id',
+  'artifact_type',
+  'attempt',
+  'producing_role',
+  'outcome',
+  'input_artifacts',
+];
+
+const artifactDefinitionsBySlug = {
+  plan: {
+    type: 'plan',
+    role: 'planner',
+    outcomes: ['READY_FOR_APPROVAL', 'BLOCKED'],
+    requiredInputs: [],
+  },
+  'build-report': {
+    type: 'build_report',
+    role: 'builder',
+    outcomes: ['READY_FOR_TEST', 'BLOCKED'],
+    requiredInputs: ['plan'],
+  },
+  'test-report': {
+    type: 'test_report',
+    role: 'tester',
+    outcomes: ['PASS', 'FAIL', 'BLOCKED'],
+    requiredInputs: ['plan', 'build_report'],
+  },
+  'review-report': {
+    type: 'review_report',
+    role: 'reviewer',
+    outcomes: ['ACCEPT', 'REJECT', 'BLOCKED'],
+    requiredInputs: ['plan', 'build_report', 'test_report'],
+  },
+};
 
 const remoteStageIds = [
   'push',
@@ -531,6 +569,325 @@ async function validateTasks(repositoryRoot, workflow, project, errors) {
   for (const taskPath of taskFiles) {
     await validateTask(repositoryRoot, taskPath, workflow, project, errors);
   }
+  return taskFiles;
+}
+
+function parseArtifactPath(artifactPath) {
+  const match = artifactPath.match(/^\.forge\/artifacts\/(TASK-\d+)\/([^/]+)$/);
+  if (!match) {
+    return null;
+  }
+  return {
+    taskId: match[1],
+    filename: match[2],
+  };
+}
+
+function parseArtifactFilename(filename) {
+  const match = filename.match(/^(.+)-([0-9]+)\.md$/);
+  if (!match) {
+    return null;
+  }
+
+  const slug = match[1];
+  const attemptText = match[2];
+  const definition = artifactDefinitionsBySlug[slug];
+  const attempt = Number(attemptText);
+
+  return {
+    slug,
+    attemptText,
+    attempt,
+    definition,
+  };
+}
+
+function validateArtifactFilename(filename, artifactPath, errors) {
+  const parsed = parseArtifactFilename(filename);
+  if (!parsed) {
+    errors.push(`Contract error in ${artifactPath}: artifact filename must match <artifact-slug>-NNN.md.`);
+    return null;
+  }
+
+  if (!parsed.definition) {
+    errors.push(`Contract error in ${artifactPath}: artifact filename uses unsupported slug '${parsed.slug}'.`);
+    return null;
+  }
+
+  if (!/^\d{3}$/.test(parsed.attemptText)) {
+    errors.push(`Contract error in ${artifactPath}: artifact filename attempt suffix must be exactly three digits.`);
+    return null;
+  }
+
+  if (parsed.attempt < 1) {
+    errors.push(`Contract error in ${artifactPath}: artifact filename attempt suffix must be a positive attempt.`);
+    return null;
+  }
+
+  return parsed;
+}
+
+async function discoverArtifactFiles(repositoryRoot, activeTaskFileSet, errors) {
+  const directory = path.resolve(repositoryRoot, artifactRoot);
+  let entries;
+  try {
+    entries = await fs.readdir(directory, { withFileTypes: true });
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      return [];
+    }
+    errors.push(`Contract error in ${artifactRoot}: artifact directory is unreadable (${error.code ?? error.message}).`);
+    return [];
+  }
+
+  const artifactFiles = [];
+  for (const entry of entries.sort((left, right) => left.name.localeCompare(right.name))) {
+    if (entry.name === 'README.md' || entry.name === 'templates') {
+      continue;
+    }
+
+    const taskArtifactDir = `${artifactRoot}/${entry.name}`;
+    if (!entry.isDirectory()) {
+      errors.push(`Contract error in ${artifactRoot}: unsupported direct artifact entry '${entry.name}'.`);
+      continue;
+    }
+
+    if (!/^TASK-\d+$/.test(entry.name)) {
+      errors.push(`Contract error in ${artifactRoot}: unsupported artifact task directory '${entry.name}'.`);
+      continue;
+    }
+
+    const taskPath = `${taskDir}/${entry.name}.yaml`;
+    if (!activeTaskFileSet.has(taskPath)) {
+      errors.push(`Contract error in ${taskArtifactDir}: artifact task directory has no matching task contract ${taskPath}.`);
+    }
+
+    let taskArtifactEntries;
+    try {
+      taskArtifactEntries = await fs.readdir(path.resolve(repositoryRoot, taskArtifactDir), { withFileTypes: true });
+    } catch (error) {
+      errors.push(`Contract error in ${taskArtifactDir}: artifact task directory is unreadable (${error.code ?? error.message}).`);
+      continue;
+    }
+
+    for (const artifactEntry of taskArtifactEntries.sort((left, right) => left.name.localeCompare(right.name))) {
+      const artifactPath = `${taskArtifactDir}/${artifactEntry.name}`;
+      if (!artifactEntry.isFile()) {
+        errors.push(`Contract error in ${artifactPath}: live artifact task directories must contain only direct artifact files.`);
+        continue;
+      }
+      artifactFiles.push(artifactPath);
+    }
+  }
+
+  return artifactFiles.sort();
+}
+
+async function parseArtifactFile(repositoryRoot, artifactPath, errors) {
+  let source;
+  try {
+    source = await fs.readFile(path.resolve(repositoryRoot, artifactPath), 'utf8');
+  } catch (error) {
+    errors.push(`Contract error in ${artifactPath}: artifact file is missing or unreadable (${error.code ?? error.message}).`);
+    return null;
+  }
+
+  const lines = source.split(/\r?\n/);
+  if (lines[0] !== '---') {
+    errors.push(`Contract error in ${artifactPath}: artifact must start with YAML front matter delimiter '---'.`);
+    return null;
+  }
+
+  const closingIndex = lines.findIndex((line, index) => index > 0 && line === '---');
+  if (closingIndex === -1) {
+    errors.push(`Contract error in ${artifactPath}: artifact front matter is missing closing delimiter '---'.`);
+    return null;
+  }
+
+  const frontMatter = lines.slice(1, closingIndex).join('\n');
+  if (frontMatter.trim() === '') {
+    errors.push(`Contract error in ${artifactPath}: artifact front matter must not be empty.`);
+    return null;
+  }
+
+  let document;
+  try {
+    document = parseDocument(frontMatter, { prettyErrors: false });
+  } catch (error) {
+    errors.push(`YAML parse error in ${artifactPath} front matter: ${error.message}`);
+    return null;
+  }
+
+  if (document.errors.length > 0) {
+    for (const error of document.errors) {
+      errors.push(`YAML parse error in ${artifactPath} front matter: ${error.message}`);
+    }
+    return null;
+  }
+
+  const metadata = document.toJS();
+  if (!isPlainObject(metadata)) {
+    errors.push(`Contract error in ${artifactPath}: artifact front matter must contain a YAML mapping.`);
+    return null;
+  }
+
+  return metadata;
+}
+
+function validateArtifactKeySet(metadata, artifactPath, errors) {
+  const actualKeys = Object.keys(metadata);
+  const expectedKeySet = new Set(expectedArtifactKeys);
+  const actualKeySet = new Set(actualKeys);
+  const missingKeys = expectedArtifactKeys.filter((key) => !actualKeySet.has(key));
+  const unexpectedKeys = actualKeys.filter((key) => !expectedKeySet.has(key)).sort();
+
+  for (const key of missingKeys) {
+    errors.push(`Contract error in ${artifactPath}: missing artifact metadata key '${key}'.`);
+  }
+
+  for (const key of unexpectedKeys) {
+    errors.push(`Contract error in ${artifactPath}: unexpected artifact metadata key '${key}'.`);
+  }
+
+  return missingKeys.length === 0 && unexpectedKeys.length === 0;
+}
+
+function validateArtifactMetadata(metadata, artifactPath, taskId, parsedFilename, errors) {
+  const definition = parsedFilename.definition;
+
+  if (metadata.schema_version !== 1) {
+    errors.push(`Contract error in ${artifactPath}: schema_version must be 1.`);
+  }
+
+  if (metadata.task_id !== taskId) {
+    errors.push(`Contract error in ${artifactPath}: task_id must match artifact task directory '${taskId}'.`);
+  }
+
+  if (metadata.artifact_type !== definition.type) {
+    errors.push(`Contract error in ${artifactPath}: artifact_type must be '${definition.type}' for filename slug '${parsedFilename.slug}'.`);
+  }
+
+  if (!Number.isInteger(metadata.attempt)) {
+    errors.push(`Contract error in ${artifactPath}: attempt must be an integer.`);
+  } else if (metadata.attempt !== parsedFilename.attempt) {
+    errors.push(`Contract error in ${artifactPath}: attempt must match filename suffix ${parsedFilename.attempt}.`);
+  }
+
+  if (metadata.producing_role !== definition.role) {
+    errors.push(`Contract error in ${artifactPath}: producing_role must be '${definition.role}' for artifact_type '${definition.type}'.`);
+  }
+
+  if (!definition.outcomes.includes(metadata.outcome)) {
+    errors.push(`Contract error in ${artifactPath}: outcome must be one of [${definition.outcomes.join(', ')}].`);
+  }
+
+  if (!Array.isArray(metadata.input_artifacts)) {
+    errors.push(`Contract error in ${artifactPath}: input_artifacts must be an array.`);
+  }
+}
+
+async function validateArtifactInputs(repositoryRoot, artifactPath, taskId, parsedFilename, inputArtifacts, artifactFileSet, errors) {
+  if (!Array.isArray(inputArtifacts)) {
+    return;
+  }
+
+  const definition = parsedFilename.definition;
+  const seenInputs = new Set();
+  const referencedTypes = new Set();
+
+  if (definition.type === 'plan' && inputArtifacts.length !== 0) {
+    errors.push(`Contract error in ${artifactPath}: plan artifacts must not declare input_artifacts.`);
+  }
+
+  for (const [index, inputPath] of inputArtifacts.entries()) {
+    const label = `${artifactPath}: input_artifacts[${index}]`;
+    if (typeof inputPath !== 'string') {
+      errors.push(`Contract error in ${artifactPath}: input_artifacts[${index}] must be a repository-relative string.`);
+      continue;
+    }
+
+    const pathIsSafe = validateRepositoryRelativePath(inputPath, label, errors);
+
+    if (seenInputs.has(inputPath)) {
+      errors.push(`Contract error in ${artifactPath}: input_artifacts[${index}] duplicates '${inputPath}'.`);
+    }
+    seenInputs.add(inputPath);
+
+    if (!pathIsSafe) {
+      continue;
+    }
+
+    if (inputPath === artifactPath) {
+      errors.push(`Contract error in ${artifactPath}: input_artifacts[${index}] must not reference the current artifact.`);
+    }
+
+    const expectedPrefix = `${artifactRoot}/${taskId}/`;
+    if (!inputPath.startsWith(expectedPrefix)) {
+      errors.push(`Contract error in ${artifactPath}: input_artifacts[${index}] must reference an artifact in ${expectedPrefix}.`);
+    }
+
+    if (!artifactFileSet.has(inputPath)) {
+      errors.push(`Contract error in ${artifactPath}: input_artifacts[${index}] does not reference an existing discovered live artifact file: ${inputPath}`);
+      continue;
+    }
+
+    if (!(await isRegularFile(repositoryRoot, inputPath))) {
+      errors.push(`Contract error in ${artifactPath}: input_artifacts[${index}] does not reference an existing regular file: ${inputPath}`);
+      continue;
+    }
+
+    const inputInfo = parseArtifactPath(inputPath);
+    const inputFilename = inputInfo ? parseArtifactFilename(inputInfo.filename) : null;
+    if (inputFilename?.definition && /^\d{3}$/.test(inputFilename.attemptText) && inputFilename.attempt >= 1) {
+      referencedTypes.add(inputFilename.definition.type);
+    }
+  }
+
+  for (const requiredType of definition.requiredInputs) {
+    if (!referencedTypes.has(requiredType)) {
+      errors.push(`Contract error in ${artifactPath}: ${definition.type} artifacts must reference at least one ${requiredType} artifact.`);
+    }
+  }
+}
+
+async function validateArtifact(repositoryRoot, artifactPath, artifactFileSet, errors) {
+  const pathInfo = parseArtifactPath(artifactPath);
+  if (!pathInfo) {
+    errors.push(`Contract error in ${artifactPath}: artifact path must match .forge/artifacts/TASK-<number>/<artifact-slug>-NNN.md.`);
+    return;
+  }
+
+  const parsedFilename = validateArtifactFilename(pathInfo.filename, artifactPath, errors);
+  if (!parsedFilename) {
+    return;
+  }
+
+  const metadata = await parseArtifactFile(repositoryRoot, artifactPath, errors);
+  if (!metadata) {
+    return;
+  }
+
+  validateArtifactKeySet(metadata, artifactPath, errors);
+  validateArtifactMetadata(metadata, artifactPath, pathInfo.taskId, parsedFilename, errors);
+  await validateArtifactInputs(
+    repositoryRoot,
+    artifactPath,
+    pathInfo.taskId,
+    parsedFilename,
+    metadata.input_artifacts,
+    artifactFileSet,
+    errors,
+  );
+}
+
+async function validateArtifacts(repositoryRoot, taskFiles, errors) {
+  const activeTaskFileSet = new Set(taskFiles.filter((taskPath) => taskPath !== taskTemplatePath));
+  const artifactFiles = await discoverArtifactFiles(repositoryRoot, activeTaskFileSet, errors);
+  const artifactFileSet = new Set(artifactFiles);
+
+  for (const artifactPath of artifactFiles) {
+    await validateArtifact(repositoryRoot, artifactPath, artifactFileSet, errors);
+  }
 }
 
 export async function validateRepository(repositoryRoot = defaultRepositoryRoot) {
@@ -539,7 +896,8 @@ export async function validateRepository(repositoryRoot = defaultRepositoryRoot)
 
   const project = await validateProject(resolvedRoot, errors);
   const workflow = await validateWorkflow(resolvedRoot, errors);
-  await validateTasks(resolvedRoot, workflow, project, errors);
+  const taskFiles = await validateTasks(resolvedRoot, workflow, project, errors);
+  await validateArtifacts(resolvedRoot, taskFiles, errors);
 
   return {
     ok: errors.length === 0,
