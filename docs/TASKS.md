@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0003` — Validate persistent stage artifact structure (`proposed`).
+- [ ] `TASK-0003` — Validate persistent stage artifact structure (`approved`).
 
 ## Next
 
-- [ ] Run Planner and create `.forge/artifacts/TASK-0003/plan-001.md`.
+- [ ] Run Builder using the approved `.forge/artifacts/TASK-0003/plan-002.md`.
 
 ## Later
 
