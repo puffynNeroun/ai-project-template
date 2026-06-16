@@ -2,16 +2,15 @@
 
 ## Now
 
-- [ ] Define the first concrete task.
-- [ ] Identify the smallest useful milestone.
+- [ ] `TASK-0001` — Document the AI-assisted project workflow (`proposed`).
 
 ## Next
 
-- [ ] Add follow-up work after the current milestone is clear.
+- [ ] Produce and approve the bounded implementation plan for `TASK-0001`.
 
 ## Later
 
-- [ ] Capture ideas that are useful but not urgent.
+Capture concise follow-up ideas after `TASK-0001` is planned.
 
 ## Completed
 
