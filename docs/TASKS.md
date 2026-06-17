@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0004` — Require stage artifacts by task status (`approved`).
+- [ ] `TASK-0004` — Require stage artifacts by task status (`ready_for_pr`).
 
 ## Next
 
-- [ ] Run Builder implementation for `TASK-0004`.
+- [ ] Push the branch and open a pull request for `TASK-0004`.
 
 ## Later
 

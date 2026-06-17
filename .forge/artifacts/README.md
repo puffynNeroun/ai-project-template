@@ -108,8 +108,29 @@ Artifacts should reference these sources rather than duplicating their authority
 
 The Forge Validator validates existing live artifacts under `.forge/artifacts/TASK-<number>/`. It checks artifact paths, filenames, YAML front matter metadata, role/type/outcome consistency, safe input references, and minimal input composition.
 
-Artifact absence is not an error based on task status. `.forge/artifacts/README.md` and `.forge/artifacts/templates/` are documentation and templates, not live artifacts.
+`.forge/artifacts/README.md` and `.forge/artifacts/templates/` are documentation and templates, not live artifacts.
+
+## Status-Aware Presence Validation
+
+For fully valid active task contracts, the Forge Validator requires structurally valid artifacts according to task status:
+
+| Task status | Required structurally valid artifact types |
+| --- | --- |
+| `proposed` | None |
+| `blocked` | None based only on status |
+| `approved` | `plan` |
+| `in_progress` | `plan` |
+| `ready_for_pr` | `plan`, `build_report`, `test_report`, `review_report` |
+| `completed` | `plan`, `build_report`, `test_report`, `review_report` |
+
+`blocked` has no additional presence requirement because it can be entered from different workflow stages, and status alone does not identify the last completed stage.
+
+Only structurally valid artifacts satisfy presence requirements. Malformed artifacts still fail structural validation and do not satisfy presence. Any structurally valid positive attempt may satisfy a required artifact type; the validator does not select the latest or exact attempt.
+
+`TASK-0001` and `TASK-0002` are explicit legacy completed-task exemptions because they were completed before persistent live artifacts existed. Do not create retroactive artifacts for them. This exemption does not apply to `TASK-0003` or later tasks.
+
+Presence validation runs only for active task contracts that pass task-contract validation. Invalid task contracts report their own task-contract errors without secondary missing-artifact errors.
 
 ## Deferred Enforcement
 
-This contract does not add status-aware artifact requirements, latest-attempt selection, retry-chain validation, append-only Git-history enforcement, human approval artifacts, delivery evidence artifacts, runtime orchestration, automatic status transitions, GitHub automation, a database, an event stream, or a web interface.
+This contract does not add latest-attempt selection, exact-attempt requirements, retry-chain validation, outcome-chain validation, append-only Git-history enforcement, human approval artifacts, delivery evidence artifacts, runtime orchestration, automatic status transitions, GitHub automation, a database, an event stream, or a web interface.

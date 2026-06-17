@@ -130,6 +130,98 @@ async function writeArtifact(fixtureRoot, relativePath, metadata, body) {
   await writeFixtureFile(fixtureRoot, relativePath, artifactContent(metadata, body));
 }
 
+async function writeTask(fixtureRoot, taskId, status, transform = (content) => content) {
+  const template = await readFixtureFile(fixtureRoot, '.forge/tasks/task.template.yaml');
+  const content = transform(
+    template
+      .replace('id: TASK-XXX', `id: ${taskId}`)
+      .replace('title: Replace with a concrete task title', 'title: Fixture task')
+      .replace('status: proposed', `status: ${status}`)
+      .replace('goal: Replace with one bounded outcome.', 'goal: Exercise fixture validation.'),
+  );
+
+  await writeFixtureFile(fixtureRoot, `.forge/tasks/${taskId}.yaml`, content);
+}
+
+function artifactPath(taskId, slug, attempt = 1) {
+  return `.forge/artifacts/${taskId}/${slug}-${String(attempt).padStart(3, '0')}.md`;
+}
+
+async function writeValidPlan(fixtureRoot, taskId, attempt = 1, outcome = 'READY_FOR_APPROVAL') {
+  await writeArtifact(
+    fixtureRoot,
+    artifactPath(taskId, 'plan', attempt),
+    planMetadata({ task_id: taskId, attempt, outcome }),
+  );
+}
+
+async function writeValidBuildReport(fixtureRoot, taskId, attempt = 1, planAttempt = 1, outcome = 'READY_FOR_TEST') {
+  await writeArtifact(
+    fixtureRoot,
+    artifactPath(taskId, 'build-report', attempt),
+    buildReportMetadata({
+      task_id: taskId,
+      attempt,
+      outcome,
+      input_artifacts: [artifactPath(taskId, 'plan', planAttempt)],
+    }),
+  );
+}
+
+async function writeValidTestReport(fixtureRoot, taskId, attempt = 1, planAttempt = 1, buildAttempt = 1, outcome = 'PASS') {
+  await writeArtifact(
+    fixtureRoot,
+    artifactPath(taskId, 'test-report', attempt),
+    testReportMetadata({
+      task_id: taskId,
+      attempt,
+      outcome,
+      input_artifacts: [
+        artifactPath(taskId, 'plan', planAttempt),
+        artifactPath(taskId, 'build-report', buildAttempt),
+      ],
+    }),
+  );
+}
+
+async function writeValidReviewReport(
+  fixtureRoot,
+  taskId,
+  attempt = 1,
+  planAttempt = 1,
+  buildAttempt = 1,
+  testAttempt = 1,
+  outcome = 'ACCEPT',
+) {
+  await writeArtifact(
+    fixtureRoot,
+    artifactPath(taskId, 'review-report', attempt),
+    reviewReportMetadata({
+      task_id: taskId,
+      attempt,
+      outcome,
+      input_artifacts: [
+        artifactPath(taskId, 'plan', planAttempt),
+        artifactPath(taskId, 'build-report', buildAttempt),
+        artifactPath(taskId, 'test-report', testAttempt),
+      ],
+    }),
+  );
+}
+
+async function writeCompleteArtifactChain(fixtureRoot, taskId, options = {}) {
+  const {
+    planAttempt = 1,
+    testOutcome = 'PASS',
+    reviewOutcome = 'ACCEPT',
+  } = options;
+
+  await writeValidPlan(fixtureRoot, taskId, planAttempt);
+  await writeValidBuildReport(fixtureRoot, taskId, 1, planAttempt);
+  await writeValidTestReport(fixtureRoot, taskId, 1, planAttempt, 1, testOutcome);
+  await writeValidReviewReport(fixtureRoot, taskId, 1, planAttempt, 1, 1, reviewOutcome);
+}
+
 async function assertInvalid(fixtureRoot, expectedMessage) {
   const result = await validateRepository(fixtureRoot);
   assert.equal(result.ok, false);
@@ -356,12 +448,263 @@ schema_version: 1
   });
 });
 
-test('artifact absence remains valid', async () => {
+test('a proposed task without artifacts passes', async () => {
   await withFixture(async (fixtureRoot) => {
-    await removeFixturePath(fixtureRoot, '.forge/artifacts/TASK-0003');
+    await writeTask(fixtureRoot, 'TASK-0090', 'proposed');
 
     const result = await validateRepository(fixtureRoot);
     assert.deepEqual(result, { ok: true, errors: [] });
+  });
+});
+
+test('a blocked task without artifacts passes', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'blocked');
+
+    const result = await validateRepository(fixtureRoot);
+    assert.deepEqual(result, { ok: true, errors: [] });
+  });
+});
+
+test('a blocked task with a malformed existing artifact still fails structural validation', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'blocked');
+    await writeFixtureFile(fixtureRoot, '.forge/artifacts/TASK-0090/plan-001.md', 'not front matter');
+
+    await assertInvalid(fixtureRoot, /artifact must start with YAML front matter delimiter/);
+  });
+});
+
+test('an approved task without a plan fails', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'approved');
+
+    await assertInvalid(
+      fixtureRoot,
+      /task TASK-0090 has status 'approved' and requires at least one structurally valid plan artifact/,
+    );
+  });
+});
+
+test('a malformed required artifact does not satisfy presence', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'approved');
+    await writeFixtureFile(fixtureRoot, '.forge/artifacts/TASK-0090/plan-001.md', 'not front matter');
+
+    const result = await validateRepository(fixtureRoot);
+    const errors = result.errors.join('\n');
+
+    assert.equal(result.ok, false);
+    assert.match(errors, /artifact must start with YAML front matter delimiter/);
+    assert.match(
+      errors,
+      /task TASK-0090 has status 'approved' and requires at least one structurally valid plan artifact/,
+    );
+  });
+});
+
+test('a later valid artifact still satisfies presence after an earlier malformed artifact', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'approved');
+    await writeFixtureFile(fixtureRoot, '.forge/artifacts/TASK-0090/plan-001.md', 'not front matter');
+    await writeValidPlan(fixtureRoot, 'TASK-0090', 2);
+
+    const result = await validateRepository(fixtureRoot);
+    const errors = result.errors.join('\n');
+
+    assert.equal(result.ok, false);
+    assert.match(errors, /artifact must start with YAML front matter delimiter/);
+    assert.doesNotMatch(
+      errors,
+      /task TASK-0090 has status 'approved' and requires at least one structurally valid plan artifact/,
+    );
+  });
+});
+
+test('an approved task with a valid plan passes', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'approved');
+    await writeValidPlan(fixtureRoot, 'TASK-0090');
+
+    const result = await validateRepository(fixtureRoot);
+    assert.deepEqual(result, { ok: true, errors: [] });
+  });
+});
+
+test('an in-progress task without a plan fails', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'in_progress');
+
+    await assertInvalid(
+      fixtureRoot,
+      /task TASK-0090 has status 'in_progress' and requires at least one structurally valid plan artifact/,
+    );
+  });
+});
+
+test('an in-progress task with a valid plan passes', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'in_progress');
+    await writeValidPlan(fixtureRoot, 'TASK-0090');
+
+    const result = await validateRepository(fixtureRoot);
+    assert.deepEqual(result, { ok: true, errors: [] });
+  });
+});
+
+test('a ready-for-pr task missing a plan fails', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'ready_for_pr');
+
+    await assertInvalid(
+      fixtureRoot,
+      /task TASK-0090 has status 'ready_for_pr' and requires at least one structurally valid plan artifact/,
+    );
+  });
+});
+
+test('a ready-for-pr task missing a build report fails', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'ready_for_pr');
+    await writeValidPlan(fixtureRoot, 'TASK-0090');
+
+    await assertInvalid(
+      fixtureRoot,
+      /task TASK-0090 has status 'ready_for_pr' and requires at least one structurally valid build_report artifact/,
+    );
+  });
+});
+
+test('a ready-for-pr task missing a test report fails', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'ready_for_pr');
+    await writeValidPlan(fixtureRoot, 'TASK-0090');
+    await writeValidBuildReport(fixtureRoot, 'TASK-0090');
+
+    await assertInvalid(
+      fixtureRoot,
+      /task TASK-0090 has status 'ready_for_pr' and requires at least one structurally valid test_report artifact/,
+    );
+  });
+});
+
+test('a ready-for-pr task missing a review report fails', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'ready_for_pr');
+    await writeValidPlan(fixtureRoot, 'TASK-0090');
+    await writeValidBuildReport(fixtureRoot, 'TASK-0090');
+    await writeValidTestReport(fixtureRoot, 'TASK-0090');
+
+    await assertInvalid(
+      fixtureRoot,
+      /task TASK-0090 has status 'ready_for_pr' and requires at least one structurally valid review_report artifact/,
+    );
+  });
+});
+
+test('a ready-for-pr task with all required artifact types passes', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'ready_for_pr');
+    await writeCompleteArtifactChain(fixtureRoot, 'TASK-0090');
+
+    const result = await validateRepository(fixtureRoot);
+    assert.deepEqual(result, { ok: true, errors: [] });
+  });
+});
+
+test('a completed non-legacy task with all required artifact types passes', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'completed');
+    await writeCompleteArtifactChain(fixtureRoot, 'TASK-0090');
+
+    const result = await validateRepository(fixtureRoot);
+    assert.deepEqual(result, { ok: true, errors: [] });
+  });
+});
+
+test('a completed non-legacy task missing a required artifact type fails', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'completed');
+
+    await assertInvalid(
+      fixtureRoot,
+      /task TASK-0090 has status 'completed' and requires at least one structurally valid plan artifact/,
+    );
+  });
+});
+
+test('legacy TASK-0001 remains valid without retroactive artifacts', async () => {
+  await withFixture(async (fixtureRoot) => {
+    const result = await validateRepository(fixtureRoot);
+    assert.deepEqual(result, { ok: true, errors: [] });
+  });
+});
+
+test('legacy TASK-0002 remains valid without retroactive artifacts', async () => {
+  await withFixture(async (fixtureRoot) => {
+    const result = await validateRepository(fixtureRoot);
+    assert.deepEqual(result, { ok: true, errors: [] });
+  });
+});
+
+test('TASK-0003 and later completed tasks do not receive the legacy exemption', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await removeFixturePath(fixtureRoot, '.forge/artifacts/TASK-0003');
+
+    await assertInvalid(
+      fixtureRoot,
+      /task TASK-0003 has status 'completed' and requires at least one structurally valid plan artifact/,
+    );
+  });
+});
+
+test('a valid non-001 positive attempt satisfies artifact presence', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'approved');
+    await writeValidPlan(fixtureRoot, 'TASK-0090', 2);
+
+    const result = await validateRepository(fixtureRoot);
+    assert.deepEqual(result, { ok: true, errors: [] });
+  });
+});
+
+test('artifact outcomes do not drive presence decisions', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'ready_for_pr');
+    await writeCompleteArtifactChain(fixtureRoot, 'TASK-0090', {
+      testOutcome: 'FAIL',
+      reviewOutcome: 'REJECT',
+    });
+
+    const result = await validateRepository(fixtureRoot);
+    assert.deepEqual(result, { ok: true, errors: [] });
+  });
+});
+
+test('missing-artifact errors include task id, status, and artifact type', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'approved');
+
+    await assertInvalid(
+      fixtureRoot,
+      /task TASK-0090 has status 'approved' and requires at least one structurally valid plan artifact/,
+    );
+  });
+});
+
+test('invalid task contracts do not produce secondary missing-artifact errors', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(
+      fixtureRoot,
+      'TASK-0099',
+      'approved',
+      (content) => content.replace('required_checks: []', 'required_checks:\n  - missing_check'),
+    );
+
+    const result = await validateRepository(fixtureRoot);
+    assert.equal(result.ok, false);
+    assert.match(result.errors.join('\n'), /required_checks\[0\] references unknown project command key 'missing_check'/);
+    assert.doesNotMatch(result.errors.join('\n'), /task TASK-0099 has status 'approved' and requires at least one structurally valid plan artifact/);
   });
 });
 
