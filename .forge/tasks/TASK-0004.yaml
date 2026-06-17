@@ -1,0 +1,117 @@
+schema_version: 1
+
+id: TASK-0004
+title: Require stage artifacts by task status
+status: ready_for_pr
+workflow: .forge/workflows/feature.yaml
+
+goal: Add status-aware artifact presence validation to Forge Validator with explicit blocked-status and legacy completed-task compatibility rules, without adding lifecycle orchestration, latest-attempt selection, or outcome-chain semantics.
+
+in_scope:
+  - Require no stage artifacts for tasks in proposed status.
+  - Require no additional artifact presence based only on blocked status, while still structurally validating any artifacts that exist for blocked tasks, because blocked may be entered from different workflow stages and status alone does not identify the last completed stage.
+  - Require at least one structurally valid plan artifact for tasks in approved status.
+  - Require at least one structurally valid plan artifact for tasks in in_progress status.
+  - Require at least one structurally valid plan, build_report, test_report, and review_report artifact for tasks in ready_for_pr status.
+  - Require at least one structurally valid plan, build_report, test_report, and review_report artifact for tasks in completed status, except for the explicit TASK-0001 and TASK-0002 legacy completed-task exemption.
+  - Exempt only TASK-0001 and TASK-0002 from status-aware artifact presence requirements because they were completed before persistent live stage artifacts were available.
+  - Ensure the legacy compatibility exemption does not apply to TASK-0003 or later tasks.
+  - Do not create or fabricate retroactive artifacts for TASK-0001 or TASK-0002.
+  - Allow any structurally valid positive attempt for a required artifact type to satisfy status-aware presence validation.
+  - Preserve the existing TASK-0003 structural artifact validation as authoritative for artifact validity.
+  - Add focused Validator tests for every supported status, valid cases, missing-artifact failures, blocked behavior, and TASK-0001/TASK-0002 legacy compatibility.
+  - Update Validator and Forge artifact documentation to describe implemented status-aware artifact presence checks, blocked-status behavior, TASK-0001/TASK-0002 legacy compatibility, and still-deferred lifecycle semantics.
+  - Update docs/TASKS.md to track TASK-0004.
+  - Preserve role-scoped artifact handoffs so each stage may create only its own new TASK-0004 artifact path under the existing artifact contract.
+
+out_of_scope:
+  - Select the latest artifact attempt.
+  - Require exact artifact attempts for a task status.
+  - Validate retry chains.
+  - Validate referenced artifact outcome chains.
+  - Require test reports to have PASS outcomes.
+  - Require review reports to have ACCEPT outcomes.
+  - Validate human approval evidence.
+  - Enforce append-only artifact history through Git history.
+  - Validate Markdown artifact bodies.
+  - Automatically transition task status.
+  - Execute agent roles.
+  - Add orchestration.
+  - Perform GitHub mutation.
+  - Add new dependencies or modify package metadata or the lockfile.
+  - Broadly refactor Validator architecture.
+  - Add a broad migration framework, configuration system, schema-version migration, or new task-contract key for legacy task compatibility.
+  - Modify existing tasks, existing artifacts, workflow contracts, role contracts, templates, root project documentation, or GitHub workflow files.
+  - Commit, push, create a pull request, merge, release, deploy, publish, or perform other remote mutation.
+
+allowed_files:
+  - .forge/tasks/TASK-0004.yaml
+  - tools/forge-validator/src/validate.mjs
+  - tools/forge-validator/test/validate.test.mjs
+  - tools/forge-validator/README.md
+  - .forge/artifacts/README.md
+  - .forge/README.md
+  - docs/TASKS.md
+
+protected_files:
+  - .forge/project.yaml
+  - .forge/workflows/feature.yaml
+  - .forge/tasks/task.template.yaml
+  - .forge/tasks/README.md
+  - .forge/tasks/TASK-0001.yaml
+  - .forge/tasks/TASK-0002.yaml
+  - .forge/tasks/TASK-0003.yaml
+  - .forge/roles/planner.md
+  - .forge/roles/builder.md
+  - .forge/roles/tester.md
+  - .forge/roles/reviewer.md
+  - .forge/artifacts/templates/plan.md
+  - .forge/artifacts/templates/build-report.md
+  - .forge/artifacts/templates/test-report.md
+  - .forge/artifacts/templates/review-report.md
+  - .forge/artifacts/TASK-0003/plan-001.md
+  - .forge/artifacts/TASK-0003/plan-002.md
+  - .forge/artifacts/TASK-0003/build-report-001.md
+  - .forge/artifacts/TASK-0003/test-report-001.md
+  - .forge/artifacts/TASK-0003/review-report-001.md
+  - .github/workflows/forge-contracts.yml
+  - tools/forge-validator/package.json
+  - tools/forge-validator/pnpm-lock.yaml
+  - AGENTS.md
+  - README.md
+  - docs/PRODUCT_SPEC.md
+  - docs/AI_WORKFLOW.md
+  - docs/DECISIONS.md
+
+acceptance_criteria:
+  - id: AC-1
+    description: Forge Validator treats proposed tasks as valid without requiring any stage artifacts.
+  - id: AC-2
+    description: Forge Validator treats blocked tasks as having no additional artifact-presence requirement based only on status, while any existing artifacts still pass TASK-0003 structural validation.
+  - id: AC-3
+    description: Forge Validator requires approved tasks to have at least one structurally valid plan artifact.
+  - id: AC-4
+    description: Forge Validator requires in_progress tasks to have at least one structurally valid plan artifact.
+  - id: AC-5
+    description: Forge Validator requires ready_for_pr tasks to have at least one structurally valid artifact of each type plan, build_report, test_report, and review_report.
+  - id: AC-6
+    description: Forge Validator requires completed tasks to have at least one structurally valid artifact of each type plan, build_report, test_report, and review_report, except for the explicit TASK-0001 and TASK-0002 legacy exemption.
+  - id: AC-7
+    description: TASK-0001 and TASK-0002 are exempt from status-aware artifact-presence requirements, no retroactive artifacts are created or fabricated for them, and the exemption does not apply to TASK-0003 or later tasks.
+  - id: AC-8
+    description: Any structurally valid positive attempt for a required artifact type may satisfy the status-aware presence requirement.
+  - id: AC-9
+    description: Validation does not introduce latest-attempt, retry-chain, outcome-chain, approval, append-only Git, orchestration, or automatic-transition semantics.
+  - id: AC-10
+    description: Missing-artifact errors identify both the task status and the missing artifact type.
+  - id: AC-11
+    description: Tests cover every supported status, valid cases, missing-artifact failures, and TASK-0001/TASK-0002 legacy compatibility while existing Validator tests continue passing.
+  - id: AC-12
+    description: Documentation explains implemented status-aware presence checks, blocked-status behavior, TASK-0001/TASK-0002 legacy compatibility, and still-deferred lifecycle semantics.
+  - id: AC-13
+    description: Forge Validator remains read-only, verification passes, and no file outside the approved scope is modified.
+  - id: AC-14
+    description: docs/TASKS.md tracks TASK-0004 as the current proposed task and shows the same lifecycle status as .forge/tasks/TASK-0004.yaml.
+
+required_checks:
+  - verify

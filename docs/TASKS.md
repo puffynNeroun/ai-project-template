@@ -2,15 +2,15 @@
 
 ## Now
 
-No active task.
+- [ ] `TASK-0004` — Require stage artifacts by task status (`ready_for_pr`).
 
 ## Next
 
-- [ ] Define the next bounded Forge task.
+- [ ] Push the branch and open a pull request for `TASK-0004`.
 
 ## Later
 
-- [ ] Evaluate status-aware artifact validation after structural validation is proven.
+- [ ] Evaluate latest-attempt and retry-chain artifact validation after status-aware presence checks are proven.
 
 ## Completed
 

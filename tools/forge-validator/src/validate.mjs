@@ -113,6 +113,17 @@ const artifactDefinitionsBySlug = {
   },
 };
 
+const requiredArtifactTypesByStatus = {
+  proposed: [],
+  blocked: [],
+  approved: ['plan'],
+  in_progress: ['plan'],
+  ready_for_pr: ['plan', 'build_report', 'test_report', 'review_report'],
+  completed: ['plan', 'build_report', 'test_report', 'review_report'],
+};
+
+const legacyCompletedTaskIdsWithoutArtifacts = new Set(['TASK-0001', 'TASK-0002']);
+
 const remoteStageIds = [
   'push',
   'pr',
@@ -472,9 +483,10 @@ async function getTaskWorkflow(repositoryRoot, taskPath, task, canonicalWorkflow
 }
 
 async function validateTask(repositoryRoot, taskPath, workflow, project, errors) {
+  const taskErrorCountBefore = errors.length;
   const task = await parseYamlFile(repositoryRoot, taskPath, errors);
   if (!validateRequiredObject(task, taskPath, errors)) {
-    return;
+    return null;
   }
 
   validateTaskKeySet(task, taskPath, errors);
@@ -562,14 +574,31 @@ async function validateTask(repositoryRoot, taskPath, workflow, project, errors)
       }
     }
   }
+
+  if (!isTemplate && errors.length === taskErrorCountBefore) {
+    return {
+      id: task.id,
+      status: task.status,
+      path: taskPath,
+    };
+  }
+
+  return null;
 }
 
 async function validateTasks(repositoryRoot, workflow, project, errors) {
   const taskFiles = await discoverTaskFiles(repositoryRoot, errors);
+  const tasksById = new Map();
   for (const taskPath of taskFiles) {
-    await validateTask(repositoryRoot, taskPath, workflow, project, errors);
+    const taskSummary = await validateTask(repositoryRoot, taskPath, workflow, project, errors);
+    if (taskSummary) {
+      tasksById.set(taskSummary.id, taskSummary);
+    }
   }
-  return taskFiles;
+  return {
+    taskFiles,
+    tasksById,
+  };
 }
 
 function parseArtifactPath(artifactPath) {
@@ -851,20 +880,21 @@ async function validateArtifactInputs(repositoryRoot, artifactPath, taskId, pars
 }
 
 async function validateArtifact(repositoryRoot, artifactPath, artifactFileSet, errors) {
+  const artifactErrorCountBefore = errors.length;
   const pathInfo = parseArtifactPath(artifactPath);
   if (!pathInfo) {
     errors.push(`Contract error in ${artifactPath}: artifact path must match .forge/artifacts/TASK-<number>/<artifact-slug>-NNN.md.`);
-    return;
+    return null;
   }
 
   const parsedFilename = validateArtifactFilename(pathInfo.filename, artifactPath, errors);
   if (!parsedFilename) {
-    return;
+    return null;
   }
 
   const metadata = await parseArtifactFile(repositoryRoot, artifactPath, errors);
   if (!metadata) {
-    return;
+    return null;
   }
 
   validateArtifactKeySet(metadata, artifactPath, errors);
@@ -878,15 +908,61 @@ async function validateArtifact(repositoryRoot, artifactPath, artifactFileSet, e
     artifactFileSet,
     errors,
   );
+
+  if (errors.length === artifactErrorCountBefore) {
+    return {
+      taskId: pathInfo.taskId,
+      artifactType: parsedFilename.definition.type,
+      path: artifactPath,
+    };
+  }
+
+  return null;
 }
 
 async function validateArtifacts(repositoryRoot, taskFiles, errors) {
   const activeTaskFileSet = new Set(taskFiles.filter((taskPath) => taskPath !== taskTemplatePath));
   const artifactFiles = await discoverArtifactFiles(repositoryRoot, activeTaskFileSet, errors);
   const artifactFileSet = new Set(artifactFiles);
+  const validArtifactsByTaskIdAndType = new Map();
 
   for (const artifactPath of artifactFiles) {
-    await validateArtifact(repositoryRoot, artifactPath, artifactFileSet, errors);
+    const artifactSummary = await validateArtifact(repositoryRoot, artifactPath, artifactFileSet, errors);
+    if (!artifactSummary) {
+      continue;
+    }
+
+    if (!validArtifactsByTaskIdAndType.has(artifactSummary.taskId)) {
+      validArtifactsByTaskIdAndType.set(artifactSummary.taskId, new Map());
+    }
+
+    const validTypes = validArtifactsByTaskIdAndType.get(artifactSummary.taskId);
+    if (!validTypes.has(artifactSummary.artifactType)) {
+      validTypes.set(artifactSummary.artifactType, new Set());
+    }
+
+    validTypes.get(artifactSummary.artifactType).add(artifactSummary.path);
+  }
+
+  return validArtifactsByTaskIdAndType;
+}
+
+function validateArtifactPresenceByTaskStatus(tasksById, validArtifactsByTaskIdAndType, errors) {
+  const tasks = [...tasksById.values()].sort((left, right) => left.id.localeCompare(right.id));
+
+  for (const task of tasks) {
+    if (task.status === 'completed' && legacyCompletedTaskIdsWithoutArtifacts.has(task.id)) {
+      continue;
+    }
+
+    const requiredArtifactTypes = requiredArtifactTypesByStatus[task.status] ?? [];
+    const validArtifactTypes = validArtifactsByTaskIdAndType.get(task.id) ?? new Map();
+
+    for (const artifactType of requiredArtifactTypes) {
+      if (!validArtifactTypes.get(artifactType)?.size) {
+        errors.push(`Contract error in ${task.path}: task ${task.id} has status '${task.status}' and requires at least one structurally valid ${artifactType} artifact.`);
+      }
+    }
   }
 }
 
@@ -896,8 +972,9 @@ export async function validateRepository(repositoryRoot = defaultRepositoryRoot)
 
   const project = await validateProject(resolvedRoot, errors);
   const workflow = await validateWorkflow(resolvedRoot, errors);
-  const taskFiles = await validateTasks(resolvedRoot, workflow, project, errors);
-  await validateArtifacts(resolvedRoot, taskFiles, errors);
+  const { taskFiles, tasksById } = await validateTasks(resolvedRoot, workflow, project, errors);
+  const validArtifactsByTaskIdAndType = await validateArtifacts(resolvedRoot, taskFiles, errors);
+  validateArtifactPresenceByTaskStatus(tasksById, validArtifactsByTaskIdAndType, errors);
 
   return {
     ok: errors.length === 0,
