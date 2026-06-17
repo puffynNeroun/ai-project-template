@@ -2,7 +2,7 @@ schema_version: 1
 
 id: TASK-0004
 title: Require stage artifacts by task status
-status: ready_for_pr
+status: completed
 workflow: .forge/workflows/feature.yaml
 
 goal: Add status-aware artifact presence validation to Forge Validator with explicit blocked-status and legacy completed-task compatibility rules, without adding lifecycle orchestration, latest-attempt selection, or outcome-chain semantics.
