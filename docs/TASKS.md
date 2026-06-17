@@ -2,15 +2,15 @@
 
 ## Now
 
-No active task.
+- [ ] `TASK-0004` — Require stage artifacts by task status (`proposed`).
 
 ## Next
 
-- [ ] Define the next bounded Forge task.
+- [ ] Produce the Planner artifact for `TASK-0004`.
 
 ## Later
 
-- [ ] Evaluate status-aware artifact validation after structural validation is proven.
+- [ ] Evaluate latest-attempt and retry-chain artifact validation after status-aware presence checks are proven.
 
 ## Completed
 
