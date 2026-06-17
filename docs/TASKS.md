@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0004` — Require stage artifacts by task status (`proposed`).
+- [ ] `TASK-0004` — Require stage artifacts by task status (`approved`).
 
 ## Next
 
-- [ ] Produce the Planner artifact for `TASK-0004`.
+- [ ] Run Builder implementation for `TASK-0004`.
 
 ## Later
 
