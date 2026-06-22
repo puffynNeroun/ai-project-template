@@ -858,9 +858,11 @@ for (const status of ['proposed', 'blocked', 'approved', 'in_progress']) {
   test(`${status} tasks do not require delivery-ready test or review outcomes`, async () => {
     await withFixture(async (fixtureRoot) => {
       await writeTask(fixtureRoot, 'TASK-0090', status);
-      await writeCompleteArtifactChain(fixtureRoot, 'TASK-0090');
-      await writeValidTestReport(fixtureRoot, 'TASK-0090', 2, 1, 1, 'FAIL');
-      await writeValidReviewReport(fixtureRoot, 'TASK-0090', 2, 1, 1, 1, 'REJECT');
+      await writeValidPlan(fixtureRoot, 'TASK-0090');
+      await writeValidBuildReport(fixtureRoot, 'TASK-0090');
+      await writeValidTestReport(fixtureRoot, 'TASK-0090', 1, 1, 1, 'FAIL');
+      await writeValidTestReport(fixtureRoot, 'TASK-0090', 2, 1, 1, 'PASS');
+      await writeValidReviewReport(fixtureRoot, 'TASK-0090', 1, 1, 1, 2, 'REJECT');
 
       const result = await validateRepository(fixtureRoot);
       assert.deepEqual(result, { ok: true, errors: [] });
@@ -1257,9 +1259,8 @@ test('input artifacts may reference earlier attempts even when later attempts ex
     await writeTask(fixtureRoot, 'TASK-0090', 'proposed');
     await writeValidPlan(fixtureRoot, 'TASK-0090');
     await writeValidBuildReport(fixtureRoot, 'TASK-0090');
+    await writeValidBuildReport(fixtureRoot, 'TASK-0090', 2, 1, 'READY_FOR_TEST');
     await writeValidTestReport(fixtureRoot, 'TASK-0090', 1, 1, 1, 'PASS');
-    await writeValidTestReport(fixtureRoot, 'TASK-0090', 2, 1, 1, 'FAIL');
-    await writeValidReviewReport(fixtureRoot, 'TASK-0090', 1, 1, 1, 1, 'ACCEPT');
 
     const result = await validateRepository(fixtureRoot);
     assert.deepEqual(result, { ok: true, errors: [] });
@@ -1295,6 +1296,285 @@ test('referenced-outcome-chain errors are deterministic for multiple invalid ref
       "Contract error in .forge/artifacts/TASK-0090/review-report-001.md: review_report input artifact .forge/artifacts/TASK-0090/build-report-002.md has outcome 'BLOCKED' but must have outcome 'READY_FOR_TEST' to satisfy referenced outcome-chain validation.",
       "Contract error in .forge/artifacts/TASK-0090/review-report-001.md: review_report input artifact .forge/artifacts/TASK-0090/plan-002.md has outcome 'BLOCKED' but must have outcome 'READY_FOR_APPROVAL' to satisfy referenced outcome-chain validation.",
       "Contract error in .forge/artifacts/TASK-0090/review-report-001.md: review_report input artifact .forge/artifacts/TASK-0090/test-report-001.md has outcome 'FAIL' but must have outcome 'PASS' to satisfy referenced outcome-chain validation.",
+    ]);
+  });
+});
+
+test('a test report attempt 1 passes without a previous test report attempt', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'proposed');
+    await writeValidPlan(fixtureRoot, 'TASK-0090');
+    await writeValidBuildReport(fixtureRoot, 'TASK-0090');
+    await writeValidTestReport(fixtureRoot, 'TASK-0090', 1, 1, 1, 'PASS');
+
+    const result = await validateRepository(fixtureRoot);
+    assert.deepEqual(result, { ok: true, errors: [] });
+  });
+});
+
+test('a review report attempt 1 passes without a previous review report attempt', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'proposed');
+    await writeCompleteArtifactChain(fixtureRoot, 'TASK-0090');
+
+    const result = await validateRepository(fixtureRoot);
+    assert.deepEqual(result, { ok: true, errors: [] });
+  });
+});
+
+test('a test report attempt 2 passes when attempt 1 outcome is FAIL', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'proposed');
+    await writeValidPlan(fixtureRoot, 'TASK-0090');
+    await writeValidBuildReport(fixtureRoot, 'TASK-0090');
+    await writeValidTestReport(fixtureRoot, 'TASK-0090', 1, 1, 1, 'FAIL');
+    await writeValidTestReport(fixtureRoot, 'TASK-0090', 2, 1, 1, 'PASS');
+
+    const result = await validateRepository(fixtureRoot);
+    assert.deepEqual(result, { ok: true, errors: [] });
+  });
+});
+
+test('a test report attempt 2 fails when attempt 1 outcome is PASS', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'proposed');
+    await writeValidPlan(fixtureRoot, 'TASK-0090');
+    await writeValidBuildReport(fixtureRoot, 'TASK-0090');
+    await writeValidTestReport(fixtureRoot, 'TASK-0090', 1, 1, 1, 'PASS');
+    await writeValidTestReport(fixtureRoot, 'TASK-0090', 2, 1, 1, 'FAIL');
+
+    await assertInvalid(
+      fixtureRoot,
+      /test_report attempt 2 requires previous test_report attempt 1 at \.forge\/artifacts\/TASK-0090\/test-report-001\.md to have outcome 'FAIL' for retry-chain validation, but found outcome 'PASS'/,
+    );
+  });
+});
+
+test('a review report attempt 2 passes when attempt 1 outcome is REJECT', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'proposed');
+    await writeCompleteArtifactChain(fixtureRoot, 'TASK-0090', { reviewOutcome: 'REJECT' });
+    await writeValidReviewReport(fixtureRoot, 'TASK-0090', 2, 1, 1, 1, 'ACCEPT');
+
+    const result = await validateRepository(fixtureRoot);
+    assert.deepEqual(result, { ok: true, errors: [] });
+  });
+});
+
+test('a review report attempt 2 fails when attempt 1 outcome is ACCEPT', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'proposed');
+    await writeCompleteArtifactChain(fixtureRoot, 'TASK-0090', { reviewOutcome: 'ACCEPT' });
+    await writeValidReviewReport(fixtureRoot, 'TASK-0090', 2, 1, 1, 1, 'REJECT');
+
+    await assertInvalid(
+      fixtureRoot,
+      /review_report attempt 2 requires previous review_report attempt 1 at \.forge\/artifacts\/TASK-0090\/review-report-001\.md to have outcome 'REJECT' for retry-chain validation, but found outcome 'ACCEPT'/,
+    );
+  });
+});
+
+test('a test report attempt 3 requires attempt 2, not just attempt 1', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'proposed');
+    await writeValidPlan(fixtureRoot, 'TASK-0090');
+    await writeValidBuildReport(fixtureRoot, 'TASK-0090');
+    await writeValidTestReport(fixtureRoot, 'TASK-0090', 1, 1, 1, 'FAIL');
+    await writeValidTestReport(fixtureRoot, 'TASK-0090', 3, 1, 1, 'PASS');
+
+    await assertInvalid(
+      fixtureRoot,
+      /test_report attempt 3 requires previous test_report attempt 2 at \.forge\/artifacts\/TASK-0090\/test-report-002\.md with outcome 'FAIL' for retry-chain validation/,
+    );
+  });
+});
+
+test('a review report attempt 3 requires attempt 2, not just attempt 1', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'proposed');
+    await writeCompleteArtifactChain(fixtureRoot, 'TASK-0090', { reviewOutcome: 'REJECT' });
+    await writeValidReviewReport(fixtureRoot, 'TASK-0090', 3, 1, 1, 1, 'ACCEPT');
+
+    await assertInvalid(
+      fixtureRoot,
+      /review_report attempt 3 requires previous review_report attempt 2 at \.forge\/artifacts\/TASK-0090\/review-report-002\.md with outcome 'REJECT' for retry-chain validation/,
+    );
+  });
+});
+
+test('a test report attempt 3 passes when attempt 2 outcome is FAIL', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'proposed');
+    await writeValidPlan(fixtureRoot, 'TASK-0090');
+    await writeValidBuildReport(fixtureRoot, 'TASK-0090');
+    await writeValidTestReport(fixtureRoot, 'TASK-0090', 1, 1, 1, 'FAIL');
+    await writeValidTestReport(fixtureRoot, 'TASK-0090', 2, 1, 1, 'FAIL');
+    await writeValidTestReport(fixtureRoot, 'TASK-0090', 3, 1, 1, 'PASS');
+
+    const result = await validateRepository(fixtureRoot);
+    assert.deepEqual(result, { ok: true, errors: [] });
+  });
+});
+
+test('a review report attempt 3 passes when attempt 2 outcome is REJECT', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'proposed');
+    await writeCompleteArtifactChain(fixtureRoot, 'TASK-0090', { reviewOutcome: 'REJECT' });
+    await writeValidReviewReport(fixtureRoot, 'TASK-0090', 2, 1, 1, 1, 'REJECT');
+    await writeValidReviewReport(fixtureRoot, 'TASK-0090', 3, 1, 1, 1, 'ACCEPT');
+
+    const result = await validateRepository(fixtureRoot);
+    assert.deepEqual(result, { ok: true, errors: [] });
+  });
+});
+
+test('a missing previous test report attempt fails retry-chain validation', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'proposed');
+    await writeValidPlan(fixtureRoot, 'TASK-0090');
+    await writeValidBuildReport(fixtureRoot, 'TASK-0090');
+    await writeValidTestReport(fixtureRoot, 'TASK-0090', 2, 1, 1, 'PASS');
+
+    await assertInvalid(
+      fixtureRoot,
+      /test_report attempt 2 requires previous test_report attempt 1 at \.forge\/artifacts\/TASK-0090\/test-report-001\.md with outcome 'FAIL' for retry-chain validation/,
+    );
+  });
+});
+
+test('a missing previous review report attempt fails retry-chain validation', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'proposed');
+    await writeCompleteArtifactChain(fixtureRoot, 'TASK-0090');
+    await removeFixturePath(fixtureRoot, artifactPath('TASK-0090', 'review-report', 1));
+    await writeValidReviewReport(fixtureRoot, 'TASK-0090', 2, 1, 1, 1, 'ACCEPT');
+
+    await assertInvalid(
+      fixtureRoot,
+      /review_report attempt 2 requires previous review_report attempt 1 at \.forge\/artifacts\/TASK-0090\/review-report-001\.md with outcome 'REJECT' for retry-chain validation/,
+    );
+  });
+});
+
+test('a structurally invalid previous test report avoids secondary retry-chain errors', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'proposed');
+    await writeValidPlan(fixtureRoot, 'TASK-0090');
+    await writeValidBuildReport(fixtureRoot, 'TASK-0090');
+    await writeFixtureFile(fixtureRoot, artifactPath('TASK-0090', 'test-report', 1), 'not front matter');
+    await writeValidTestReport(fixtureRoot, 'TASK-0090', 2, 1, 1, 'PASS');
+
+    const result = await validateRepository(fixtureRoot);
+    const errors = result.errors.join('\n');
+
+    assert.equal(result.ok, false);
+    assert.match(errors, /artifact must start with YAML front matter delimiter/);
+    assert.doesNotMatch(errors, /retry-chain validation/);
+  });
+});
+
+test('a structurally invalid previous review report avoids secondary retry-chain errors', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'proposed');
+    await writeCompleteArtifactChain(fixtureRoot, 'TASK-0090');
+    await writeFixtureFile(fixtureRoot, artifactPath('TASK-0090', 'review-report', 1), 'not front matter');
+    await writeValidReviewReport(fixtureRoot, 'TASK-0090', 2, 1, 1, 1, 'ACCEPT');
+
+    const result = await validateRepository(fixtureRoot);
+    const errors = result.errors.join('\n');
+
+    assert.equal(result.ok, false);
+    assert.match(errors, /artifact must start with YAML front matter delimiter/);
+    assert.doesNotMatch(errors, /retry-chain validation/);
+  });
+});
+
+test('a structurally invalid current retry artifact avoids retry-chain errors', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'proposed');
+    await writeValidPlan(fixtureRoot, 'TASK-0090');
+    await writeValidBuildReport(fixtureRoot, 'TASK-0090');
+    await writeValidTestReport(fixtureRoot, 'TASK-0090', 1, 1, 1, 'PASS');
+    await writeFixtureFile(fixtureRoot, artifactPath('TASK-0090', 'test-report', 2), 'not front matter');
+
+    const result = await validateRepository(fixtureRoot);
+    const errors = result.errors.join('\n');
+
+    assert.equal(result.ok, false);
+    assert.match(errors, /artifact must start with YAML front matter delimiter/);
+    assert.doesNotMatch(errors, /retry-chain validation/);
+  });
+});
+
+test('invalid task contracts do not produce secondary retry-chain errors', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(
+      fixtureRoot,
+      'TASK-0099',
+      'proposed',
+      (content) => content.replace('required_checks: []', 'required_checks:\n  - missing_check'),
+    );
+    await writeValidPlan(fixtureRoot, 'TASK-0099');
+    await writeValidBuildReport(fixtureRoot, 'TASK-0099');
+    await writeValidTestReport(fixtureRoot, 'TASK-0099', 1, 1, 1, 'PASS');
+    await writeValidTestReport(fixtureRoot, 'TASK-0099', 2, 1, 1, 'FAIL');
+
+    const result = await validateRepository(fixtureRoot);
+    const errors = result.errors.join('\n');
+
+    assert.equal(result.ok, false);
+    assert.match(errors, /required_checks\[0\] references unknown project command key 'missing_check'/);
+    assert.doesNotMatch(errors, /retry-chain validation/);
+  });
+});
+
+test('plan attempt 2 is not checked by retry-chain validation', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'proposed');
+    await writeValidPlan(fixtureRoot, 'TASK-0090', 1, 'READY_FOR_APPROVAL');
+    await writeValidPlan(fixtureRoot, 'TASK-0090', 2, 'READY_FOR_APPROVAL');
+
+    const result = await validateRepository(fixtureRoot);
+    assert.deepEqual(result, { ok: true, errors: [] });
+  });
+});
+
+test('build report attempt 2 is not checked by retry-chain validation', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'proposed');
+    await writeValidPlan(fixtureRoot, 'TASK-0090');
+    await writeValidBuildReport(fixtureRoot, 'TASK-0090', 1, 1, 'READY_FOR_TEST');
+    await writeValidBuildReport(fixtureRoot, 'TASK-0090', 2, 1, 'READY_FOR_TEST');
+
+    const result = await validateRepository(fixtureRoot);
+    assert.deepEqual(result, { ok: true, errors: [] });
+  });
+});
+
+test('legacy TASK-0004 test report retry artifact remains compatible', async () => {
+  await withFixture(async (fixtureRoot) => {
+    const result = await validateRepository(fixtureRoot);
+    assert.deepEqual(result, { ok: true, errors: [] });
+  });
+});
+
+test('retry-chain errors are deterministic for multiple invalid retries', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'proposed');
+    await writeValidPlan(fixtureRoot, 'TASK-0090');
+    await writeValidBuildReport(fixtureRoot, 'TASK-0090');
+    await writeValidTestReport(fixtureRoot, 'TASK-0090', 1, 1, 1, 'PASS');
+    await writeValidTestReport(fixtureRoot, 'TASK-0090', 2, 1, 1, 'PASS');
+    await writeValidReviewReport(fixtureRoot, 'TASK-0090', 1, 1, 1, 1, 'ACCEPT');
+    await writeValidReviewReport(fixtureRoot, 'TASK-0090', 2, 1, 1, 1, 'ACCEPT');
+
+    const result = await validateRepository(fixtureRoot);
+    const retryErrors = result.errors.filter((error) => error.includes('retry-chain validation'));
+
+    assert.equal(result.ok, false);
+    assert.deepEqual(retryErrors, [
+      "Contract error in .forge/artifacts/TASK-0090/review-report-002.md: review_report attempt 2 requires previous review_report attempt 1 at .forge/artifacts/TASK-0090/review-report-001.md to have outcome 'REJECT' for retry-chain validation, but found outcome 'ACCEPT'.",
+      "Contract error in .forge/artifacts/TASK-0090/test-report-002.md: test_report attempt 2 requires previous test_report attempt 1 at .forge/artifacts/TASK-0090/test-report-001.md to have outcome 'FAIL' for retry-chain validation, but found outcome 'PASS'.",
     ]);
   });
 });

@@ -150,6 +150,20 @@ const requiredReferencedArtifactOutcomesByType = {
   },
 };
 
+const requiredPreviousRetryOutcomesByArtifactType = {
+  test_report: 'FAIL',
+  review_report: 'REJECT',
+};
+
+const retryArtifactSlugsByType = {
+  test_report: 'test-report',
+  review_report: 'review-report',
+};
+
+const legacyRetryChainExemptArtifactPaths = new Set([
+  '.forge/artifacts/TASK-0004/test-report-002.md',
+]);
+
 const remoteStageIds = [
   'push',
   'pr',
@@ -1017,6 +1031,46 @@ function validateReferencedArtifactOutcomeChains(tasksById, artifactsByPath, err
   }
 }
 
+function retryArtifactPath(taskId, artifactType, attempt) {
+  const slug = retryArtifactSlugsByType[artifactType];
+  return `${artifactRoot}/${taskId}/${slug}-${String(attempt).padStart(3, '0')}.md`;
+}
+
+function validateArtifactRetryChains(tasksById, artifactsByPath, errors) {
+  const artifacts = [...artifactsByPath.values()].sort((left, right) => left.path.localeCompare(right.path));
+
+  for (const artifact of artifacts) {
+    if (
+      !artifact.structurallyValid
+      || !tasksById.has(artifact.taskId)
+      || legacyRetryChainExemptArtifactPaths.has(artifact.path)
+    ) {
+      continue;
+    }
+
+    const expectedPreviousOutcome = requiredPreviousRetryOutcomesByArtifactType[artifact.artifactType];
+    if (!expectedPreviousOutcome || artifact.attempt === 1) {
+      continue;
+    }
+
+    const previousAttempt = artifact.attempt - 1;
+    const previousArtifactPath = retryArtifactPath(artifact.taskId, artifact.artifactType, previousAttempt);
+    const previousArtifact = artifactsByPath.get(previousArtifactPath);
+    if (!previousArtifact) {
+      errors.push(`Contract error in ${artifact.path}: ${artifact.artifactType} attempt ${artifact.attempt} requires previous ${artifact.artifactType} attempt ${previousAttempt} at ${previousArtifactPath} with outcome '${expectedPreviousOutcome}' for retry-chain validation.`);
+      continue;
+    }
+
+    if (!previousArtifact.structurallyValid) {
+      continue;
+    }
+
+    if (previousArtifact.outcome !== expectedPreviousOutcome) {
+      errors.push(`Contract error in ${artifact.path}: ${artifact.artifactType} attempt ${artifact.attempt} requires previous ${artifact.artifactType} attempt ${previousAttempt} at ${previousArtifact.path} to have outcome '${expectedPreviousOutcome}' for retry-chain validation, but found outcome '${previousArtifact.outcome}'.`);
+    }
+  }
+}
+
 function validateArtifactPresenceByTaskStatus(tasksById, latestArtifactsByTaskIdAndType, errors) {
   const tasks = [...tasksById.values()].sort((left, right) => left.id.localeCompare(right.id));
 
@@ -1075,6 +1129,7 @@ export async function validateRepository(repositoryRoot = defaultRepositoryRoot)
   const { taskFiles, tasksById } = await validateTasks(resolvedRoot, workflow, project, errors);
   const { artifactsByPath, latestArtifactsByTaskIdAndType } = await validateArtifacts(resolvedRoot, taskFiles, errors);
   validateReferencedArtifactOutcomeChains(tasksById, artifactsByPath, errors);
+  validateArtifactRetryChains(tasksById, artifactsByPath, errors);
   validateArtifactPresenceByTaskStatus(tasksById, latestArtifactsByTaskIdAndType, errors);
   validateDeliveryArtifactOutcomes(tasksById, latestArtifactsByTaskIdAndType, errors);
 

@@ -109,6 +109,21 @@ The Forge Validator checks the outcomes of referenced input artifacts with this 
 
 Referenced outcome-chain checks run only when both the referencing artifact and referenced artifact are structurally valid. Missing referenced artifacts and structurally invalid referenced artifacts are reported by input and structural validation without secondary referenced-outcome errors.
 
+## Retry Chains
+
+Retry-chain validation applies only to repeated `test_report` and `review_report` attempts.
+
+- `test_report` attempt `1` is valid without a previous `test_report`.
+- `review_report` attempt `1` is valid without a previous `review_report`.
+- `test_report` attempt `N` greater than `1` requires same-task `test_report` attempt `N-1` to exist and have outcome `FAIL`.
+- `review_report` attempt `N` greater than `1` requires same-task `review_report` attempt `N-1` to exist and have outcome `REJECT`.
+
+The validator does not apply retry-chain validation to `plan` or `build_report` artifacts. Retry chains are based on same-task, same-type numeric attempts, not Git history. Input artifact references are still exact paths and are not required to reference latest attempts.
+
+Retry-chain checks run only when the current retry artifact is structurally valid, belongs to a valid task contract, and its required previous same-type attempt exists and is structurally valid. Missing or malformed artifacts are reported by structural and input validation without extra retry-chain cascade errors.
+
+The historical `.forge/artifacts/TASK-0004/test-report-002.md` artifact predates retry-chain enforcement and remains immutable. It is narrowly exempt from retry-chain validation rather than being rewritten.
+
 ## Source Boundaries
 
 - Task YAML is the source of task status, goal, scope, file boundaries, acceptance criteria, and required checks.
@@ -161,4 +176,4 @@ Presence validation runs only for active task contracts that pass task-contract 
 
 ## Deferred Enforcement
 
-This contract does not add exact-attempt requirements, retry-chain validation, append-only Git-history enforcement, human approval artifacts, delivery evidence artifacts, runtime orchestration, automatic status transitions, GitHub automation, a database, an event stream, or a web interface.
+This contract does not add exact-attempt requirements beyond the narrow test/review retry-chain rules above, append-only Git-history enforcement, human approval artifacts, delivery evidence artifacts, runtime orchestration, automatic status transitions, GitHub automation, a database, an event stream, or a web interface.
