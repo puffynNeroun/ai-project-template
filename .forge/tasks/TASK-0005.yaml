@@ -1,0 +1,128 @@
+schema_version: 1
+
+id: TASK-0005
+title: Select latest artifact attempt for presence validation
+status: proposed
+workflow: .forge/workflows/feature.yaml
+
+goal: Make Forge Validator use the highest-numbered existing artifact attempt for each task and artifact type when evaluating status-aware artifact presence, while continuing to structurally validate every live artifact and without adding retry-chain, outcome-chain, approval, or orchestration semantics.
+
+in_scope:
+  - Select the latest existing artifact attempt by highest numeric attempt for each task_id and artifact_type pair when evaluating status-aware artifact presence.
+  - Treat attempt numbers as numeric values derived from live artifact filenames and checked against artifact front matter when structurally valid.
+  - Allow gaps in attempts, so attempt 003 is latest when attempts 001 and 003 exist.
+  - Continue structurally validating every discovered live artifact, including non-latest attempts.
+  - Require the latest existing attempt for a required artifact type to be structurally valid before it can satisfy status-aware presence.
+  - Ensure an earlier valid attempt does not satisfy presence when a later existing attempt for the same task and artifact type is structurally invalid.
+  - Ensure an earlier malformed attempt still reports its structural error while a later structurally valid attempt can satisfy presence.
+  - Preserve TASK-0004 status-aware presence requirements for proposed, blocked, approved, in_progress, ready_for_pr, and completed tasks.
+  - Preserve the explicit completed-task legacy exemption for TASK-0001 and TASK-0002 only.
+  - Preserve invalid-task behavior so invalid task contracts do not produce secondary missing-artifact presence errors.
+  - Keep artifact outcomes independent from presence decisions.
+  - Add focused Validator tests for latest-attempt selection, malformed latest attempts, malformed earlier attempts, attempt gaps, legacy compatibility, and invalid-task cascade prevention.
+  - Update Validator and Forge artifact documentation to describe latest-attempt presence semantics and still-deferred lifecycle semantics.
+  - Update docs/TASKS.md to track TASK-0005.
+
+out_of_scope:
+  - Validate retry chains.
+  - Validate referenced artifact outcome chains.
+  - Require test reports to have PASS outcomes.
+  - Require review reports to have ACCEPT outcomes.
+  - Require exact artifact attempts for a task status.
+  - Validate human approval evidence.
+  - Enforce append-only artifact history through Git history.
+  - Validate Markdown artifact bodies.
+  - Automatically transition task status.
+  - Execute agent roles.
+  - Add orchestration.
+  - Perform GitHub mutation.
+  - Add new dependencies or modify package metadata or the lockfile.
+  - Broadly refactor Validator architecture beyond what is needed for latest-attempt selection.
+  - Add a migration framework, configuration system, schema-version migration, or new task-contract key.
+  - Modify existing tasks, existing artifacts, workflow contracts, role contracts, templates, root project documentation, or GitHub workflow files.
+  - Commit, push, create a pull request, merge, release, deploy, publish, or perform other remote mutation.
+
+allowed_files:
+  - .forge/tasks/TASK-0005.yaml
+  - tools/forge-validator/src/validate.mjs
+  - tools/forge-validator/test/validate.test.mjs
+  - tools/forge-validator/README.md
+  - .forge/artifacts/README.md
+  - .forge/README.md
+  - docs/TASKS.md
+
+protected_files:
+  - .forge/project.yaml
+  - .forge/workflows/feature.yaml
+  - .forge/tasks/task.template.yaml
+  - .forge/tasks/README.md
+  - .forge/tasks/TASK-0001.yaml
+  - .forge/tasks/TASK-0002.yaml
+  - .forge/tasks/TASK-0003.yaml
+  - .forge/tasks/TASK-0004.yaml
+  - .forge/roles/planner.md
+  - .forge/roles/builder.md
+  - .forge/roles/tester.md
+  - .forge/roles/reviewer.md
+  - .forge/artifacts/templates/plan.md
+  - .forge/artifacts/templates/build-report.md
+  - .forge/artifacts/templates/test-report.md
+  - .forge/artifacts/templates/review-report.md
+  - .forge/artifacts/TASK-0003/plan-001.md
+  - .forge/artifacts/TASK-0003/plan-002.md
+  - .forge/artifacts/TASK-0003/build-report-001.md
+  - .forge/artifacts/TASK-0003/test-report-001.md
+  - .forge/artifacts/TASK-0003/review-report-001.md
+  - .forge/artifacts/TASK-0004/plan-001.md
+  - .forge/artifacts/TASK-0004/plan-002.md
+  - .forge/artifacts/TASK-0004/build-report-001.md
+  - .forge/artifacts/TASK-0004/build-report-002.md
+  - .forge/artifacts/TASK-0004/test-report-001.md
+  - .forge/artifacts/TASK-0004/test-report-002.md
+  - .forge/artifacts/TASK-0004/test-report-003.md
+  - .forge/artifacts/TASK-0004/test-report-004.md
+  - .forge/artifacts/TASK-0004/review-report-001.md
+  - .forge/artifacts/TASK-0004/review-report-002.md
+  - .github/workflows/forge-contracts.yml
+  - tools/forge-validator/package.json
+  - tools/forge-validator/pnpm-lock.yaml
+  - AGENTS.md
+  - README.md
+  - docs/PRODUCT_SPEC.md
+  - docs/AI_WORKFLOW.md
+  - docs/DECISIONS.md
+
+acceptance_criteria:
+  - id: AC-1
+    description: Forge Validator continues structurally validating every discovered live artifact, including non-latest attempts.
+  - id: AC-2
+    description: For each task_id and artifact_type pair, Forge Validator selects the highest numeric existing attempt as the latest attempt for status-aware presence validation.
+  - id: AC-3
+    description: Attempt gaps are allowed, so attempt 003 is selected as latest when attempts 001 and 003 exist.
+  - id: AC-4
+    description: A latest structurally valid attempt satisfies the required artifact type for status-aware presence even if an earlier attempt for the same type is malformed, while the earlier malformed attempt still reports its structural error.
+  - id: AC-5
+    description: An earlier structurally valid attempt does not satisfy status-aware presence when a later existing attempt for the same task and artifact type is structurally invalid.
+  - id: AC-6
+    description: Missing-artifact and invalid-latest-attempt errors identify the task id, task status, artifact type, and relevant latest attempt when applicable.
+  - id: AC-7
+    description: TASK-0004 status-aware requirements for proposed, blocked, approved, in_progress, ready_for_pr, and completed tasks remain intact.
+  - id: AC-8
+    description: The explicit completed-task legacy exemption remains limited to TASK-0001 and TASK-0002 and does not apply to TASK-0003 or later tasks.
+  - id: AC-9
+    description: Invalid task contracts do not enter presence validation and do not produce secondary missing-artifact or invalid-latest-attempt errors.
+  - id: AC-10
+    description: Artifact outcomes do not affect latest-attempt selection or presence satisfaction.
+  - id: AC-11
+    description: Validation does not introduce retry-chain, outcome-chain, approval, append-only Git, orchestration, or automatic-transition semantics.
+  - id: AC-12
+    description: Tests cover latest valid attempts, malformed latest attempts, malformed earlier attempts, attempt gaps, status-aware presence preservation, legacy compatibility, invalid-task cascade prevention, and existing structural validation behavior.
+  - id: AC-13
+    description: Documentation explains latest-attempt presence semantics, malformed latest behavior, attempt gaps, legacy compatibility, and still-deferred lifecycle semantics.
+  - id: AC-14
+    description: Forge Validator remains read-only, verification passes, and no file outside the approved scope is modified.
+  - id: AC-15
+    description: docs/TASKS.md tracks TASK-0005 as the current proposed task and shows the same lifecycle status as .forge/tasks/TASK-0005.yaml.
+
+required_checks:
+  - verify
