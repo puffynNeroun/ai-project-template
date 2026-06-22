@@ -94,6 +94,21 @@ Input rules:
 - `test_report`: references the plan and exact build report being tested.
 - `review_report`: references the plan, build report, and passing test report being reviewed.
 
+Input references are exact artifact paths. They are not required to reference the latest attempt, and the validator does not infer replacement or retry chains from later attempts.
+
+The Forge Validator checks the outcomes of referenced input artifacts with this matrix:
+
+| Referencing artifact type | Referenced artifact type | Required referenced outcome |
+| --- | --- | --- |
+| `build_report` | `plan` | `READY_FOR_APPROVAL` |
+| `test_report` | `plan` | `READY_FOR_APPROVAL` |
+| `test_report` | `build_report` | `READY_FOR_TEST` |
+| `review_report` | `plan` | `READY_FOR_APPROVAL` |
+| `review_report` | `build_report` | `READY_FOR_TEST` |
+| `review_report` | `test_report` | `PASS` |
+
+Referenced outcome-chain checks run only when both the referencing artifact and referenced artifact are structurally valid. Missing referenced artifacts and structurally invalid referenced artifacts are reported by input and structural validation without secondary referenced-outcome errors.
+
 ## Source Boundaries
 
 - Task YAML is the source of task status, goal, scope, file boundaries, acceptance criteria, and required checks.
@@ -146,4 +161,4 @@ Presence validation runs only for active task contracts that pass task-contract 
 
 ## Deferred Enforcement
 
-This contract does not add exact-attempt requirements, retry-chain validation, referenced outcome-chain validation, append-only Git-history enforcement, human approval artifacts, delivery evidence artifacts, runtime orchestration, automatic status transitions, GitHub automation, a database, an event stream, or a web interface.
+This contract does not add exact-attempt requirements, retry-chain validation, append-only Git-history enforcement, human approval artifacts, delivery evidence artifacts, runtime orchestration, automatic status transitions, GitHub automation, a database, an event stream, or a web interface.

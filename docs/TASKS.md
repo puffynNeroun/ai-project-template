@@ -2,15 +2,15 @@
 
 ## Now
 
-- [ ] No active task.
+- [ ] `TASK-0007` — Validate referenced artifact outcome chains (`ready_for_pr`).
 
 ## Next
 
-- [ ] Evaluate retry-chain and referenced outcome-chain artifact validation after delivery-ready outcome gates are proven.
+- [ ] Open implementation PR for `TASK-0007`.
 
 ## Later
 
-- [ ] No deferred task.
+- [ ] Evaluate retry-chain validation after referenced outcome-chain validation is proven.
 
 ## Completed
 

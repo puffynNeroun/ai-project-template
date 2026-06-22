@@ -858,10 +858,9 @@ for (const status of ['proposed', 'blocked', 'approved', 'in_progress']) {
   test(`${status} tasks do not require delivery-ready test or review outcomes`, async () => {
     await withFixture(async (fixtureRoot) => {
       await writeTask(fixtureRoot, 'TASK-0090', status);
-      await writeCompleteArtifactChain(fixtureRoot, 'TASK-0090', {
-        testOutcome: 'FAIL',
-        reviewOutcome: 'REJECT',
-      });
+      await writeCompleteArtifactChain(fixtureRoot, 'TASK-0090');
+      await writeValidTestReport(fixtureRoot, 'TASK-0090', 2, 1, 1, 'FAIL');
+      await writeValidReviewReport(fixtureRoot, 'TASK-0090', 2, 1, 1, 1, 'REJECT');
 
       const result = await validateRepository(fixtureRoot);
       assert.deepEqual(result, { ok: true, errors: [] });
@@ -872,10 +871,12 @@ for (const status of ['proposed', 'blocked', 'approved', 'in_progress']) {
 test('plan and build report outcomes do not drive delivery-ready outcome validation', async () => {
   await withFixture(async (fixtureRoot) => {
     await writeTask(fixtureRoot, 'TASK-0090', 'ready_for_pr');
-    await writeValidPlan(fixtureRoot, 'TASK-0090', 1, 'BLOCKED');
-    await writeValidBuildReport(fixtureRoot, 'TASK-0090', 1, 1, 'BLOCKED');
+    await writeValidPlan(fixtureRoot, 'TASK-0090', 1, 'READY_FOR_APPROVAL');
+    await writeValidBuildReport(fixtureRoot, 'TASK-0090', 1, 1, 'READY_FOR_TEST');
     await writeValidTestReport(fixtureRoot, 'TASK-0090', 1, 1, 1, 'PASS');
     await writeValidReviewReport(fixtureRoot, 'TASK-0090', 1, 1, 1, 1, 'ACCEPT');
+    await writeValidPlan(fixtureRoot, 'TASK-0090', 2, 'BLOCKED');
+    await writeValidBuildReport(fixtureRoot, 'TASK-0090', 2, 1, 'BLOCKED');
 
     const result = await validateRepository(fixtureRoot);
     assert.deepEqual(result, { ok: true, errors: [] });
@@ -1024,6 +1025,277 @@ test('invalid task contracts do not produce secondary invalid-outcome errors', a
     assert.match(errors, /required_checks\[0\] references unknown project command key 'missing_check'/);
     assert.doesNotMatch(errors, /has outcome 'FAIL' but must have outcome 'PASS'/);
     assert.doesNotMatch(errors, /has outcome 'REJECT' but must have outcome 'ACCEPT'/);
+  });
+});
+
+test('a build report may reference a ready-for-approval plan', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'proposed');
+    await writeValidPlan(fixtureRoot, 'TASK-0090');
+    await writeValidBuildReport(fixtureRoot, 'TASK-0090');
+
+    const result = await validateRepository(fixtureRoot);
+    assert.deepEqual(result, { ok: true, errors: [] });
+  });
+});
+
+test('a build report rejects a blocked referenced plan', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'proposed');
+    await writeValidPlan(fixtureRoot, 'TASK-0090', 1, 'BLOCKED');
+    await writeValidBuildReport(fixtureRoot, 'TASK-0090');
+
+    await assertInvalid(
+      fixtureRoot,
+      /build_report input artifact \.forge\/artifacts\/TASK-0090\/plan-001\.md has outcome 'BLOCKED' but must have outcome 'READY_FOR_APPROVAL' to satisfy referenced outcome-chain validation/,
+    );
+  });
+});
+
+test('a test report may reference ready plan and build report artifacts', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'proposed');
+    await writeValidPlan(fixtureRoot, 'TASK-0090');
+    await writeValidBuildReport(fixtureRoot, 'TASK-0090');
+    await writeValidTestReport(fixtureRoot, 'TASK-0090');
+
+    const result = await validateRepository(fixtureRoot);
+    assert.deepEqual(result, { ok: true, errors: [] });
+  });
+});
+
+test('a test report rejects a blocked referenced build report', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'proposed');
+    await writeValidPlan(fixtureRoot, 'TASK-0090');
+    await writeValidBuildReport(fixtureRoot, 'TASK-0090', 1, 1, 'BLOCKED');
+    await writeValidTestReport(fixtureRoot, 'TASK-0090');
+
+    await assertInvalid(
+      fixtureRoot,
+      /test_report input artifact \.forge\/artifacts\/TASK-0090\/build-report-001\.md has outcome 'BLOCKED' but must have outcome 'READY_FOR_TEST' to satisfy referenced outcome-chain validation/,
+    );
+  });
+});
+
+test('a test report rejects a blocked referenced plan', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'proposed');
+    await writeValidPlan(fixtureRoot, 'TASK-0090', 1, 'READY_FOR_APPROVAL');
+    await writeValidPlan(fixtureRoot, 'TASK-0090', 2, 'BLOCKED');
+    await writeValidBuildReport(fixtureRoot, 'TASK-0090', 1, 1);
+    await writeValidTestReport(fixtureRoot, 'TASK-0090', 1, 2, 1);
+
+    await assertInvalid(
+      fixtureRoot,
+      /test_report input artifact \.forge\/artifacts\/TASK-0090\/plan-002\.md has outcome 'BLOCKED' but must have outcome 'READY_FOR_APPROVAL' to satisfy referenced outcome-chain validation/,
+    );
+  });
+});
+
+test('a review report may reference ready plan, ready build, and passing test artifacts', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'proposed');
+    await writeCompleteArtifactChain(fixtureRoot, 'TASK-0090');
+
+    const result = await validateRepository(fixtureRoot);
+    assert.deepEqual(result, { ok: true, errors: [] });
+  });
+});
+
+test('a review report rejects a failed referenced test report', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'proposed');
+    await writeValidPlan(fixtureRoot, 'TASK-0090');
+    await writeValidBuildReport(fixtureRoot, 'TASK-0090');
+    await writeValidTestReport(fixtureRoot, 'TASK-0090', 1, 1, 1, 'FAIL');
+    await writeValidReviewReport(fixtureRoot, 'TASK-0090');
+
+    await assertInvalid(
+      fixtureRoot,
+      /review_report input artifact \.forge\/artifacts\/TASK-0090\/test-report-001\.md has outcome 'FAIL' but must have outcome 'PASS' to satisfy referenced outcome-chain validation/,
+    );
+  });
+});
+
+test('a review report rejects a blocked referenced test report', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'proposed');
+    await writeValidPlan(fixtureRoot, 'TASK-0090');
+    await writeValidBuildReport(fixtureRoot, 'TASK-0090');
+    await writeValidTestReport(fixtureRoot, 'TASK-0090', 1, 1, 1, 'BLOCKED');
+    await writeValidReviewReport(fixtureRoot, 'TASK-0090');
+
+    await assertInvalid(
+      fixtureRoot,
+      /review_report input artifact \.forge\/artifacts\/TASK-0090\/test-report-001\.md has outcome 'BLOCKED' but must have outcome 'PASS' to satisfy referenced outcome-chain validation/,
+    );
+  });
+});
+
+test('a review report rejects a blocked referenced build report', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'proposed');
+    await writeValidPlan(fixtureRoot, 'TASK-0090');
+    await writeValidBuildReport(fixtureRoot, 'TASK-0090', 1, 1, 'READY_FOR_TEST');
+    await writeValidBuildReport(fixtureRoot, 'TASK-0090', 2, 1, 'BLOCKED');
+    await writeValidTestReport(fixtureRoot, 'TASK-0090', 1, 1, 1, 'PASS');
+    await writeValidReviewReport(fixtureRoot, 'TASK-0090', 1, 1, 2, 1);
+
+    await assertInvalid(
+      fixtureRoot,
+      /review_report input artifact \.forge\/artifacts\/TASK-0090\/build-report-002\.md has outcome 'BLOCKED' but must have outcome 'READY_FOR_TEST' to satisfy referenced outcome-chain validation/,
+    );
+  });
+});
+
+test('a review report rejects a blocked referenced plan', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'proposed');
+    await writeValidPlan(fixtureRoot, 'TASK-0090', 1, 'READY_FOR_APPROVAL');
+    await writeValidPlan(fixtureRoot, 'TASK-0090', 2, 'BLOCKED');
+    await writeValidBuildReport(fixtureRoot, 'TASK-0090', 1, 1);
+    await writeValidTestReport(fixtureRoot, 'TASK-0090', 1, 1, 1, 'PASS');
+    await writeValidReviewReport(fixtureRoot, 'TASK-0090', 1, 2, 1, 1);
+
+    await assertInvalid(
+      fixtureRoot,
+      /review_report input artifact \.forge\/artifacts\/TASK-0090\/plan-002\.md has outcome 'BLOCKED' but must have outcome 'READY_FOR_APPROVAL' to satisfy referenced outcome-chain validation/,
+    );
+  });
+});
+
+test('missing referenced artifacts do not produce referenced-outcome-chain duplicate errors', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'proposed');
+    await writeArtifact(
+      fixtureRoot,
+      artifactPath('TASK-0090', 'build-report'),
+      buildReportMetadata({
+        task_id: 'TASK-0090',
+        input_artifacts: [artifactPath('TASK-0090', 'plan', 999)],
+      }),
+    );
+
+    const result = await validateRepository(fixtureRoot);
+    const errors = result.errors.join('\n');
+
+    assert.equal(result.ok, false);
+    assert.match(errors, /does not reference an existing discovered live artifact file/);
+    assert.doesNotMatch(errors, /referenced outcome-chain validation/);
+  });
+});
+
+test('structurally invalid referenced artifacts do not produce referenced-outcome-chain duplicate errors', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'proposed');
+    await writeFixtureFile(fixtureRoot, artifactPath('TASK-0090', 'plan'), 'not front matter');
+    await writeValidBuildReport(fixtureRoot, 'TASK-0090');
+
+    const result = await validateRepository(fixtureRoot);
+    const errors = result.errors.join('\n');
+
+    assert.equal(result.ok, false);
+    assert.match(errors, /artifact must start with YAML front matter delimiter/);
+    assert.doesNotMatch(errors, /referenced outcome-chain validation/);
+  });
+});
+
+test('structurally invalid referencing artifacts do not produce referenced-outcome-chain errors', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'proposed');
+    await writeValidPlan(fixtureRoot, 'TASK-0090');
+    await writeValidBuildReport(fixtureRoot, 'TASK-0090');
+    await writeValidTestReport(fixtureRoot, 'TASK-0090', 1, 1, 1, 'FAIL');
+    await writeArtifact(
+      fixtureRoot,
+      artifactPath('TASK-0090', 'review-report'),
+      reviewReportMetadata({
+        task_id: 'TASK-0090',
+        outcome: 'NOT_ALLOWED',
+        input_artifacts: [
+          artifactPath('TASK-0090', 'plan'),
+          artifactPath('TASK-0090', 'build-report'),
+          artifactPath('TASK-0090', 'test-report'),
+        ],
+      }),
+    );
+
+    const result = await validateRepository(fixtureRoot);
+    const errors = result.errors.join('\n');
+
+    assert.equal(result.ok, false);
+    assert.match(errors, /outcome must be one of \[ACCEPT, REJECT, BLOCKED\]/);
+    assert.doesNotMatch(errors, /referenced outcome-chain validation/);
+  });
+});
+
+test('invalid task contracts do not produce secondary referenced-outcome-chain errors', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(
+      fixtureRoot,
+      'TASK-0099',
+      'proposed',
+      (content) => content.replace('required_checks: []', 'required_checks:\n  - missing_check'),
+    );
+    await writeValidPlan(fixtureRoot, 'TASK-0099');
+    await writeValidBuildReport(fixtureRoot, 'TASK-0099');
+    await writeValidTestReport(fixtureRoot, 'TASK-0099', 1, 1, 1, 'FAIL');
+    await writeValidReviewReport(fixtureRoot, 'TASK-0099');
+
+    const result = await validateRepository(fixtureRoot);
+    const errors = result.errors.join('\n');
+
+    assert.equal(result.ok, false);
+    assert.match(errors, /required_checks\[0\] references unknown project command key 'missing_check'/);
+    assert.doesNotMatch(errors, /referenced outcome-chain validation/);
+  });
+});
+
+test('input artifacts may reference earlier attempts even when later attempts exist', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'proposed');
+    await writeValidPlan(fixtureRoot, 'TASK-0090');
+    await writeValidBuildReport(fixtureRoot, 'TASK-0090');
+    await writeValidTestReport(fixtureRoot, 'TASK-0090', 1, 1, 1, 'PASS');
+    await writeValidTestReport(fixtureRoot, 'TASK-0090', 2, 1, 1, 'FAIL');
+    await writeValidReviewReport(fixtureRoot, 'TASK-0090', 1, 1, 1, 1, 'ACCEPT');
+
+    const result = await validateRepository(fixtureRoot);
+    assert.deepEqual(result, { ok: true, errors: [] });
+  });
+});
+
+test('referenced-outcome-chain errors are deterministic for multiple invalid references', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'proposed');
+    await writeValidPlan(fixtureRoot, 'TASK-0090', 1, 'READY_FOR_APPROVAL');
+    await writeValidPlan(fixtureRoot, 'TASK-0090', 2, 'BLOCKED');
+    await writeValidBuildReport(fixtureRoot, 'TASK-0090', 1, 1, 'READY_FOR_TEST');
+    await writeValidBuildReport(fixtureRoot, 'TASK-0090', 2, 1, 'BLOCKED');
+    await writeValidTestReport(fixtureRoot, 'TASK-0090', 1, 1, 1, 'FAIL');
+    await writeArtifact(
+      fixtureRoot,
+      artifactPath('TASK-0090', 'review-report'),
+      reviewReportMetadata({
+        task_id: 'TASK-0090',
+        input_artifacts: [
+          artifactPath('TASK-0090', 'test-report'),
+          artifactPath('TASK-0090', 'plan', 2),
+          artifactPath('TASK-0090', 'build-report', 2),
+        ],
+      }),
+    );
+
+    const result = await validateRepository(fixtureRoot);
+    const referencedOutcomeErrors = result.errors.filter((error) => error.includes('referenced outcome-chain validation'));
+
+    assert.equal(result.ok, false);
+    assert.deepEqual(referencedOutcomeErrors, [
+      "Contract error in .forge/artifacts/TASK-0090/review-report-001.md: review_report input artifact .forge/artifacts/TASK-0090/build-report-002.md has outcome 'BLOCKED' but must have outcome 'READY_FOR_TEST' to satisfy referenced outcome-chain validation.",
+      "Contract error in .forge/artifacts/TASK-0090/review-report-001.md: review_report input artifact .forge/artifacts/TASK-0090/plan-002.md has outcome 'BLOCKED' but must have outcome 'READY_FOR_APPROVAL' to satisfy referenced outcome-chain validation.",
+      "Contract error in .forge/artifacts/TASK-0090/review-report-001.md: review_report input artifact .forge/artifacts/TASK-0090/test-report-001.md has outcome 'FAIL' but must have outcome 'PASS' to satisfy referenced outcome-chain validation.",
+    ]);
   });
 });
 
