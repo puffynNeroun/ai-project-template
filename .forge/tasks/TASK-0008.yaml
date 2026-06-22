@@ -2,7 +2,7 @@ schema_version: 1
 
 id: TASK-0008
 title: Validate artifact retry chains
-status: proposed
+status: approved
 workflow: .forge/workflows/feature.yaml
 
 goal: Make Forge Validator check that repeated test_report and review_report artifact attempts form valid retry chains, while preserving latest-attempt selection, delivery-ready outcome gates, referenced outcome-chain validation, and existing structural artifact validation.

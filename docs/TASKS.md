@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0008` — Validate artifact retry chains (`proposed`).
+- [ ] `TASK-0008` — Validate artifact retry chains (`approved`).
 
 ## Next
 
-- [ ] Run Planner for `TASK-0008`.
+- [ ] Run Builder for `TASK-0008`.
 
 ## Later
 
