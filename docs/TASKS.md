@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0005` — Select latest artifact attempt for presence validation (`approved`).
+- [ ] `TASK-0005` — Select latest artifact attempt for presence validation (`in_progress`).
 
 ## Next
 
-- [ ] Run Builder for `TASK-0005`.
+- [ ] Run Tester for `TASK-0005`.
 
 ## Later
 

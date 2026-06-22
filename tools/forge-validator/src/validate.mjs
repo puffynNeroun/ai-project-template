@@ -894,7 +894,13 @@ async function validateArtifact(repositoryRoot, artifactPath, artifactFileSet, e
 
   const metadata = await parseArtifactFile(repositoryRoot, artifactPath, errors);
   if (!metadata) {
-    return null;
+    return {
+      taskId: pathInfo.taskId,
+      artifactType: parsedFilename.definition.type,
+      attempt: parsedFilename.attempt,
+      path: artifactPath,
+      structurallyValid: false,
+    };
   }
 
   validateArtifactKeySet(metadata, artifactPath, errors);
@@ -909,22 +915,20 @@ async function validateArtifact(repositoryRoot, artifactPath, artifactFileSet, e
     errors,
   );
 
-  if (errors.length === artifactErrorCountBefore) {
-    return {
-      taskId: pathInfo.taskId,
-      artifactType: parsedFilename.definition.type,
-      path: artifactPath,
-    };
-  }
-
-  return null;
+  return {
+    taskId: pathInfo.taskId,
+    artifactType: parsedFilename.definition.type,
+    attempt: parsedFilename.attempt,
+    path: artifactPath,
+    structurallyValid: errors.length === artifactErrorCountBefore,
+  };
 }
 
 async function validateArtifacts(repositoryRoot, taskFiles, errors) {
   const activeTaskFileSet = new Set(taskFiles.filter((taskPath) => taskPath !== taskTemplatePath));
   const artifactFiles = await discoverArtifactFiles(repositoryRoot, activeTaskFileSet, errors);
   const artifactFileSet = new Set(artifactFiles);
-  const validArtifactsByTaskIdAndType = new Map();
+  const latestArtifactsByTaskIdAndType = new Map();
 
   for (const artifactPath of artifactFiles) {
     const artifactSummary = await validateArtifact(repositoryRoot, artifactPath, artifactFileSet, errors);
@@ -932,22 +936,21 @@ async function validateArtifacts(repositoryRoot, taskFiles, errors) {
       continue;
     }
 
-    if (!validArtifactsByTaskIdAndType.has(artifactSummary.taskId)) {
-      validArtifactsByTaskIdAndType.set(artifactSummary.taskId, new Map());
+    if (!latestArtifactsByTaskIdAndType.has(artifactSummary.taskId)) {
+      latestArtifactsByTaskIdAndType.set(artifactSummary.taskId, new Map());
     }
 
-    const validTypes = validArtifactsByTaskIdAndType.get(artifactSummary.taskId);
-    if (!validTypes.has(artifactSummary.artifactType)) {
-      validTypes.set(artifactSummary.artifactType, new Set());
+    const latestTypes = latestArtifactsByTaskIdAndType.get(artifactSummary.taskId);
+    const currentLatest = latestTypes.get(artifactSummary.artifactType);
+    if (!currentLatest || artifactSummary.attempt > currentLatest.attempt) {
+      latestTypes.set(artifactSummary.artifactType, artifactSummary);
     }
-
-    validTypes.get(artifactSummary.artifactType).add(artifactSummary.path);
   }
 
-  return validArtifactsByTaskIdAndType;
+  return latestArtifactsByTaskIdAndType;
 }
 
-function validateArtifactPresenceByTaskStatus(tasksById, validArtifactsByTaskIdAndType, errors) {
+function validateArtifactPresenceByTaskStatus(tasksById, latestArtifactsByTaskIdAndType, errors) {
   const tasks = [...tasksById.values()].sort((left, right) => left.id.localeCompare(right.id));
 
   for (const task of tasks) {
@@ -956,11 +959,14 @@ function validateArtifactPresenceByTaskStatus(tasksById, validArtifactsByTaskIdA
     }
 
     const requiredArtifactTypes = requiredArtifactTypesByStatus[task.status] ?? [];
-    const validArtifactTypes = validArtifactsByTaskIdAndType.get(task.id) ?? new Map();
+    const latestArtifactTypes = latestArtifactsByTaskIdAndType.get(task.id) ?? new Map();
 
     for (const artifactType of requiredArtifactTypes) {
-      if (!validArtifactTypes.get(artifactType)?.size) {
+      const latestArtifact = latestArtifactTypes.get(artifactType);
+      if (!latestArtifact) {
         errors.push(`Contract error in ${task.path}: task ${task.id} has status '${task.status}' and requires at least one structurally valid ${artifactType} artifact.`);
+      } else if (!latestArtifact.structurallyValid) {
+        errors.push(`Contract error in ${task.path}: task ${task.id} has status '${task.status}' and latest ${artifactType} artifact attempt ${latestArtifact.attempt} at ${latestArtifact.path} must be structurally valid to satisfy presence.`);
       }
     }
   }
@@ -973,8 +979,8 @@ export async function validateRepository(repositoryRoot = defaultRepositoryRoot)
   const project = await validateProject(resolvedRoot, errors);
   const workflow = await validateWorkflow(resolvedRoot, errors);
   const { taskFiles, tasksById } = await validateTasks(resolvedRoot, workflow, project, errors);
-  const validArtifactsByTaskIdAndType = await validateArtifacts(resolvedRoot, taskFiles, errors);
-  validateArtifactPresenceByTaskStatus(tasksById, validArtifactsByTaskIdAndType, errors);
+  const latestArtifactsByTaskIdAndType = await validateArtifacts(resolvedRoot, taskFiles, errors);
+  validateArtifactPresenceByTaskStatus(tasksById, latestArtifactsByTaskIdAndType, errors);
 
   return {
     ok: errors.length === 0,
