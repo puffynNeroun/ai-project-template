@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0006` — Require delivery-ready artifact outcomes (`in_progress`).
+- [ ] `TASK-0006` — Require delivery-ready artifact outcomes (`ready_for_pr`).
 
 ## Next
 
-- [ ] Run Tester for `TASK-0006`.
+- [ ] Push the branch and open a pull request for `TASK-0006`.
 
 ## Later
 
