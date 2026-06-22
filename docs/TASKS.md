@@ -2,15 +2,15 @@
 
 ## Now
 
-- No active task.
+- [ ] `TASK-0008` — Validate artifact retry chains (`proposed`).
 
 ## Next
 
-- [ ] Define next task.
+- [ ] Run Planner for `TASK-0008`.
 
 ## Later
 
-- [ ] Evaluate retry-chain validation after referenced outcome-chain validation is proven.
+- [ ] Decide whether retry-chain validation should later expand to plan/build artifacts.
 
 ## Completed
 
