@@ -1,0 +1,151 @@
+schema_version: 1
+
+id: TASK-0007
+title: Validate referenced artifact outcome chains
+status: proposed
+workflow: .forge/workflows/feature.yaml
+
+goal: Make Forge Validator check that artifact input chains are not only structurally valid by artifact type, but also semantically valid by referenced artifact outcome, while avoiding retry-chain semantics and automatic transition semantics.
+
+in_scope:
+  - Add a task contract for future referenced artifact outcome-chain validation.
+  - Require the future implementation to validate outcome compatibility for artifacts referenced through input_artifacts.
+  - Treat referenced outcome-chain validation as separate from TASK-0006 latest delivery-ready outcome gates.
+  - Require review_report artifacts to reject input chains that reference a test_report whose outcome is not PASS.
+  - Require test_report artifacts to reject input chains that reference a build_report whose outcome is not READY_FOR_TEST.
+  - Require build_report artifacts to reject input chains that reference a plan whose outcome is not READY_FOR_APPROVAL.
+  - Require test_report artifacts to reject input chains that reference a plan whose outcome is not READY_FOR_APPROVAL.
+  - Require review_report artifacts to reject input chains that reference a plan whose outcome is not READY_FOR_APPROVAL.
+  - Require review_report artifacts to reject input chains that reference a build_report whose outcome is not READY_FOR_TEST.
+  - Keep the referenced outcome compatibility matrix explicit in acceptance criteria.
+  - Preserve structural validation of every discovered live artifact, including non-latest attempts.
+  - Preserve TASK-0005 latest-attempt selection semantics for status-aware presence and TASK-0006 delivery-ready latest outcome gates.
+  - Preserve the explicit completed-task legacy exemption for TASK-0001 and TASK-0002 only.
+  - Preserve TASK-0006 delivery-ready latest outcome gates for ready_for_pr and non-legacy completed tasks.
+  - Preserve invalid-task behavior so invalid task contracts do not produce secondary referenced-outcome-chain errors.
+  - Avoid secondary referenced-outcome-chain errors when a referenced artifact is missing or structurally invalid because existing input and structural checks already cover those cases.
+  - Add focused Validator tests for positive and negative referenced outcome-chain cases, cascade prevention, deterministic behavior, and preservation of existing validation behavior.
+  - Update Validator and Forge artifact documentation to describe referenced outcome-chain validation and still-deferred retry-chain lifecycle semantics.
+  - Update docs/TASKS.md to track TASK-0007.
+
+out_of_scope:
+  - Implement source, tests, or documentation as part of this task-definition change.
+  - Validate retry chains.
+  - Validate whether a later artifact supersedes a referenced earlier artifact in an input chain.
+  - Require references to point to latest artifact attempts.
+  - Change TASK-0006 latest delivery-ready outcome gates.
+  - Add new latest-artifact outcome gates beyond TASK-0006.
+  - Validate human approval evidence.
+  - Enforce append-only artifact history through Git history.
+  - Validate Markdown artifact bodies.
+  - Automatically transition task status.
+  - Execute agent roles.
+  - Add orchestration.
+  - Perform GitHub mutation.
+  - Add new dependencies or modify package metadata or the lockfile.
+  - Broadly refactor Validator architecture beyond what is needed for referenced outcome-chain validation.
+  - Add a migration framework, configuration system, schema-version migration, or new task-contract key.
+  - Modify existing tasks, existing artifacts, workflow contracts, role contracts, templates, root project documentation, or GitHub workflow files.
+  - Commit, push, create a pull request, merge, release, deploy, publish, or perform other remote mutation.
+
+allowed_files:
+  - .forge/tasks/TASK-0007.yaml
+  - tools/forge-validator/src/validate.mjs
+  - tools/forge-validator/test/validate.test.mjs
+  - tools/forge-validator/README.md
+  - .forge/artifacts/README.md
+  - .forge/README.md
+  - docs/TASKS.md
+
+protected_files:
+  - .forge/project.yaml
+  - .forge/workflows/feature.yaml
+  - .forge/tasks/task.template.yaml
+  - .forge/tasks/README.md
+  - .forge/tasks/TASK-0001.yaml
+  - .forge/tasks/TASK-0002.yaml
+  - .forge/tasks/TASK-0003.yaml
+  - .forge/tasks/TASK-0004.yaml
+  - .forge/tasks/TASK-0005.yaml
+  - .forge/tasks/TASK-0006.yaml
+  - .forge/roles/planner.md
+  - .forge/roles/builder.md
+  - .forge/roles/tester.md
+  - .forge/roles/reviewer.md
+  - .forge/artifacts/templates/plan.md
+  - .forge/artifacts/templates/build-report.md
+  - .forge/artifacts/templates/test-report.md
+  - .forge/artifacts/templates/review-report.md
+  - .forge/artifacts/TASK-0003/plan-001.md
+  - .forge/artifacts/TASK-0003/plan-002.md
+  - .forge/artifacts/TASK-0003/build-report-001.md
+  - .forge/artifacts/TASK-0003/test-report-001.md
+  - .forge/artifacts/TASK-0003/review-report-001.md
+  - .forge/artifacts/TASK-0004/plan-001.md
+  - .forge/artifacts/TASK-0004/plan-002.md
+  - .forge/artifacts/TASK-0004/build-report-001.md
+  - .forge/artifacts/TASK-0004/build-report-002.md
+  - .forge/artifacts/TASK-0004/test-report-001.md
+  - .forge/artifacts/TASK-0004/test-report-002.md
+  - .forge/artifacts/TASK-0004/test-report-003.md
+  - .forge/artifacts/TASK-0004/test-report-004.md
+  - .forge/artifacts/TASK-0004/review-report-001.md
+  - .forge/artifacts/TASK-0004/review-report-002.md
+  - .forge/artifacts/TASK-0005/plan-001.md
+  - .forge/artifacts/TASK-0005/build-report-001.md
+  - .forge/artifacts/TASK-0005/test-report-001.md
+  - .forge/artifacts/TASK-0005/review-report-001.md
+  - .forge/artifacts/TASK-0005/review-report-002.md
+  - .forge/artifacts/TASK-0006/plan-001.md
+  - .forge/artifacts/TASK-0006/build-report-001.md
+  - .forge/artifacts/TASK-0006/test-report-001.md
+  - .forge/artifacts/TASK-0006/review-report-001.md
+  - .github/workflows/forge-contracts.yml
+  - tools/forge-validator/package.json
+  - tools/forge-validator/pnpm-lock.yaml
+  - AGENTS.md
+  - README.md
+  - docs/PRODUCT_SPEC.md
+  - docs/AI_WORKFLOW.md
+  - docs/DECISIONS.md
+
+acceptance_criteria:
+  - id: AC-1
+    description: The task clearly separates referenced outcome-chain validation for input_artifacts from retry-chain validation, latest-attempt outcome validation, orchestration, and automatic task transitions.
+  - id: AC-2
+    description: The future Validator behavior is deterministic by sorting discovered artifacts and referenced input paths before producing referenced-outcome-chain errors.
+  - id: AC-3
+    description: The explicit allowed referenced outcome matrix is build_report referencing plan requires READY_FOR_APPROVAL; test_report referencing plan requires READY_FOR_APPROVAL; test_report referencing build_report requires READY_FOR_TEST; review_report referencing plan requires READY_FOR_APPROVAL; review_report referencing build_report requires READY_FOR_TEST; review_report referencing test_report requires PASS.
+  - id: AC-4
+    description: A review_report that references a test_report with outcome FAIL, BLOCKED, or any outcome other than PASS fails referenced outcome-chain validation.
+  - id: AC-5
+    description: A test_report that references a build_report with outcome BLOCKED or any outcome other than READY_FOR_TEST fails referenced outcome-chain validation.
+  - id: AC-6
+    description: A build_report, test_report, or review_report that references a plan with outcome BLOCKED or any outcome other than READY_FOR_APPROVAL fails referenced outcome-chain validation when that pair is covered by the matrix.
+  - id: AC-7
+    description: A review_report that references a build_report with outcome BLOCKED or any outcome other than READY_FOR_TEST fails referenced outcome-chain validation.
+  - id: AC-8
+    description: Positive chains pass when a build_report references a READY_FOR_APPROVAL plan, a test_report references READY_FOR_APPROVAL plan and READY_FOR_TEST build_report artifacts, and a review_report references READY_FOR_APPROVAL plan, READY_FOR_TEST build_report, and PASS test_report artifacts.
+  - id: AC-9
+    description: Missing referenced artifacts and structurally invalid referenced artifacts continue to be handled by existing input and structural validation without secondary referenced-outcome-chain errors.
+  - id: AC-10
+    description: Invalid task contracts do not produce secondary referenced-outcome-chain errors.
+  - id: AC-11
+    description: Forge Validator continues structurally validating every discovered live artifact, including non-latest attempts.
+  - id: AC-12
+    description: TASK-0005 latest-attempt selection remains intact and referenced outcome-chain validation does not require input_artifacts to reference the latest attempt.
+  - id: AC-13
+    description: TASK-0001 and TASK-0002 remain the only completed-task legacy exemptions, and TASK-0003 and later completed tasks remain non-exempt.
+  - id: AC-14
+    description: TASK-0006 delivery-ready latest outcome gates for ready_for_pr and non-legacy completed tasks remain intact and separate from referenced input artifact outcome validation.
+  - id: AC-15
+    description: Tests cover positive chains, failing review_report to test_report references, failing test_report to build_report references, failing plan and build_report references, missing and structurally invalid referenced artifact cascade prevention, invalid-task cascade prevention, deterministic error ordering, and preservation of existing latest-attempt and delivery-ready outcome behavior.
+  - id: AC-16
+    description: Documentation explains referenced artifact outcome-chain validation, the exact matrix, cascade-prevention behavior, and still-deferred retry-chain, append-only Git, human approval, orchestration, and automatic-transition semantics.
+  - id: AC-17
+    description: Forge Validator remains read-only, verification passes, and no file outside the approved scope is modified.
+  - id: AC-18
+    description: docs/TASKS.md tracks TASK-0007 as the current proposed task and shows the same lifecycle status as .forge/tasks/TASK-0007.yaml.
+
+required_checks:
+  - verify
