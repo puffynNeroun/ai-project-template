@@ -2,15 +2,15 @@
 
 ## Now
 
-No active task.
+- [ ] `TASK-0005` — Select latest artifact attempt for presence validation (`ready_for_pr`).
 
 ## Next
 
-- [ ] Define the next bounded Forge task.
+- [ ] Push the branch and open a pull request for `TASK-0005`.
 
 ## Later
 
-- [ ] Evaluate latest-attempt and retry-chain artifact validation after status-aware presence checks are proven.
+- [ ] Evaluate retry-chain and outcome-chain artifact validation after latest-attempt selection is proven.
 
 ## Completed
 

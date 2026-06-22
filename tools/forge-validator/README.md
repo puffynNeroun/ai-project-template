@@ -19,11 +19,13 @@ The validator also enforces status-aware artifact presence for fully valid activ
 
 Presence validation runs only for active task contracts that pass task-contract validation. Invalid task contracts report their own task-contract errors and do not receive secondary missing-artifact errors.
 
-Malformed artifacts still fail structural validation and do not satisfy presence requirements. Any structurally valid positive attempt may satisfy the required artifact type; the validator does not select the latest attempt.
+Malformed artifacts still fail structural validation. For status-aware presence, the validator selects the latest existing attempt for each task and artifact type by highest numeric filename attempt. Attempt gaps are allowed, so `plan-003.md` is latest when `plan-001.md` and `plan-003.md` exist.
+
+The latest existing attempt must be structurally valid to satisfy presence. A malformed latest attempt is not hidden by an earlier valid attempt and produces an invalid-latest-attempt presence error. A malformed earlier attempt still reports its structural error, while a later structurally valid attempt may satisfy presence.
 
 `TASK-0001` and `TASK-0002` are explicit legacy completed-task exemptions because they predate persistent live artifacts. No retroactive artifacts are required or fabricated for them. This exemption does not apply to `TASK-0003` or later tasks.
 
-The validator does not enforce latest-attempt selection, retry-chain semantics, outcome chains, append-only Git history, human approval evidence, runtime orchestration, or automatic status transitions.
+Artifact outcomes do not affect presence decisions. The validator does not enforce retry-chain semantics, outcome chains, append-only Git history, human approval evidence, runtime orchestration, or automatic status transitions.
 
 ## Install
 

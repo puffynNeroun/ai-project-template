@@ -498,7 +498,7 @@ test('a malformed required artifact does not satisfy presence', async () => {
     assert.match(errors, /artifact must start with YAML front matter delimiter/);
     assert.match(
       errors,
-      /task TASK-0090 has status 'approved' and requires at least one structurally valid plan artifact/,
+      /task TASK-0090 has status 'approved' and latest plan artifact attempt 1 at \.forge\/artifacts\/TASK-0090\/plan-001\.md must be structurally valid to satisfy presence/,
     );
   });
 });
@@ -514,6 +514,69 @@ test('a later valid artifact still satisfies presence after an earlier malformed
 
     assert.equal(result.ok, false);
     assert.match(errors, /artifact must start with YAML front matter delimiter/);
+    assert.doesNotMatch(
+      errors,
+      /task TASK-0090 has status 'approved' and requires at least one structurally valid plan artifact/,
+    );
+    assert.doesNotMatch(errors, /latest plan artifact attempt 2/);
+  });
+});
+
+test('a latest valid attempt satisfies required presence when earlier attempts exist', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'approved');
+    await writeValidPlan(fixtureRoot, 'TASK-0090', 1);
+    await writeValidPlan(fixtureRoot, 'TASK-0090', 2);
+
+    const result = await validateRepository(fixtureRoot);
+    assert.deepEqual(result, { ok: true, errors: [] });
+  });
+});
+
+test('the highest numeric artifact attempt is selected instead of an earlier discovered path', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'approved');
+    await writeValidPlan(fixtureRoot, 'TASK-0090', 9);
+    await writeFixtureFile(fixtureRoot, '.forge/artifacts/TASK-0090/plan-010.md', 'not front matter');
+
+    const result = await validateRepository(fixtureRoot);
+    const errors = result.errors.join('\n');
+
+    assert.equal(result.ok, false);
+    assert.match(errors, /artifact must start with YAML front matter delimiter/);
+    assert.match(
+      errors,
+      /task TASK-0090 has status 'approved' and latest plan artifact attempt 10 at \.forge\/artifacts\/TASK-0090\/plan-010\.md must be structurally valid to satisfy presence/,
+    );
+  });
+});
+
+test('attempt gaps are allowed when selecting the latest artifact attempt', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'approved');
+    await writeValidPlan(fixtureRoot, 'TASK-0090', 1);
+    await writeValidPlan(fixtureRoot, 'TASK-0090', 3);
+
+    const result = await validateRepository(fixtureRoot);
+    assert.deepEqual(result, { ok: true, errors: [] });
+  });
+});
+
+test('a latest malformed required artifact is not hidden by an earlier valid attempt', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(fixtureRoot, 'TASK-0090', 'approved');
+    await writeValidPlan(fixtureRoot, 'TASK-0090', 1);
+    await writeFixtureFile(fixtureRoot, '.forge/artifacts/TASK-0090/plan-002.md', 'not front matter');
+
+    const result = await validateRepository(fixtureRoot);
+    const errors = result.errors.join('\n');
+
+    assert.equal(result.ok, false);
+    assert.match(errors, /artifact must start with YAML front matter delimiter/);
+    assert.match(
+      errors,
+      /task TASK-0090 has status 'approved' and latest plan artifact attempt 2 at \.forge\/artifacts\/TASK-0090\/plan-002\.md must be structurally valid to satisfy presence/,
+    );
     assert.doesNotMatch(
       errors,
       /task TASK-0090 has status 'approved' and requires at least one structurally valid plan artifact/,
@@ -705,6 +768,31 @@ test('invalid task contracts do not produce secondary missing-artifact errors', 
     assert.equal(result.ok, false);
     assert.match(result.errors.join('\n'), /required_checks\[0\] references unknown project command key 'missing_check'/);
     assert.doesNotMatch(result.errors.join('\n'), /task TASK-0099 has status 'approved' and requires at least one structurally valid plan artifact/);
+  });
+});
+
+test('invalid task contracts do not produce secondary invalid-latest-attempt errors', async () => {
+  await withFixture(async (fixtureRoot) => {
+    await writeTask(
+      fixtureRoot,
+      'TASK-0099',
+      'approved',
+      (content) => content.replace('required_checks: []', 'required_checks:\n  - missing_check'),
+    );
+    await writeValidPlan(fixtureRoot, 'TASK-0099', 1);
+    await writeFixtureFile(fixtureRoot, '.forge/artifacts/TASK-0099/plan-002.md', 'not front matter');
+
+    const result = await validateRepository(fixtureRoot);
+    const errors = result.errors.join('\n');
+
+    assert.equal(result.ok, false);
+    assert.match(errors, /required_checks\[0\] references unknown project command key 'missing_check'/);
+    assert.match(errors, /artifact must start with YAML front matter delimiter/);
+    assert.doesNotMatch(errors, /latest plan artifact attempt 2/);
+    assert.doesNotMatch(
+      errors,
+      /task TASK-0099 has status 'approved' and requires at least one structurally valid plan artifact/,
+    );
   });
 });
 
