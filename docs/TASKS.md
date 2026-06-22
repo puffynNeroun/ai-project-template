@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0005` — Select latest artifact attempt for presence validation (`proposed`).
+- [ ] `TASK-0005` — Select latest artifact attempt for presence validation (`approved`).
 
 ## Next
 
-- [ ] Run Planner for `TASK-0005`.
+- [ ] Run Builder for `TASK-0005`.
 
 ## Later
 
