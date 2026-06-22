@@ -2,18 +2,19 @@
 
 ## Now
 
-- [ ] `TASK-0006` — Require delivery-ready artifact outcomes (`ready_for_pr`).
+- [ ] No active task.
 
 ## Next
 
-- [ ] Push the branch and open a pull request for `TASK-0006`.
+- [ ] Evaluate retry-chain and referenced outcome-chain artifact validation after delivery-ready outcome gates are proven.
 
 ## Later
 
-- [ ] Evaluate retry-chain and referenced outcome-chain artifact validation after delivery-ready outcome gates are proven.
+- [ ] No deferred task.
 
 ## Completed
 
+- [x] `TASK-0006` — Require delivery-ready artifact outcomes (`completed`, 2026-06-22).
 - [x] `TASK-0005` — Select latest artifact attempt for presence validation (`completed`, 2026-06-22).
 - [x] `TASK-0004` — Require stage artifacts by task status (`completed`, 2026-06-18).
 - [x] `TASK-0003` — Validate persistent stage artifact structure (`completed`, 2026-06-17).
