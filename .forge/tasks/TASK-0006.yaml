@@ -2,7 +2,7 @@ schema_version: 1
 
 id: TASK-0006
 title: Require delivery-ready artifact outcomes
-status: proposed
+status: approved
 workflow: .forge/workflows/feature.yaml
 
 goal: Make Forge Validator require successful latest test and review artifact outcomes for delivery-ready task statuses, while preserving structural validation, latest-attempt selection, existing status-aware artifact presence rules, and without adding retry-chain, outcome-chain, approval, or orchestration semantics.

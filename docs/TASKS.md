@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0006` — Require delivery-ready artifact outcomes (`proposed`).
+- [ ] `TASK-0006` — Require delivery-ready artifact outcomes (`approved`).
 
 ## Next
 
-- [ ] Run Planner for `TASK-0006`.
+- [ ] Run Builder for `TASK-0006`.
 
 ## Later
 
