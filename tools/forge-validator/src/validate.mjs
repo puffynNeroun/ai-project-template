@@ -135,6 +135,21 @@ const requiredDeliveryArtifactOutcomesByStatus = {
   },
 };
 
+const requiredReferencedArtifactOutcomesByType = {
+  build_report: {
+    plan: 'READY_FOR_APPROVAL',
+  },
+  test_report: {
+    plan: 'READY_FOR_APPROVAL',
+    build_report: 'READY_FOR_TEST',
+  },
+  review_report: {
+    plan: 'READY_FOR_APPROVAL',
+    build_report: 'READY_FOR_TEST',
+    test_report: 'PASS',
+  },
+};
+
 const remoteStageIds = [
   'push',
   'pr',
@@ -909,6 +924,7 @@ async function validateArtifact(repositoryRoot, artifactPath, artifactFileSet, e
       taskId: pathInfo.taskId,
       artifactType: parsedFilename.definition.type,
       attempt: parsedFilename.attempt,
+      inputArtifacts: [],
       path: artifactPath,
       structurallyValid: false,
     };
@@ -930,6 +946,7 @@ async function validateArtifact(repositoryRoot, artifactPath, artifactFileSet, e
     taskId: pathInfo.taskId,
     artifactType: parsedFilename.definition.type,
     attempt: parsedFilename.attempt,
+    inputArtifacts: Array.isArray(metadata.input_artifacts) ? metadata.input_artifacts : [],
     outcome: metadata.outcome,
     path: artifactPath,
     structurallyValid: errors.length === artifactErrorCountBefore,
@@ -940,6 +957,7 @@ async function validateArtifacts(repositoryRoot, taskFiles, errors) {
   const activeTaskFileSet = new Set(taskFiles.filter((taskPath) => taskPath !== taskTemplatePath));
   const artifactFiles = await discoverArtifactFiles(repositoryRoot, activeTaskFileSet, errors);
   const artifactFileSet = new Set(artifactFiles);
+  const artifactsByPath = new Map();
   const latestArtifactsByTaskIdAndType = new Map();
 
   for (const artifactPath of artifactFiles) {
@@ -947,6 +965,8 @@ async function validateArtifacts(repositoryRoot, taskFiles, errors) {
     if (!artifactSummary) {
       continue;
     }
+
+    artifactsByPath.set(artifactSummary.path, artifactSummary);
 
     if (!latestArtifactsByTaskIdAndType.has(artifactSummary.taskId)) {
       latestArtifactsByTaskIdAndType.set(artifactSummary.taskId, new Map());
@@ -959,7 +979,42 @@ async function validateArtifacts(repositoryRoot, taskFiles, errors) {
     }
   }
 
-  return latestArtifactsByTaskIdAndType;
+  return {
+    artifactsByPath,
+    latestArtifactsByTaskIdAndType,
+  };
+}
+
+function validateReferencedArtifactOutcomeChains(tasksById, artifactsByPath, errors) {
+  const artifacts = [...artifactsByPath.values()].sort((left, right) => left.path.localeCompare(right.path));
+
+  for (const artifact of artifacts) {
+    if (!artifact.structurallyValid || !tasksById.has(artifact.taskId)) {
+      continue;
+    }
+
+    const requiredOutcomes = requiredReferencedArtifactOutcomesByType[artifact.artifactType];
+    if (!requiredOutcomes) {
+      continue;
+    }
+
+    const inputArtifacts = [...artifact.inputArtifacts].sort();
+    for (const inputPath of inputArtifacts) {
+      const referencedArtifact = artifactsByPath.get(inputPath);
+      if (!referencedArtifact?.structurallyValid) {
+        continue;
+      }
+
+      const expectedOutcome = requiredOutcomes[referencedArtifact.artifactType];
+      if (!expectedOutcome) {
+        continue;
+      }
+
+      if (referencedArtifact.outcome !== expectedOutcome) {
+        errors.push(`Contract error in ${artifact.path}: ${artifact.artifactType} input artifact ${referencedArtifact.path} has outcome '${referencedArtifact.outcome}' but must have outcome '${expectedOutcome}' to satisfy referenced outcome-chain validation.`);
+      }
+    }
+  }
 }
 
 function validateArtifactPresenceByTaskStatus(tasksById, latestArtifactsByTaskIdAndType, errors) {
@@ -1018,7 +1073,8 @@ export async function validateRepository(repositoryRoot = defaultRepositoryRoot)
   const project = await validateProject(resolvedRoot, errors);
   const workflow = await validateWorkflow(resolvedRoot, errors);
   const { taskFiles, tasksById } = await validateTasks(resolvedRoot, workflow, project, errors);
-  const latestArtifactsByTaskIdAndType = await validateArtifacts(resolvedRoot, taskFiles, errors);
+  const { artifactsByPath, latestArtifactsByTaskIdAndType } = await validateArtifacts(resolvedRoot, taskFiles, errors);
+  validateReferencedArtifactOutcomeChains(tasksById, artifactsByPath, errors);
   validateArtifactPresenceByTaskStatus(tasksById, latestArtifactsByTaskIdAndType, errors);
   validateDeliveryArtifactOutcomes(tasksById, latestArtifactsByTaskIdAndType, errors);
 

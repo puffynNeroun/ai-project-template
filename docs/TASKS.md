@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0007` — Validate referenced artifact outcome chains (`approved`).
+- [ ] `TASK-0007` — Validate referenced artifact outcome chains (`in_progress`).
 
 ## Next
 
-- [ ] Run Builder for `TASK-0007`.
+- [ ] Run Tester for `TASK-0007`.
 
 ## Later
 

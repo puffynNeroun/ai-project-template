@@ -2,7 +2,7 @@ schema_version: 1
 
 id: TASK-0007
 title: Validate referenced artifact outcome chains
-status: approved
+status: in_progress
 workflow: .forge/workflows/feature.yaml
 
 goal: Make Forge Validator check that artifact input chains are not only structurally valid by artifact type, but also semantically valid by referenced artifact outcome, while avoiding retry-chain semantics and automatic transition semantics.

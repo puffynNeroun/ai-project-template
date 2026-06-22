@@ -29,7 +29,20 @@ Artifact outcomes do not affect presence decisions. For delivery-ready statuses,
 
 Delivery-ready outcome gates run only after the relevant latest artifact exists and is structurally valid. Missing artifacts and structurally invalid latest attempts are reported by the structural and presence checks, without secondary outcome errors.
 
-The validator does not enforce retry-chain semantics, referenced outcome chains, append-only Git history, human approval evidence, runtime orchestration, or automatic status transitions.
+The validator also checks referenced artifact outcome chains for exact paths listed in `input_artifacts`. This is separate from latest-attempt delivery gates and does not require input artifacts to reference the latest attempts.
+
+| Referencing artifact type | Referenced artifact type | Required referenced outcome |
+| --- | --- | --- |
+| `build_report` | `plan` | `READY_FOR_APPROVAL` |
+| `test_report` | `plan` | `READY_FOR_APPROVAL` |
+| `test_report` | `build_report` | `READY_FOR_TEST` |
+| `review_report` | `plan` | `READY_FOR_APPROVAL` |
+| `review_report` | `build_report` | `READY_FOR_TEST` |
+| `review_report` | `test_report` | `PASS` |
+
+Referenced outcome-chain checks run only when both the referencing artifact and referenced artifact are structurally valid. Missing references and structurally invalid references are reported by the existing input and structural checks, without secondary referenced-outcome errors.
+
+The validator does not enforce retry-chain semantics, append-only Git history, human approval evidence, runtime orchestration, or automatic status transitions.
 
 ## Install
 
