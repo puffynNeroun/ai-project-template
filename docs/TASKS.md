@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0006` — Require delivery-ready artifact outcomes (`approved`).
+- [ ] `TASK-0006` — Require delivery-ready artifact outcomes (`in_progress`).
 
 ## Next
 
-- [ ] Run Builder for `TASK-0006`.
+- [ ] Run Tester for `TASK-0006`.
 
 ## Later
 

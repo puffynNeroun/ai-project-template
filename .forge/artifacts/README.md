@@ -129,7 +129,16 @@ The validator selects the latest existing attempt for each task and artifact typ
 
 Only the latest existing attempt can satisfy presence for a required artifact type. A malformed latest attempt is not hidden by an earlier valid attempt and produces an invalid-latest-attempt presence error. A malformed earlier attempt still fails structural validation, while a later structurally valid attempt can satisfy presence.
 
-Artifact outcomes do not affect presence decisions. A structurally valid `test_report` with `FAIL` or `review_report` with `REJECT` can satisfy type presence when it is the latest attempt.
+Artifact outcomes do not affect presence decisions. For delivery-ready statuses, the validator separately requires successful latest delivery artifact outcomes:
+
+| Task status | Latest `test_report` outcome | Latest `review_report` outcome |
+| --- | --- | --- |
+| `ready_for_pr` | `PASS` | `ACCEPT` |
+| `completed` | `PASS` | `ACCEPT` |
+
+The `completed` outcome gate follows the same TASK-0001 and TASK-0002 legacy exemption as status-aware presence. Proposed, blocked, approved, and in-progress tasks do not require `test_report` `PASS` or `review_report` `ACCEPT`.
+
+Delivery-ready outcome gates run only after the relevant latest artifact exists and is structurally valid. Missing artifacts and structurally invalid latest attempts are reported by structural and presence checks, without secondary outcome errors.
 
 `TASK-0001` and `TASK-0002` are explicit legacy completed-task exemptions because they were completed before persistent live artifacts existed. Do not create retroactive artifacts for them. This exemption does not apply to `TASK-0003` or later tasks.
 
@@ -137,4 +146,4 @@ Presence validation runs only for active task contracts that pass task-contract 
 
 ## Deferred Enforcement
 
-This contract does not add exact-attempt requirements, retry-chain validation, outcome-chain validation, append-only Git-history enforcement, human approval artifacts, delivery evidence artifacts, runtime orchestration, automatic status transitions, GitHub automation, a database, an event stream, or a web interface.
+This contract does not add exact-attempt requirements, retry-chain validation, referenced outcome-chain validation, append-only Git-history enforcement, human approval artifacts, delivery evidence artifacts, runtime orchestration, automatic status transitions, GitHub automation, a database, an event stream, or a web interface.
