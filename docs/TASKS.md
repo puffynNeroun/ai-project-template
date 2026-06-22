@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0007` — Validate referenced artifact outcome chains (`in_progress`).
+- [ ] `TASK-0007` — Validate referenced artifact outcome chains (`ready_for_pr`).
 
 ## Next
 
-- [ ] Run Tester for `TASK-0007`.
+- [ ] Open implementation PR for `TASK-0007`.
 
 ## Later
 
