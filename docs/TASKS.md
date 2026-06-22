@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0005` — Select latest artifact attempt for presence validation (`in_progress`).
+- [ ] `TASK-0005` — Select latest artifact attempt for presence validation (`ready_for_pr`).
 
 ## Next
 
-- [ ] Run Tester for `TASK-0005`.
+- [ ] Push the branch and open a pull request for `TASK-0005`.
 
 ## Later
 

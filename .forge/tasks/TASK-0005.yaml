@@ -2,7 +2,7 @@ schema_version: 1
 
 id: TASK-0005
 title: Select latest artifact attempt for presence validation
-status: in_progress
+status: ready_for_pr
 workflow: .forge/workflows/feature.yaml
 
 goal: Make Forge Validator use the highest-numbered existing artifact attempt for each task and artifact type when evaluating status-aware artifact presence, while continuing to structurally validate every live artifact and without adding retry-chain, outcome-chain, approval, or orchestration semantics.
