@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0007` — Validate referenced artifact outcome chains (`ready_for_pr`).
+- No active task.
 
 ## Next
 
-- [ ] Open implementation PR for `TASK-0007`.
+- [ ] Define next task.
 
 ## Later
 
@@ -14,6 +14,7 @@
 
 ## Completed
 
+- [x] `TASK-0007` — Validate referenced artifact outcome chains (`completed`, 2026-06-22).
 - [x] `TASK-0006` — Require delivery-ready artifact outcomes (`completed`, 2026-06-22).
 - [x] `TASK-0005` — Select latest artifact attempt for presence validation (`completed`, 2026-06-22).
 - [x] `TASK-0004` — Require stage artifacts by task status (`completed`, 2026-06-18).
