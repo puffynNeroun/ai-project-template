@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0007` — Validate referenced artifact outcome chains (`proposed`).
+- [ ] `TASK-0007` — Validate referenced artifact outcome chains (`approved`).
 
 ## Next
 
-- [ ] Run Planner for `TASK-0007`.
+- [ ] Run Builder for `TASK-0007`.
 
 ## Later
 
