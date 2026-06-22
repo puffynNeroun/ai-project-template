@@ -25,7 +25,11 @@ The latest existing attempt must be structurally valid to satisfy presence. A ma
 
 `TASK-0001` and `TASK-0002` are explicit legacy completed-task exemptions because they predate persistent live artifacts. No retroactive artifacts are required or fabricated for them. This exemption does not apply to `TASK-0003` or later tasks.
 
-Artifact outcomes do not affect presence decisions. The validator does not enforce retry-chain semantics, outcome chains, append-only Git history, human approval evidence, runtime orchestration, or automatic status transitions.
+Artifact outcomes do not affect presence decisions. For delivery-ready statuses, the validator separately requires the latest structurally valid `test_report` to have outcome `PASS` and the latest structurally valid `review_report` to have outcome `ACCEPT`. These delivery-ready outcome gates apply to `ready_for_pr` tasks and non-legacy `completed` tasks only.
+
+Delivery-ready outcome gates run only after the relevant latest artifact exists and is structurally valid. Missing artifacts and structurally invalid latest attempts are reported by the structural and presence checks, without secondary outcome errors.
+
+The validator does not enforce retry-chain semantics, referenced outcome chains, append-only Git history, human approval evidence, runtime orchestration, or automatic status transitions.
 
 ## Install
 

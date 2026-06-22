@@ -1,0 +1,144 @@
+schema_version: 1
+
+id: TASK-0006
+title: Require delivery-ready artifact outcomes
+status: ready_for_pr
+workflow: .forge/workflows/feature.yaml
+
+goal: Make Forge Validator require successful latest test and review artifact outcomes for delivery-ready task statuses, while preserving structural validation, latest-attempt selection, existing status-aware artifact presence rules, and without adding retry-chain, outcome-chain, approval, or orchestration semantics.
+
+in_scope:
+  - Require tasks with status ready_for_pr to have latest test_report outcome PASS.
+  - Require tasks with status ready_for_pr to have latest review_report outcome ACCEPT.
+  - Require non-legacy tasks with status completed to have latest test_report outcome PASS.
+  - Require non-legacy tasks with status completed to have latest review_report outcome ACCEPT.
+  - Use the latest existing artifact attempt selected by highest numeric filename attempt for each task_id and artifact_type pair.
+  - Continue structurally validating every discovered live artifact, including non-latest attempts.
+  - Run outcome validation only after the relevant latest artifact is structurally valid enough to satisfy status-aware presence.
+  - Avoid secondary outcome errors when the latest required artifact is missing or structurally invalid because existing missing-artifact and invalid-latest-attempt errors already cover those cases.
+  - Preserve TASK-0004 status-aware presence requirements for proposed, blocked, approved, in_progress, ready_for_pr, and completed tasks.
+  - Preserve TASK-0005 latest-attempt selection semantics, including numeric comparison and allowed attempt gaps.
+  - Preserve the explicit completed-task legacy exemption for TASK-0001 and TASK-0002 only.
+  - Ensure TASK-0003 and later completed tasks must satisfy delivery-ready outcome requirements.
+  - Preserve invalid-task behavior so invalid task contracts do not produce secondary missing-artifact, invalid-latest-attempt, or invalid-outcome errors.
+  - Keep plan and build_report outcomes independent from delivery-ready outcome validation.
+  - Keep approved and in_progress tasks free from test_report and review_report outcome requirements.
+  - Add focused Validator tests for ready_for_pr and completed outcome gates, latest-attempt outcome selection, rejected earlier review attempts followed by accepted latest review attempts, failed latest test reports, rejected latest review reports, legacy compatibility, and invalid-task cascade prevention.
+  - Update Validator and Forge artifact documentation to describe delivery-ready outcome gates and still-deferred retry-chain/outcome-chain lifecycle semantics.
+  - Update docs/TASKS.md to track TASK-0006.
+
+out_of_scope:
+  - Validate retry chains.
+  - Validate referenced artifact outcome chains.
+  - Require plan outcomes for status transitions.
+  - Require build_report outcomes for status transitions.
+  - Require exact artifact attempts for a task status.
+  - Validate human approval evidence.
+  - Enforce append-only artifact history through Git history.
+  - Validate Markdown artifact bodies.
+  - Automatically transition task status.
+  - Execute agent roles.
+  - Add orchestration.
+  - Perform GitHub mutation.
+  - Add new dependencies or modify package metadata or the lockfile.
+  - Broadly refactor Validator architecture beyond what is needed for delivery-ready outcome validation.
+  - Add a migration framework, configuration system, schema-version migration, or new task-contract key.
+  - Modify existing tasks, existing artifacts, workflow contracts, role contracts, templates, root project documentation, or GitHub workflow files.
+  - Commit, push, create a pull request, merge, release, deploy, publish, or perform other remote mutation.
+
+allowed_files:
+  - .forge/tasks/TASK-0006.yaml
+  - tools/forge-validator/src/validate.mjs
+  - tools/forge-validator/test/validate.test.mjs
+  - tools/forge-validator/README.md
+  - .forge/artifacts/README.md
+  - .forge/README.md
+  - docs/TASKS.md
+
+protected_files:
+  - .forge/project.yaml
+  - .forge/workflows/feature.yaml
+  - .forge/tasks/task.template.yaml
+  - .forge/tasks/README.md
+  - .forge/tasks/TASK-0001.yaml
+  - .forge/tasks/TASK-0002.yaml
+  - .forge/tasks/TASK-0003.yaml
+  - .forge/tasks/TASK-0004.yaml
+  - .forge/tasks/TASK-0005.yaml
+  - .forge/roles/planner.md
+  - .forge/roles/builder.md
+  - .forge/roles/tester.md
+  - .forge/roles/reviewer.md
+  - .forge/artifacts/templates/plan.md
+  - .forge/artifacts/templates/build-report.md
+  - .forge/artifacts/templates/test-report.md
+  - .forge/artifacts/templates/review-report.md
+  - .forge/artifacts/TASK-0003/plan-001.md
+  - .forge/artifacts/TASK-0003/plan-002.md
+  - .forge/artifacts/TASK-0003/build-report-001.md
+  - .forge/artifacts/TASK-0003/test-report-001.md
+  - .forge/artifacts/TASK-0003/review-report-001.md
+  - .forge/artifacts/TASK-0004/plan-001.md
+  - .forge/artifacts/TASK-0004/plan-002.md
+  - .forge/artifacts/TASK-0004/build-report-001.md
+  - .forge/artifacts/TASK-0004/build-report-002.md
+  - .forge/artifacts/TASK-0004/test-report-001.md
+  - .forge/artifacts/TASK-0004/test-report-002.md
+  - .forge/artifacts/TASK-0004/test-report-003.md
+  - .forge/artifacts/TASK-0004/test-report-004.md
+  - .forge/artifacts/TASK-0004/review-report-001.md
+  - .forge/artifacts/TASK-0004/review-report-002.md
+  - .forge/artifacts/TASK-0005/plan-001.md
+  - .forge/artifacts/TASK-0005/build-report-001.md
+  - .forge/artifacts/TASK-0005/test-report-001.md
+  - .forge/artifacts/TASK-0005/review-report-001.md
+  - .forge/artifacts/TASK-0005/review-report-002.md
+  - .github/workflows/forge-contracts.yml
+  - tools/forge-validator/package.json
+  - tools/forge-validator/pnpm-lock.yaml
+  - AGENTS.md
+  - README.md
+  - docs/PRODUCT_SPEC.md
+  - docs/AI_WORKFLOW.md
+  - docs/DECISIONS.md
+
+acceptance_criteria:
+  - id: AC-1
+    description: Forge Validator continues structurally validating every discovered live artifact, including non-latest attempts.
+  - id: AC-2
+    description: TASK-0005 latest-attempt selection remains intact and uses the highest numeric existing attempt for each task_id and artifact_type pair.
+  - id: AC-3
+    description: Tasks with status ready_for_pr fail validation when the latest structurally valid test_report outcome is not PASS.
+  - id: AC-4
+    description: Tasks with status ready_for_pr fail validation when the latest structurally valid review_report outcome is not ACCEPT.
+  - id: AC-5
+    description: Non-legacy tasks with status completed fail validation when the latest structurally valid test_report outcome is not PASS.
+  - id: AC-6
+    description: Non-legacy tasks with status completed fail validation when the latest structurally valid review_report outcome is not ACCEPT.
+  - id: AC-7
+    description: Earlier failed or rejected attempts do not fail delivery-ready outcome validation when a later latest structurally valid attempt has the required successful outcome.
+  - id: AC-8
+    description: Latest failed or rejected attempts are not hidden by earlier successful attempts.
+  - id: AC-9
+    description: Missing-artifact and invalid-latest-attempt errors are not duplicated by secondary invalid-outcome errors.
+  - id: AC-10
+    description: Proposed, blocked, approved, and in_progress statuses do not require test_report PASS or review_report ACCEPT outcomes.
+  - id: AC-11
+    description: TASK-0001 and TASK-0002 remain the only completed-task legacy exemptions, while TASK-0003 and later completed tasks must satisfy delivery-ready outcome gates.
+  - id: AC-12
+    description: Invalid task contracts do not enter presence or outcome validation and do not produce secondary missing-artifact, invalid-latest-attempt, or invalid-outcome errors.
+  - id: AC-13
+    description: Outcome validation does not introduce retry-chain, referenced outcome-chain, approval, append-only Git, orchestration, or automatic-transition semantics.
+  - id: AC-14
+    description: Outcome error messages identify the task id, task status, artifact type, latest attempt, actual outcome, expected outcome, and artifact path.
+  - id: AC-15
+    description: Tests cover ready_for_pr and completed outcome gates, latest outcome selection, earlier failed or rejected attempts followed by successful latest attempts, failed latest attempts, rejected latest attempts, legacy compatibility, invalid-task cascade prevention, and preservation of existing structural validation behavior.
+  - id: AC-16
+    description: Documentation explains delivery-ready latest-outcome gates, legacy compatibility, and still-deferred retry-chain and outcome-chain semantics.
+  - id: AC-17
+    description: Forge Validator remains read-only, verification passes, and no file outside the approved scope is modified.
+  - id: AC-18
+    description: docs/TASKS.md tracks TASK-0006 as the current proposed task and shows the same lifecycle status as .forge/tasks/TASK-0006.yaml.
+
+required_checks:
+  - verify

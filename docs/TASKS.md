@@ -2,15 +2,15 @@
 
 ## Now
 
-- No active task.
+- [ ] `TASK-0006` — Require delivery-ready artifact outcomes (`ready_for_pr`).
 
 ## Next
 
-- [ ] Evaluate next Forge lifecycle enforcement task.
+- [ ] Push the branch and open a pull request for `TASK-0006`.
 
 ## Later
 
-- [ ] Evaluate retry-chain and outcome-chain artifact validation after latest-attempt selection is proven.
+- [ ] Evaluate retry-chain and referenced outcome-chain artifact validation after delivery-ready outcome gates are proven.
 
 ## Completed
 

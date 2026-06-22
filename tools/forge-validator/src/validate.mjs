@@ -124,6 +124,17 @@ const requiredArtifactTypesByStatus = {
 
 const legacyCompletedTaskIdsWithoutArtifacts = new Set(['TASK-0001', 'TASK-0002']);
 
+const requiredDeliveryArtifactOutcomesByStatus = {
+  ready_for_pr: {
+    test_report: 'PASS',
+    review_report: 'ACCEPT',
+  },
+  completed: {
+    test_report: 'PASS',
+    review_report: 'ACCEPT',
+  },
+};
+
 const remoteStageIds = [
   'push',
   'pr',
@@ -919,6 +930,7 @@ async function validateArtifact(repositoryRoot, artifactPath, artifactFileSet, e
     taskId: pathInfo.taskId,
     artifactType: parsedFilename.definition.type,
     attempt: parsedFilename.attempt,
+    outcome: metadata.outcome,
     path: artifactPath,
     structurallyValid: errors.length === artifactErrorCountBefore,
   };
@@ -972,6 +984,33 @@ function validateArtifactPresenceByTaskStatus(tasksById, latestArtifactsByTaskId
   }
 }
 
+function validateDeliveryArtifactOutcomes(tasksById, latestArtifactsByTaskIdAndType, errors) {
+  const tasks = [...tasksById.values()].sort((left, right) => left.id.localeCompare(right.id));
+
+  for (const task of tasks) {
+    if (task.status === 'completed' && legacyCompletedTaskIdsWithoutArtifacts.has(task.id)) {
+      continue;
+    }
+
+    const requiredOutcomes = requiredDeliveryArtifactOutcomesByStatus[task.status];
+    if (!requiredOutcomes) {
+      continue;
+    }
+
+    const latestArtifactTypes = latestArtifactsByTaskIdAndType.get(task.id) ?? new Map();
+    for (const [artifactType, expectedOutcome] of Object.entries(requiredOutcomes)) {
+      const latestArtifact = latestArtifactTypes.get(artifactType);
+      if (!latestArtifact?.structurallyValid) {
+        continue;
+      }
+
+      if (latestArtifact.outcome !== expectedOutcome) {
+        errors.push(`Contract error in ${task.path}: task ${task.id} has status '${task.status}' and latest ${artifactType} artifact attempt ${latestArtifact.attempt} at ${latestArtifact.path} has outcome '${latestArtifact.outcome}' but must have outcome '${expectedOutcome}'.`);
+      }
+    }
+  }
+}
+
 export async function validateRepository(repositoryRoot = defaultRepositoryRoot) {
   const resolvedRoot = path.resolve(repositoryRoot);
   const errors = [];
@@ -981,6 +1020,7 @@ export async function validateRepository(repositoryRoot = defaultRepositoryRoot)
   const { taskFiles, tasksById } = await validateTasks(resolvedRoot, workflow, project, errors);
   const latestArtifactsByTaskIdAndType = await validateArtifacts(resolvedRoot, taskFiles, errors);
   validateArtifactPresenceByTaskStatus(tasksById, latestArtifactsByTaskIdAndType, errors);
+  validateDeliveryArtifactOutcomes(tasksById, latestArtifactsByTaskIdAndType, errors);
 
   return {
     ok: errors.length === 0,
