@@ -81,6 +81,30 @@ pnpm -C tools/forge-validator validate
 pnpm -C tools/forge-validator verify
 ```
 
+## Status
+
+The package also includes a read-only lifecycle status command.
+
+~~~bash
+pnpm -C tools/forge-validator run status
+~~~
+
+The status command reports:
+
+- current Git branch and working tree state;
+- current task board state from `docs/TASKS.md`;
+- active task detection from the Now section;
+- expected artifact presence for the selected task;
+- stale verification text matches in selected task artifacts.
+
+The command is read-only. It does not create files, edit artifacts, commit, push, create pull requests, merge, or release anything.
+
+A specific task can be checked with:
+
+~~~bash
+pnpm -C tools/forge-validator run status -- --task TASK-0010
+~~~
+
 ## Exit Codes
 
 Validation exits `0` when the Forge contracts are valid. It exits `1` when contract errors are found.

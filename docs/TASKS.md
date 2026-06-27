@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0010` — Add Forge lifecycle status command (`approved`).
+- [ ] `TASK-0010` — Add Forge lifecycle status command (`in_progress`).
 
 ## Next
 
-- [ ] Run Builder for `TASK-0010`.
+- [ ] Run Tester for `TASK-0010`.
 
 ## Later
 
