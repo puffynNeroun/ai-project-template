@@ -112,3 +112,31 @@ Validation exits `0` when the Forge contracts are valid. It exits `1` when contr
 ## CI
 
 The repository workflow runs the same frozen install command and `verify` command documented above for pull requests targeting `main` and pushes to `main`.
+
+## Task scaffold command
+
+Create a new task scaffold with:
+
+~~~bash
+pnpm -C tools/forge-validator run task:new -- --id TASK-0012 --title "Example task title"
+~~~
+
+The scaffold command creates:
+
+- `.forge/tasks/TASK-XXXX.yaml`
+- `.forge/artifacts/TASK-XXXX/`
+
+It also updates `docs/TASKS.md`:
+
+- `Now` becomes the new task in `proposed` status.
+- `Next` becomes `Run Planner for TASK-XXXX`.
+
+The command refuses to run when:
+
+- the task ID is invalid;
+- the title is empty;
+- `docs/TASKS.md` already has an active task;
+- the task contract already exists;
+- the artifact directory already exists.
+
+The command does not create branches, commits, pushes, pull requests, merges, releases, plans, build reports, test reports, or review reports.

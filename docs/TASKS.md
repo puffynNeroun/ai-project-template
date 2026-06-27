@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0011` — Add Forge task scaffold command (`approved`).
+- [ ] `TASK-0011` — Add Forge task scaffold command (`in_progress`).
 
 ## Next
 
-- [ ] Run Builder for `TASK-0011`.
+- [ ] Run Tester for `TASK-0011`.
 
 ## Later
 
