@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0008` — Validate artifact retry chains (`ready_for_pr`).
+- [ ] No active task.
 
 ## Next
 
-- [ ] Prepare PR for `TASK-0008`.
+- [ ] Define the next task.
 
 ## Later
 
@@ -14,6 +14,7 @@
 
 ## Completed
 
+- [x] `TASK-0008` — Validate artifact retry chains (`completed`, 2026-06-27).
 - [x] `TASK-0007` — Validate referenced artifact outcome chains (`completed`, 2026-06-22).
 - [x] `TASK-0006` — Require delivery-ready artifact outcomes (`completed`, 2026-06-22).
 - [x] `TASK-0005` — Select latest artifact attempt for presence validation (`completed`, 2026-06-22).
