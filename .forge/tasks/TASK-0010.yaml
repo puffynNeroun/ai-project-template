@@ -1,0 +1,77 @@
+schema_version: 1
+
+id: TASK-0010
+title: Add Forge lifecycle status command
+status: proposed
+workflow: .forge/workflows/feature.yaml
+
+goal: Add a read-only Forge lifecycle status command that summarizes the repository's current task state, task board, artifact readiness, stale verification guard result, and verification readiness so future task runs require less manual copy-paste checking.
+
+in_scope:
+  - Design a read-only status command for the Forge Validator tool.
+  - Report the current Git branch and working tree status.
+  - Report the current task board state from docs/TASKS.md.
+  - Report the active task, if one exists.
+  - Report artifact presence for the active or selected task.
+  - Report stale verification text matches for the selected task artifacts.
+  - Document how to run the command.
+  - Add tests for the status command behavior.
+  - Preserve existing Forge Validator verification behavior.
+
+out_of_scope:
+  - Changing existing validator validation rules.
+  - Changing retry-chain validation policy.
+  - Automatically creating, editing, or approving artifacts.
+  - Automatically creating branches, commits, pushes, pull requests, merges, or releases.
+  - Modifying completed task contracts or completed task artifacts.
+  - Rewriting TASK-0001 through TASK-0009 evidence.
+  - Adding a database, web UI, or long-running runtime service.
+
+allowed_files:
+  - .forge/tasks/TASK-0010.yaml
+  - docs/TASKS.md
+  - .forge/artifacts/TASK-0010/plan-001.md
+  - .forge/artifacts/TASK-0010/build-report-001.md
+  - .forge/artifacts/TASK-0010/test-report-001.md
+  - .forge/artifacts/TASK-0010/review-report-001.md
+  - tools/forge-validator/src/status.mjs
+  - tools/forge-validator/test/status.test.mjs
+  - tools/forge-validator/package.json
+  - tools/forge-validator/README.md
+
+protected_files:
+  - tools/forge-validator/src/validate.mjs
+  - tools/forge-validator/test/validate.test.mjs
+  - package.json
+  - pnpm-lock.yaml
+  - .github/workflows/forge-contracts.yml
+  - .forge/workflows/feature.yaml
+  - .forge/roles/planner.md
+  - .forge/roles/builder.md
+  - .forge/roles/tester.md
+  - .forge/roles/reviewer.md
+  - completed TASK-0001..0009 contracts
+  - completed TASK-0001..0009 artifacts
+
+acceptance_criteria:
+  - id: AC-01
+    description: A read-only Forge lifecycle status command is available from the Forge Validator tool.
+  - id: AC-02
+    description: The command reports the current branch and working tree status.
+  - id: AC-03
+    description: The command reports the current task board state from docs/TASKS.md.
+  - id: AC-04
+    description: The command reports the active task when one exists, or clearly reports that no active task exists.
+  - id: AC-05
+    description: The command reports expected artifact files for the selected task.
+  - id: AC-06
+    description: The command reports whether stale verification text is present in selected task artifacts.
+  - id: AC-07
+    description: The command is documented in tools/forge-validator/README.md.
+  - id: AC-08
+    description: Tests cover the new status command behavior.
+  - id: AC-09
+    description: Existing Forge Validator verification still passes.
+
+required_checks:
+  - verify
