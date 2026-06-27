@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0011` — Add Forge task scaffold command (`proposed`).
+- [ ] `TASK-0011` — Add Forge task scaffold command (`approved`).
 
 ## Next
 
-- [ ] Run Planner for `TASK-0011`.
+- [ ] Run Builder for `TASK-0011`.
 
 ## Later
 
