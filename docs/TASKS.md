@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0008` — Validate artifact retry chains (`in_progress`).
+- [ ] `TASK-0008` — Validate artifact retry chains (`ready_for_pr`).
 
 ## Next
 
-- [ ] Run Reviewer for `TASK-0008`.
+- [ ] Prepare PR for `TASK-0008`.
 
 ## Later
 
