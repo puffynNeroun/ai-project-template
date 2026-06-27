@@ -2,7 +2,7 @@ schema_version: 1
 
 id: TASK-0009
 title: Decide plan/build retry-chain policy
-status: ready_for_pr
+status: completed
 workflow: .forge/workflows/feature.yaml
 
 goal: Decide whether Forge Validator should later extend retry-chain validation to plan and build_report artifacts, and document the policy before any implementation work.
