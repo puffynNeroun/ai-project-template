@@ -2,7 +2,7 @@ schema_version: 1
 
 id: TASK-0010
 title: Add Forge lifecycle status command
-status: proposed
+status: approved
 workflow: .forge/workflows/feature.yaml
 
 goal: Add a read-only Forge lifecycle status command that summarizes the repository's current task state, task board, artifact readiness, stale verification guard result, and verification readiness so future task runs require less manual copy-paste checking.

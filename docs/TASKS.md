@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0010` — Add Forge lifecycle status command (`proposed`).
+- [ ] `TASK-0010` — Add Forge lifecycle status command (`approved`).
 
 ## Next
 
-- [ ] Run Planner for `TASK-0010`.
+- [ ] Run Builder for `TASK-0010`.
 
 ## Later
 
