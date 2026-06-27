@@ -20,4 +20,4 @@ The local validator lives in `tools/forge-validator`. It verifies the current v1
 
 `.github/workflows/forge-contracts.yml` runs the local validator for pull requests targeting `main` and pushes to `main`. CI uses the reproducible install and verify commands already exposed by the Forge project manifest.
 
-Formal external schemas, runtime orchestration, retry-chain validation beyond repeated test and review artifacts, append-only Git-history enforcement, human approval evidence validation, automatic status transitions, additional workflows, and additional policies are intentionally deferred.
+Formal external schemas, runtime orchestration, retry-chain validation beyond repeated test and review artifacts, append-only Git-history enforcement, human approval evidence validation, automatic status transitions, additional workflows, and additional policies are intentionally deferred. Repeated `plan` and `build_report` artifacts remain structurally validated but intentionally unrestricted by retry-chain policy unless a later approved implementation task changes that.
