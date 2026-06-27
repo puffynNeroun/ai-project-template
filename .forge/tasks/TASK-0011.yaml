@@ -2,7 +2,7 @@ schema_version: 1
 
 id: TASK-0011
 title: Add Forge task scaffold command
-status: in_progress
+status: ready_for_pr
 workflow: .forge/workflows/feature.yaml
 
 goal: Add a controlled Forge task scaffold command that creates a new task contract, prepares the task artifact directory, and updates docs/TASKS.md so future tasks can be started safely without manual large heredoc copy-paste blocks.

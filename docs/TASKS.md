@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0011` — Add Forge task scaffold command (`in_progress`).
+- [ ] `TASK-0011` — Add Forge task scaffold command (`ready_for_pr`).
 
 ## Next
 
-- [ ] Run Reviewer for `TASK-0011`.
+- [ ] Prepare PR for `TASK-0011`.
 
 ## Later
 
