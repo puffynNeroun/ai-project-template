@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0009` — Decide plan/build retry-chain policy (`proposed`).
+- [ ] `TASK-0009` — Decide plan/build retry-chain policy (`approved`).
 
 ## Next
 
-- [ ] Run Planner for `TASK-0009`.
+- [ ] Run Builder for `TASK-0009`.
 
 ## Later
 
