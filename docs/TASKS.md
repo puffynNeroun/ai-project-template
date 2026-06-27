@@ -2,15 +2,15 @@
 
 ## Now
 
-- [ ] No active task.
+- [ ] `TASK-0009` — Decide plan/build retry-chain policy (`ready_for_pr`).
 
 ## Next
 
-- [ ] Define the next task.
+- [ ] Prepare PR for `TASK-0009`.
 
 ## Later
 
-- [ ] Decide whether retry-chain validation should later expand to plan/build artifacts.
+- [ ] No later tasks.
 
 ## Completed
 

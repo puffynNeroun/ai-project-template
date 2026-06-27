@@ -1,0 +1,73 @@
+schema_version: 1
+
+id: TASK-0009
+title: Decide plan/build retry-chain policy
+status: ready_for_pr
+workflow: .forge/workflows/feature.yaml
+
+goal: Decide whether Forge Validator should later extend retry-chain validation to plan and build_report artifacts, and document the policy before any implementation work.
+
+in_scope:
+  - Evaluate whether plan retry attempts should require a specific previous plan outcome.
+  - Evaluate whether build_report retry attempts should require a specific previous build_report outcome.
+  - Decide whether plan and build_report retries should remain intentionally unrestricted.
+  - Document the chosen policy and the reasoning behind it.
+  - Preserve the existing TASK-0008 behavior for test_report and review_report retry chains.
+  - Preserve completed task evidence and existing validator behavior unless a later implementation task explicitly changes it.
+
+out_of_scope:
+  - Implementing plan retry-chain validation.
+  - Implementing build_report retry-chain validation.
+  - Changing validator source code.
+  - Changing validator tests.
+  - Changing package files, lockfiles, or CI workflows.
+  - Rewriting completed task artifacts.
+  - Creating release tags or deployment artifacts.
+
+allowed_files:
+  - .forge/tasks/TASK-0009.yaml
+  - docs/TASKS.md
+  - .forge/artifacts/TASK-0009/plan-001.md
+  - .forge/artifacts/TASK-0009/build-report-001.md
+  - .forge/artifacts/TASK-0009/test-report-001.md
+  - .forge/artifacts/TASK-0009/review-report-001.md
+  - tools/forge-validator/README.md
+  - .forge/artifacts/README.md
+  - .forge/README.md
+
+protected_files:
+  - tools/forge-validator/src/validate.mjs
+  - tools/forge-validator/test/validate.test.mjs
+  - package.json
+  - pnpm-lock.yaml
+  - .github/workflows/forge-contracts.yml
+  - .forge/workflows/feature.yaml
+  - .forge/roles/planner.md
+  - .forge/roles/builder.md
+  - .forge/roles/tester.md
+  - .forge/roles/reviewer.md
+  - .forge/tasks/TASK-0001.yaml
+  - .forge/tasks/TASK-0002.yaml
+  - .forge/tasks/TASK-0003.yaml
+  - .forge/tasks/TASK-0004.yaml
+  - .forge/tasks/TASK-0005.yaml
+  - .forge/tasks/TASK-0006.yaml
+  - .forge/tasks/TASK-0007.yaml
+  - .forge/tasks/TASK-0008.yaml
+
+acceptance_criteria:
+  - id: AC-01
+    description: The task records a clear decision on whether plan retry chains should be validated later.
+  - id: AC-02
+    description: The task records a clear decision on whether build_report retry chains should be validated later.
+  - id: AC-03
+    description: The decision explains risks of enforcing retry chains for planning and builder artifacts.
+  - id: AC-04
+    description: The decision explains whether TASK-0008 test_report and review_report behavior remains unchanged.
+  - id: AC-05
+    description: The task does not change validator implementation or validator tests.
+  - id: AC-06
+    description: Forge Validator verification passes.
+
+required_checks:
+  - verify

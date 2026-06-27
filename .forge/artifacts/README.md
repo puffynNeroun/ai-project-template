@@ -118,7 +118,9 @@ Retry-chain validation applies only to repeated `test_report` and `review_report
 - `test_report` attempt `N` greater than `1` requires same-task `test_report` attempt `N-1` to exist and have outcome `FAIL`.
 - `review_report` attempt `N` greater than `1` requires same-task `review_report` attempt `N-1` to exist and have outcome `REJECT`.
 
-The validator does not apply retry-chain validation to `plan` or `build_report` artifacts. Retry chains are based on same-task, same-type numeric attempts, not Git history. Input artifact references are still exact paths and are not required to reference latest attempts.
+The validator does not apply retry-chain validation to `plan` or `build_report` artifacts. Repeated `plan` attempts remain structurally validated, and repeated `build_report` attempts remain structurally validated with normal input and referenced-outcome checks. They are not retry-chain validated because plan and build retry semantics are intentionally unrestricted until a separate approved task defines a clearer workflow or cross-artifact policy.
+
+Retry chains are based on same-task, same-type numeric attempts, not Git history. Input artifact references are still exact paths and are not required to reference latest attempts.
 
 Retry-chain checks run only when the current retry artifact is structurally valid, belongs to a valid task contract, and its required previous same-type attempt exists and is structurally valid. Missing or malformed artifacts are reported by structural and input validation without extra retry-chain cascade errors.
 
@@ -176,4 +178,4 @@ Presence validation runs only for active task contracts that pass task-contract 
 
 ## Deferred Enforcement
 
-This contract does not add exact-attempt requirements beyond the narrow test/review retry-chain rules above, append-only Git-history enforcement, human approval artifacts, delivery evidence artifacts, runtime orchestration, automatic status transitions, GitHub automation, a database, an event stream, or a web interface.
+This contract does not add exact-attempt requirements beyond the narrow test/review retry-chain rules above, plan/build retry-chain enforcement, append-only Git-history enforcement, human approval artifacts, delivery evidence artifacts, runtime orchestration, automatic status transitions, GitHub automation, a database, an event stream, or a web interface.
