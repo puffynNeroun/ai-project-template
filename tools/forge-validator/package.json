@@ -7,9 +7,10 @@
   },
   "scripts": {
     "validate": "node ./src/validate.mjs ../..",
-    "test": "node --test ./test/validate.test.mjs ./test/status.test.mjs",
+    "test": "node --test ./test/validate.test.mjs ./test/status.test.mjs ./test/scaffold-task.test.mjs",
     "verify": "pnpm run test && pnpm run validate",
-    "status": "node ./src/status.mjs"
+    "status": "node ./src/status.mjs",
+    "task:new": "node ./src/scaffold-task.mjs"
   },
   "dependencies": {
     "yaml": "2.9.0"

@@ -1,0 +1,87 @@
+schema_version: 1
+
+id: TASK-0011
+title: Add Forge task scaffold command
+status: ready_for_pr
+workflow: .forge/workflows/feature.yaml
+
+goal: Add a controlled Forge task scaffold command that creates a new task contract, prepares the task artifact directory, and updates docs/TASKS.md so future tasks can be started safely without manual large heredoc copy-paste blocks.
+
+in_scope:
+  - Design a controlled task scaffold command for the Forge Validator tool.
+  - Accept a task ID and task title from CLI arguments.
+  - Validate the task ID format before writing files.
+  - Refuse to run when docs/TASKS.md already has an active task.
+  - Refuse to overwrite an existing task contract or task artifact directory.
+  - Create a new .forge/tasks/TASK-XXXX.yaml contract in proposed status.
+  - Create or prepare the matching .forge/artifacts/TASK-XXXX/ directory.
+  - Update docs/TASKS.md Now and Next sections for the new task.
+  - Document how to run the scaffold command.
+  - Add tests for successful and rejected scaffold behavior.
+  - Preserve existing Forge Validator verification behavior.
+
+out_of_scope:
+  - Changing existing validator validation rules.
+  - Automatically creating plan, build, test, or review reports.
+  - Automatically approving plans or reviews.
+  - Automatically creating branches, commits, pushes, pull requests, merges, or releases.
+  - Modifying completed task contracts or completed task artifacts.
+  - Rewriting TASK-0001 through TASK-0010 evidence.
+  - Adding a database, web UI, or long-running runtime service.
+
+allowed_files:
+  - .forge/tasks/TASK-0011.yaml
+  - docs/TASKS.md
+  - .forge/artifacts/TASK-0011/plan-001.md
+  - .forge/artifacts/TASK-0011/build-report-001.md
+  - .forge/artifacts/TASK-0011/test-report-001.md
+  - .forge/artifacts/TASK-0011/review-report-001.md
+  - tools/forge-validator/src/scaffold-task.mjs
+  - tools/forge-validator/test/scaffold-task.test.mjs
+  - tools/forge-validator/package.json
+  - tools/forge-validator/README.md
+
+protected_files:
+  - tools/forge-validator/src/validate.mjs
+  - tools/forge-validator/test/validate.test.mjs
+  - tools/forge-validator/src/status.mjs
+  - tools/forge-validator/test/status.test.mjs
+  - package.json
+  - pnpm-lock.yaml
+  - .github/workflows/forge-contracts.yml
+  - .forge/workflows/feature.yaml
+  - .forge/roles/planner.md
+  - .forge/roles/builder.md
+  - .forge/roles/tester.md
+  - .forge/roles/reviewer.md
+  - completed TASK-0001..0010 contracts
+  - completed TASK-0001..0010 artifacts
+
+acceptance_criteria:
+  - id: AC-01
+    description: A controlled Forge task scaffold command is available from the Forge Validator tool.
+  - id: AC-02
+    description: The command accepts a task ID and task title from CLI arguments.
+  - id: AC-03
+    description: The command validates task ID format before writing files.
+  - id: AC-04
+    description: The command refuses to run when docs/TASKS.md already has an active task.
+  - id: AC-05
+    description: The command refuses to overwrite an existing task contract or task artifact directory.
+  - id: AC-06
+    description: The command creates a new task contract in proposed status.
+  - id: AC-07
+    description: The command prepares the matching task artifact directory.
+  - id: AC-08
+    description: The command updates docs/TASKS.md Now and Next sections for the new task.
+  - id: AC-09
+    description: The command does not create branches, commits, pushes, pull requests, merges, or releases.
+  - id: AC-10
+    description: The command is documented in tools/forge-validator/README.md.
+  - id: AC-11
+    description: Tests cover successful scaffold behavior and rejected scaffold behavior.
+  - id: AC-12
+    description: Existing Forge Validator verification still passes.
+
+required_checks:
+  - verify
