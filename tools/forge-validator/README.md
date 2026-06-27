@@ -42,7 +42,18 @@ The validator also checks referenced artifact outcome chains for exact paths lis
 
 Referenced outcome-chain checks run only when both the referencing artifact and referenced artifact are structurally valid. Missing references and structurally invalid references are reported by the existing input and structural checks, without secondary referenced-outcome errors.
 
-The validator does not enforce retry-chain semantics, append-only Git history, human approval evidence, runtime orchestration, or automatic status transitions.
+The validator also checks retry chains for repeated test and review artifacts:
+
+- `test_report` attempt `1` is valid without a previous `test_report`.
+- `review_report` attempt `1` is valid without a previous `review_report`.
+- `test_report` attempt `N` greater than `1` requires `test_report` attempt `N-1` for the same task to exist and have outcome `FAIL`.
+- `review_report` attempt `N` greater than `1` requires `review_report` attempt `N-1` for the same task to exist and have outcome `REJECT`.
+
+Retry-chain checks apply only to `test_report` and `review_report` artifacts. They do not validate `plan` or `build_report` retries, infer retry chains from Git history, or require input artifacts to reference latest attempts. Retry-chain checks run only when the current artifact and the required previous artifact are structurally valid and belong to a valid task contract.
+
+The existing historical `.forge/artifacts/TASK-0004/test-report-002.md` artifact predates retry-chain enforcement and remains immutable compatibility evidence. It is narrowly exempt from retry-chain validation so completed artifacts do not need to be rewritten or fabricated.
+
+The validator does not enforce append-only Git history, human approval evidence, runtime orchestration, or automatic status transitions.
 
 ## Install
 

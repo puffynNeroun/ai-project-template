@@ -1,0 +1,127 @@
+schema_version: 1
+
+id: TASK-0008
+title: Validate artifact retry chains
+status: ready_for_pr
+workflow: .forge/workflows/feature.yaml
+
+goal: Make Forge Validator check that repeated test_report and review_report artifact attempts form valid retry chains, while preserving latest-attempt selection, delivery-ready outcome gates, referenced outcome-chain validation, and existing structural artifact validation.
+
+in_scope:
+  - Add a task contract for future artifact retry-chain validation.
+  - Validate retry chains for test_report artifacts with attempt greater than 1.
+  - Validate retry chains for review_report artifacts with attempt greater than 1.
+  - Require test_report attempt N greater than 1 to have previous same-type attempt N-1 with outcome FAIL.
+  - Require review_report attempt N greater than 1 to have previous same-type attempt N-1 with outcome REJECT.
+  - Keep test_report attempt 1 valid without a previous test_report attempt.
+  - Keep review_report attempt 1 valid without a previous review_report attempt.
+  - Preserve existing attempt-gap behavior unless a retry-chain rule explicitly needs the previous same-type attempt.
+  - Avoid secondary retry-chain errors when the previous retry attempt is missing and existing structural or input validation already reports the relevant issue.
+  - Avoid secondary retry-chain errors when the previous retry attempt is structurally invalid.
+  - Avoid retry-chain errors for artifacts belonging to invalid task contracts.
+  - Preserve the existing historical TASK-0004 test-report-002.md artifact without modifying or fabricating completed artifacts.
+  - Preserve TASK-0005 latest-attempt selection behavior.
+  - Preserve TASK-0006 delivery-ready latest outcome gates.
+  - Preserve TASK-0007 exact input_artifacts referenced outcome-chain validation.
+  - Preserve TASK-0001 and TASK-0002 completed-task legacy exemptions.
+  - Add focused Validator tests for positive retry chains, invalid retry chains, cascade prevention, non-latest behavior, and preservation of existing validation behavior.
+  - Update relevant Forge Validator and artifact documentation.
+  - Update docs/TASKS.md to track TASK-0008.
+
+out_of_scope:
+  - Implement source, tests, or documentation as part of this task-definition change.
+  - Validate retry chains for plan artifacts.
+  - Validate retry chains for build_report artifacts.
+  - Infer retry chains from Git history.
+  - Enforce append-only artifact history through Git history.
+  - Require human approval evidence.
+  - Validate Markdown artifact bodies.
+  - Add runtime orchestration.
+  - Automatically transition task status.
+  - Execute agent roles.
+  - Add new dependencies or modify package metadata or the lockfile.
+  - Change CI or release workflows.
+  - Create a release.
+  - Modify existing completed task contracts.
+  - Modify existing completed task artifacts.
+  - Modify workflow contracts, role contracts, templates, root project documentation, or GitHub workflow files.
+  - Commit, push, create a pull request, merge, release, deploy, publish, or perform other remote mutation.
+
+allowed_files:
+  - .forge/tasks/TASK-0008.yaml
+  - .forge/artifacts/TASK-0008/
+  - docs/TASKS.md
+  - .forge/README.md
+  - .forge/artifacts/README.md
+  - tools/forge-validator/README.md
+  - tools/forge-validator/src/validate.mjs
+  - tools/forge-validator/test/validate.test.mjs
+
+protected_files:
+  - .forge/project.yaml
+  - .forge/workflows/feature.yaml
+  - .forge/tasks/task.template.yaml
+  - .forge/tasks/README.md
+  - .forge/tasks/TASK-0001.yaml
+  - .forge/tasks/TASK-0002.yaml
+  - .forge/tasks/TASK-0003.yaml
+  - .forge/tasks/TASK-0004.yaml
+  - .forge/tasks/TASK-0005.yaml
+  - .forge/tasks/TASK-0006.yaml
+  - .forge/tasks/TASK-0007.yaml
+  - .forge/roles/planner.md
+  - .forge/roles/builder.md
+  - .forge/roles/tester.md
+  - .forge/roles/reviewer.md
+  - .forge/artifacts/templates/plan.md
+  - .forge/artifacts/templates/build-report.md
+  - .forge/artifacts/templates/test-report.md
+  - .forge/artifacts/templates/review-report.md
+  - .forge/artifacts/TASK-0003/
+  - .forge/artifacts/TASK-0004/
+  - .forge/artifacts/TASK-0005/
+  - .forge/artifacts/TASK-0006/
+  - .forge/artifacts/TASK-0007/
+  - .github/workflows/forge-contracts.yml
+  - tools/forge-validator/package.json
+  - tools/forge-validator/pnpm-lock.yaml
+  - AGENTS.md
+  - README.md
+  - docs/PRODUCT_SPEC.md
+  - docs/AI_WORKFLOW.md
+  - docs/DECISIONS.md
+
+acceptance_criteria:
+  - id: AC-1
+    description: test_report attempt 1 remains valid without a previous test_report attempt.
+  - id: AC-2
+    description: review_report attempt 1 remains valid without a previous review_report attempt.
+  - id: AC-3
+    description: test_report attempt N greater than 1 passes retry-chain validation when attempt N-1 exists and has outcome FAIL.
+  - id: AC-4
+    description: test_report attempt N greater than 1 fails retry-chain validation when attempt N-1 exists and has outcome PASS.
+  - id: AC-5
+    description: review_report attempt N greater than 1 passes retry-chain validation when attempt N-1 exists and has outcome REJECT.
+  - id: AC-6
+    description: review_report attempt N greater than 1 fails retry-chain validation when attempt N-1 exists and has outcome ACCEPT.
+  - id: AC-7
+    description: Missing previous retry attempts do not produce duplicate retry-chain errors when existing validation already reports the structural issue.
+  - id: AC-8
+    description: Structurally invalid previous retry attempts do not produce duplicate retry-chain errors.
+  - id: AC-9
+    description: Artifacts belonging to invalid task contracts do not produce secondary retry-chain errors.
+  - id: AC-10
+    description: The existing historical .forge/artifacts/TASK-0004/test-report-002.md artifact remains immutable and does not make the current repository invalid.
+  - id: AC-11
+    description: TASK-0005 latest-attempt selection behavior continues to pass.
+  - id: AC-12
+    description: TASK-0006 delivery-ready latest outcome gate behavior continues to pass.
+  - id: AC-13
+    description: TASK-0007 exact input_artifacts referenced outcome-chain validation continues to pass.
+  - id: AC-14
+    description: Forge Validator remains read-only, verification passes, and no file outside the approved scope is modified.
+  - id: AC-15
+    description: docs/TASKS.md tracks TASK-0008 as the current task and shows the same lifecycle status as .forge/tasks/TASK-0008.yaml.
+
+required_checks:
+  - verify

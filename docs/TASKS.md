@@ -2,15 +2,15 @@
 
 ## Now
 
-- No active task.
+- [ ] `TASK-0008` — Validate artifact retry chains (`ready_for_pr`).
 
 ## Next
 
-- [ ] Define next task.
+- [ ] Prepare PR for `TASK-0008`.
 
 ## Later
 
-- [ ] Evaluate retry-chain validation after referenced outcome-chain validation is proven.
+- [ ] Decide whether retry-chain validation should later expand to plan/build artifacts.
 
 ## Completed
 
