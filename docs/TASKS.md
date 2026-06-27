@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0009` — Decide plan/build retry-chain policy (`in_progress`).
+- [ ] `TASK-0009` — Decide plan/build retry-chain policy (`ready_for_pr`).
 
 ## Next
 
-- [ ] Run Reviewer for `TASK-0009`.
+- [ ] Prepare PR for `TASK-0009`.
 
 ## Later
 
