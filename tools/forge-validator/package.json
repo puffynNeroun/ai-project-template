@@ -7,8 +7,9 @@
   },
   "scripts": {
     "validate": "node ./src/validate.mjs ../..",
-    "test": "node --test ./test/validate.test.mjs",
-    "verify": "pnpm run test && pnpm run validate"
+    "test": "node --test ./test/validate.test.mjs ./test/status.test.mjs",
+    "verify": "pnpm run test && pnpm run validate",
+    "status": "node ./src/status.mjs"
   },
   "dependencies": {
     "yaml": "2.9.0"
