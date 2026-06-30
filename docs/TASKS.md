@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0016` — Add Forge workflow smoke command (`in_progress`).
+- [ ] `TASK-0016` — Add Forge workflow smoke command (`ready_for_pr`).
 
 ## Next
 
-- [ ] Run Reviewer for `TASK-0016`.
+- [ ] Prepare PR for `TASK-0016`.
 
 ## Later
 

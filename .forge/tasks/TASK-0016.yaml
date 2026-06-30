@@ -2,7 +2,7 @@ schema_version: 1
 
 id: TASK-0016
 title: Add Forge workflow smoke command
-status: in_progress
+status: ready_for_pr
 workflow: .forge/workflows/feature.yaml
 
 goal: Add a controlled Forge workflow smoke command that validates the full Forge task lifecycle on a temporary fixture repository from task creation through completion.
