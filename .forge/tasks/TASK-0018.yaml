@@ -1,0 +1,95 @@
+schema_version: 1
+
+id: TASK-0018
+title: Add project bootstrap documentation
+status: ready_for_pr
+workflow: .forge/workflows/feature.yaml
+
+goal: Add clear project bootstrap documentation that explains how to start a real product from this template after the v0.2.0 release.
+
+in_scope:
+  - Create docs/BOOTSTRAP_PROJECT.md.
+  - Explain how to create a new repository from this template.
+  - Explain how to clone and enter the project locally.
+  - Explain how to verify the template before starting work.
+  - Explain how to rename and adapt the project.
+  - Explain what files to edit first for a real product.
+  - Explain how to start the first Forge task.
+  - Explain how to use the Forge lifecycle commands.
+  - Explain how to use the template with Cursor, Codex, or another AI assistant.
+  - Include a Pixardia-oriented example.
+  - Keep this task documentation-only.
+  - Preserve existing Forge Validator behavior.
+
+out_of_scope:
+  - Changing Forge Validator runtime behavior.
+  - Changing lifecycle validation policy.
+  - Creating a new project repository.
+  - Creating or pushing tags.
+  - Creating GitHub releases.
+  - Publishing packages.
+  - Changing CI configuration.
+  - Rewriting historical TASK-0001 through TASK-0017 evidence.
+
+allowed_files:
+  - .forge/tasks/TASK-0018.yaml
+  - docs/TASKS.md
+  - .forge/artifacts/TASK-0018/plan-001.md
+  - .forge/artifacts/TASK-0018/build-report-001.md
+  - .forge/artifacts/TASK-0018/test-report-001.md
+  - .forge/artifacts/TASK-0018/review-report-001.md
+  - docs/BOOTSTRAP_PROJECT.md
+
+protected_files:
+  - tools/forge-validator/src/validate.mjs
+  - tools/forge-validator/test/validate.test.mjs
+  - tools/forge-validator/src/status.mjs
+  - tools/forge-validator/test/status.test.mjs
+  - tools/forge-validator/src/scaffold-task.mjs
+  - tools/forge-validator/test/scaffold-task.test.mjs
+  - tools/forge-validator/src/complete-task.mjs
+  - tools/forge-validator/test/complete-task.test.mjs
+  - tools/forge-validator/src/stage-task.mjs
+  - tools/forge-validator/test/stage-task.test.mjs
+  - tools/forge-validator/src/scaffold-artifact.mjs
+  - tools/forge-validator/test/scaffold-artifact.test.mjs
+  - tools/forge-validator/src/workflow-smoke.mjs
+  - tools/forge-validator/test/workflow-smoke.test.mjs
+  - tools/forge-validator/package.json
+  - tools/forge-validator/README.md
+  - docs/releases/v0.2.0.md
+  - package.json
+  - pnpm-lock.yaml
+  - .github/workflows/forge-contracts.yml
+  - .forge/workflows/feature.yaml
+  - .forge/roles/planner.md
+  - .forge/roles/builder.md
+  - .forge/roles/tester.md
+  - .forge/roles/reviewer.md
+  - completed TASK-0001..0017 contracts
+  - completed TASK-0001..0017 artifacts
+
+acceptance_criteria:
+  - id: AC-01
+    description: docs/BOOTSTRAP_PROJECT.md exists.
+  - id: AC-02
+    description: The document explains how to create a new project repository from this template.
+  - id: AC-03
+    description: The document explains the first local verification commands.
+  - id: AC-04
+    description: The document explains what files to rename or edit first.
+  - id: AC-05
+    description: The document explains how to start the first Forge task.
+  - id: AC-06
+    description: The document lists the core Forge lifecycle commands.
+  - id: AC-07
+    description: The document includes guidance for using Cursor, Codex, or another AI assistant.
+  - id: AC-08
+    description: The document includes a Pixardia-oriented bootstrap example.
+  - id: AC-09
+    description: This task does not change runtime behavior.
+  - id: AC-10
+    description: Existing Forge Validator verification still passes.
+
+required_checks:
+  - verify
