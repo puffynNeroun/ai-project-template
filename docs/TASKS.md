@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] No active task.
+- [ ] `TASK-0016` — Add Forge workflow smoke command (`proposed`).
 
 ## Next
 
-- [ ] Define the next task.
+- [ ] Run Planner for `TASK-0016`.
 
 ## Later
 
