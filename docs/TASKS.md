@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0014` — Add Forge stage transition command (`ready_for_pr`).
+- [ ] No active task.
 
 ## Next
 
-- [ ] Prepare PR for `TASK-0014`.
+- [ ] Define the next task.
 
 ## Later
 
@@ -14,6 +14,7 @@
 
 ## Completed
 
+- [x] `TASK-0014` — Add Forge stage transition command (`completed`, 2026-07-01).
 - [x] `TASK-0013` — Add Forge task completion command (`completed`, 2026-07-01).
 - [x] `TASK-0012` — Fix Forge task scaffold argument separator handling (`completed`, 2026-06-27).
 - [x] `TASK-0011` — Add Forge task scaffold command (`completed`, 2026-06-27).
