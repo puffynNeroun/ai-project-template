@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0016` — Add Forge workflow smoke command (`approved`).
+- [ ] `TASK-0016` — Add Forge workflow smoke command (`in_progress`).
 
 ## Next
 
-- [ ] Run Builder for `TASK-0016`.
+- [ ] Run Tester for `TASK-0016`.
 
 ## Later
 
