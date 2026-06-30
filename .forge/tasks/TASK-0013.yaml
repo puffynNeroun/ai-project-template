@@ -1,0 +1,95 @@
+schema_version: 1
+
+id: TASK-0013
+title: Add Forge task completion command
+status: ready_for_pr
+workflow: .forge/workflows/feature.yaml
+
+goal: Add a controlled Forge task completion command that marks a ready-for-pr task as completed, clears the active task board state, and adds the task to the Completed section without manual docs/TASKS.md editing.
+
+in_scope:
+  - Design a controlled task completion command for the Forge Validator tool.
+  - Accept a task ID from CLI arguments.
+  - Validate the task ID format before writing files.
+  - Refuse to run when the task contract does not exist.
+  - Refuse to run when the task is not in ready_for_pr status.
+  - Refuse to run when docs/TASKS.md does not show that task as the active ready_for_pr task.
+  - Update the task contract status from ready_for_pr to completed.
+  - Update docs/TASKS.md Now to No active task.
+  - Update docs/TASKS.md Next to Define the next task.
+  - Add the task to the top of the Completed section.
+  - Document how to run the completion command.
+  - Add tests for successful and rejected completion behavior.
+  - Preserve existing Forge Validator verification behavior.
+
+out_of_scope:
+  - Changing task lifecycle validation policy.
+  - Automatically creating branches, commits, pushes, pull requests, merges, or releases.
+  - Automatically creating plan, build, test, or review reports.
+  - Completing tasks that are not ready_for_pr.
+  - Modifying completed task contracts or completed task artifacts other than the selected task contract.
+  - Rewriting TASK-0001 through TASK-0012 evidence.
+  - Adding a database, web UI, or long-running runtime service.
+
+allowed_files:
+  - .forge/tasks/TASK-0013.yaml
+  - docs/TASKS.md
+  - .forge/artifacts/TASK-0013/plan-001.md
+  - .forge/artifacts/TASK-0013/build-report-001.md
+  - .forge/artifacts/TASK-0013/test-report-001.md
+  - .forge/artifacts/TASK-0013/review-report-001.md
+  - tools/forge-validator/src/complete-task.mjs
+  - tools/forge-validator/test/complete-task.test.mjs
+  - tools/forge-validator/package.json
+  - tools/forge-validator/README.md
+
+protected_files:
+  - tools/forge-validator/src/validate.mjs
+  - tools/forge-validator/test/validate.test.mjs
+  - tools/forge-validator/src/status.mjs
+  - tools/forge-validator/test/status.test.mjs
+  - tools/forge-validator/src/scaffold-task.mjs
+  - tools/forge-validator/test/scaffold-task.test.mjs
+  - package.json
+  - pnpm-lock.yaml
+  - .github/workflows/forge-contracts.yml
+  - .forge/workflows/feature.yaml
+  - .forge/roles/planner.md
+  - .forge/roles/builder.md
+  - .forge/roles/tester.md
+  - .forge/roles/reviewer.md
+  - completed TASK-0001..0012 contracts
+  - completed TASK-0001..0012 artifacts
+
+acceptance_criteria:
+  - id: AC-01
+    description: A controlled Forge task completion command is available from the Forge Validator tool.
+  - id: AC-02
+    description: The command accepts a task ID from CLI arguments.
+  - id: AC-03
+    description: The command validates task ID format before writing files.
+  - id: AC-04
+    description: The command refuses to complete a missing task contract.
+  - id: AC-05
+    description: The command refuses to complete a task that is not in ready_for_pr status.
+  - id: AC-06
+    description: The command refuses to run when docs/TASKS.md does not show the selected task as the active ready_for_pr task.
+  - id: AC-07
+    description: The command updates the selected task contract status from ready_for_pr to completed.
+  - id: AC-08
+    description: The command clears the Now section to No active task.
+  - id: AC-09
+    description: The command sets the Next section to Define the next task.
+  - id: AC-10
+    description: The command adds the completed task to the top of the Completed section.
+  - id: AC-11
+    description: The command does not create branches, commits, pushes, pull requests, merges, or releases.
+  - id: AC-12
+    description: The command is documented in tools/forge-validator/README.md.
+  - id: AC-13
+    description: Tests cover successful and rejected completion behavior.
+  - id: AC-14
+    description: Existing Forge Validator verification still passes.
+
+required_checks:
+  - verify
