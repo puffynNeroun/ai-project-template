@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0012` — Fix Forge task scaffold argument separator handling (`ready_for_pr`).
+- [ ] No active task.
 
 ## Next
 
-- [ ] Prepare PR for `TASK-0012`.
+- [ ] Define the next task.
 
 ## Later
 
@@ -14,6 +14,7 @@
 
 ## Completed
 
+- [x] `TASK-0012` — Fix Forge task scaffold argument separator handling (`completed`, 2026-06-27).
 - [x] `TASK-0011` — Add Forge task scaffold command (`completed`, 2026-06-27).
 - [x] `TASK-0010` — Add Forge lifecycle status command (`completed`, 2026-06-27).
 - [x] `TASK-0009` — Decide plan/build retry-chain policy (`completed`, 2026-06-27).
