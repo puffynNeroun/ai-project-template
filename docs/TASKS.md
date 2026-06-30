@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0016` — Add Forge workflow smoke command (`proposed`).
+- [ ] `TASK-0016` — Add Forge workflow smoke command (`approved`).
 
 ## Next
 
-- [ ] Run Planner for `TASK-0016`.
+- [ ] Run Builder for `TASK-0016`.
 
 ## Later
 
