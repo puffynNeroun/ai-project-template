@@ -200,3 +200,36 @@ The command refuses to run when:
 - `docs/TASKS.md` does not show the expected current Next step
 
 The command intentionally does not create artifact reports, branches, commits, pushes, pull requests, merges, releases, or task completion updates.
+
+## Scaffold an artifact report
+
+Use the artifact scaffold command to create lifecycle artifact report files with valid frontmatter.
+
+~~~bash
+pnpm -C tools/forge-validator run artifact:new -- --id TASK-0015 --type plan
+pnpm -C tools/forge-validator run artifact:new -- --id TASK-0015 --type build_report
+pnpm -C tools/forge-validator run artifact:new -- --id TASK-0015 --type test_report
+pnpm -C tools/forge-validator run artifact:new -- --id TASK-0015 --type review_report
+~~~
+
+Supported artifact types:
+
+- `plan`
+- `build_report`
+- `test_report`
+- `review_report`
+
+The command creates files under:
+
+~~~text
+.forge/artifacts/TASK-XXXX/
+~~~
+
+The command refuses to run when:
+
+- the task ID is invalid
+- the artifact type is invalid
+- the task contract does not exist
+- the artifact report already exists
+
+The command intentionally does not change task status, change `docs/TASKS.md`, create branches, create commits, push, create pull requests, merge pull requests, release, or complete tasks.
