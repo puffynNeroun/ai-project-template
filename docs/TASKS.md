@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0018` — Add project bootstrap documentation (`approved`).
+- [ ] `TASK-0018` — Add project bootstrap documentation (`in_progress`).
 
 ## Next
 
-- [ ] Run Builder for `TASK-0018`.
+- [ ] Run Tester for `TASK-0018`.
 
 ## Later
 
