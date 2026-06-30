@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0018` — Add project bootstrap documentation (`proposed`).
+- [ ] `TASK-0018` — Add project bootstrap documentation (`approved`).
 
 ## Next
 
-- [ ] Run Planner for `TASK-0018`.
+- [ ] Run Builder for `TASK-0018`.
 
 ## Later
 
