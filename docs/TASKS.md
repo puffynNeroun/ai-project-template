@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0013` — Add Forge task completion command (`proposed`).
+- [ ] `TASK-0013` — Add Forge task completion command (`approved`).
 
 ## Next
 
-- [ ] Run Planner for `TASK-0013`.
+- [ ] Run Builder for `TASK-0013`.
 
 ## Later
 
