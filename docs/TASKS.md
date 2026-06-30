@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0018` — Add project bootstrap documentation (`ready_for_pr`).
+- [ ] No active task.
 
 ## Next
 
-- [ ] Prepare PR for `TASK-0018`.
+- [ ] Define the next task.
 
 ## Later
 
@@ -14,6 +14,7 @@
 
 ## Completed
 
+- [x] `TASK-0018` — Add project bootstrap documentation (`completed`, 2026-07-01).
 - [x] `TASK-0017` — Prepare Forge v0.2.0 release notes (`completed`, 2026-07-01).
 - [x] `TASK-0016` — Add Forge workflow smoke command (`completed`, 2026-07-01).
 - [x] `TASK-0015` — Add Forge artifact report scaffold command (`completed`, 2026-07-01).
