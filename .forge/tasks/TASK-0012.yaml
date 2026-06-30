@@ -1,0 +1,69 @@
+schema_version: 1
+
+id: TASK-0012
+title: Fix Forge task scaffold argument separator handling
+status: ready_for_pr
+workflow: .forge/workflows/feature.yaml
+
+goal: Fix the Forge task scaffold command so it accepts both direct script arguments and the common pnpm argument separator form with a leading --.
+
+in_scope:
+  - Update the scaffold command argument parser to ignore a leading -- separator.
+  - Preserve existing direct argument usage without the separator.
+  - Add tests for both supported invocation styles.
+  - Update README documentation to show both supported command forms.
+  - Preserve existing scaffold command behavior.
+  - Preserve existing Forge Validator verification behavior.
+
+out_of_scope:
+  - Changing task lifecycle policy.
+  - Adding a task completion command.
+  - Changing existing validator validation rules.
+  - Automatically creating branches, commits, pushes, pull requests, merges, or releases.
+  - Modifying completed task contracts or completed task artifacts.
+  - Rewriting TASK-0001 through TASK-0011 evidence.
+
+allowed_files:
+  - .forge/tasks/TASK-0012.yaml
+  - docs/TASKS.md
+  - .forge/artifacts/TASK-0012/plan-001.md
+  - .forge/artifacts/TASK-0012/build-report-001.md
+  - .forge/artifacts/TASK-0012/test-report-001.md
+  - .forge/artifacts/TASK-0012/review-report-001.md
+  - tools/forge-validator/src/scaffold-task.mjs
+  - tools/forge-validator/test/scaffold-task.test.mjs
+  - tools/forge-validator/README.md
+
+protected_files:
+  - tools/forge-validator/src/validate.mjs
+  - tools/forge-validator/test/validate.test.mjs
+  - tools/forge-validator/src/status.mjs
+  - tools/forge-validator/test/status.test.mjs
+  - tools/forge-validator/package.json
+  - package.json
+  - pnpm-lock.yaml
+  - .github/workflows/forge-contracts.yml
+  - .forge/workflows/feature.yaml
+  - .forge/roles/planner.md
+  - .forge/roles/builder.md
+  - .forge/roles/tester.md
+  - .forge/roles/reviewer.md
+  - completed TASK-0001..0011 contracts
+  - completed TASK-0001..0011 artifacts
+
+acceptance_criteria:
+  - id: AC-01
+    description: The scaffold command accepts direct arguments without a separator.
+  - id: AC-02
+    description: The scaffold command accepts arguments after a leading -- separator.
+  - id: AC-03
+    description: Unknown non-separator arguments are still rejected.
+  - id: AC-04
+    description: Tests cover both supported argument styles.
+  - id: AC-05
+    description: README documents both supported invocation forms.
+  - id: AC-06
+    description: Existing Forge Validator verification still passes.
+
+required_checks:
+  - verify

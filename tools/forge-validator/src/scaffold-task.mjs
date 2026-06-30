@@ -15,6 +15,10 @@ export function parseArgs(argv = process.argv.slice(2)) {
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
 
+    if (arg === '--') {
+      continue;
+    }
+
     if (arg === '--repo-root') {
       args.repositoryRoot = path.resolve(readValue(argv, index, arg));
       index += 1;
