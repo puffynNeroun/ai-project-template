@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0012` — Fix Forge task scaffold argument separator handling (`proposed`).
+- [ ] `TASK-0012` — Fix Forge task scaffold argument separator handling (`approved`).
 
 ## Next
 
-- [ ] Run Planner for `TASK-0012`.
+- [ ] Run Builder for `TASK-0012`.
 
 ## Later
 
