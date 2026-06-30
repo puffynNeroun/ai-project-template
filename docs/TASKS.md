@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0017` — Prepare Forge v0.2.0 release notes (`proposed`).
+- [ ] `TASK-0017` — Prepare Forge v0.2.0 release notes (`approved`).
 
 ## Next
 
-- [ ] Run Planner for `TASK-0017`.
+- [ ] Run Builder for `TASK-0017`.
 
 ## Later
 
