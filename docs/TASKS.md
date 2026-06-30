@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0016` — Add Forge workflow smoke command (`ready_for_pr`).
+- [ ] No active task.
 
 ## Next
 
-- [ ] Prepare PR for `TASK-0016`.
+- [ ] Define the next task.
 
 ## Later
 
@@ -14,6 +14,7 @@
 
 ## Completed
 
+- [x] `TASK-0016` — Add Forge workflow smoke command (`completed`, 2026-07-01).
 - [x] `TASK-0015` — Add Forge artifact report scaffold command (`completed`, 2026-07-01).
 - [x] `TASK-0014` — Add Forge stage transition command (`completed`, 2026-07-01).
 - [x] `TASK-0013` — Add Forge task completion command (`completed`, 2026-07-01).
