@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0017` — Prepare Forge v0.2.0 release notes (`in_progress`).
+- [ ] `TASK-0017` — Prepare Forge v0.2.0 release notes (`ready_for_pr`).
 
 ## Next
 
-- [ ] Run Reviewer for `TASK-0017`.
+- [ ] Prepare PR for `TASK-0017`.
 
 ## Later
 
