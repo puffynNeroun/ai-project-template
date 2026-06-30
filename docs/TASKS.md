@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0014` — Add Forge stage transition command (`proposed`).
+- [ ] `TASK-0014` — Add Forge stage transition command (`approved`).
 
 ## Next
 
-- [ ] Run Planner for `TASK-0014`.
+- [ ] Run Builder for `TASK-0014`.
 
 ## Later
 
