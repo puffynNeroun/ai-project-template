@@ -1,24 +1,34 @@
 schema_version: 1
 
 id: TASK-0019
-title: "Prepare Forge v0.2.1 release notes"
-status: proposed
+title: Prepare Forge v0.2.1 release notes
+status: approved
 workflow: .forge/workflows/feature.yaml
 
-goal: "Define and deliver Prepare Forge v0.2.1 release notes."
+goal: Prepare Forge v0.2.1 release notes for the project bootstrap guide added after v0.2.0.
 
 in_scope:
-  - Clarify the implementation plan for TASK-0019.
-  - Implement the approved scope for TASK-0019.
-  - Add or update tests for TASK-0019.
-  - Update documentation when needed.
-  - Preserve existing Forge Validator verification behavior.
+  - Create docs/releases/v0.2.1.md.
+  - Explain that v0.2.1 is a patch release after v0.2.0.
+  - Summarize the new project bootstrap guide.
+  - Reference docs/BOOTSTRAP_PROJECT.md.
+  - Include the current verification baseline.
+  - Include the current smoke workflow command.
+  - Include the current test count.
+  - Include a checklist for later v0.2.1 tag and GitHub release creation.
+  - Keep this task documentation-only.
+  - Preserve existing Forge Validator behavior.
 
 out_of_scope:
-  - Automatically creating branches, commits, pushes, pull requests, merges, or releases.
-  - Modifying completed task contracts or completed task artifacts.
-  - Rewriting previous task evidence.
-  - Adding unrelated features outside TASK-0019.
+  - Creating the v0.2.1 Git tag.
+  - Creating the v0.2.1 GitHub release.
+  - Publishing packages.
+  - Changing Forge Validator runtime behavior.
+  - Changing lifecycle validation policy.
+  - Changing workflow commands.
+  - Changing CI configuration.
+  - Rewriting historical TASK-0001 through TASK-0018 evidence.
+  - Editing docs/BOOTSTRAP_PROJECT.md.
 
 allowed_files:
   - .forge/tasks/TASK-0019.yaml
@@ -27,25 +37,57 @@ allowed_files:
   - .forge/artifacts/TASK-0019/build-report-001.md
   - .forge/artifacts/TASK-0019/test-report-001.md
   - .forge/artifacts/TASK-0019/review-report-001.md
+  - docs/releases/v0.2.1.md
 
 protected_files:
+  - tools/forge-validator/src/validate.mjs
+  - tools/forge-validator/test/validate.test.mjs
+  - tools/forge-validator/src/status.mjs
+  - tools/forge-validator/test/status.test.mjs
+  - tools/forge-validator/src/scaffold-task.mjs
+  - tools/forge-validator/test/scaffold-task.test.mjs
+  - tools/forge-validator/src/complete-task.mjs
+  - tools/forge-validator/test/complete-task.test.mjs
+  - tools/forge-validator/src/stage-task.mjs
+  - tools/forge-validator/test/stage-task.test.mjs
+  - tools/forge-validator/src/scaffold-artifact.mjs
+  - tools/forge-validator/test/scaffold-artifact.test.mjs
+  - tools/forge-validator/src/workflow-smoke.mjs
+  - tools/forge-validator/test/workflow-smoke.test.mjs
+  - tools/forge-validator/package.json
+  - tools/forge-validator/README.md
+  - docs/BOOTSTRAP_PROJECT.md
+  - docs/releases/v0.2.0.md
+  - package.json
+  - pnpm-lock.yaml
   - .github/workflows/forge-contracts.yml
   - .forge/workflows/feature.yaml
   - .forge/roles/planner.md
   - .forge/roles/builder.md
   - .forge/roles/tester.md
   - .forge/roles/reviewer.md
-  - completed TASK-0001..TASK-0018 contracts and artifacts
+  - completed TASK-0001..0018 contracts
+  - completed TASK-0001..0018 artifacts
 
 acceptance_criteria:
   - id: AC-01
-    description: The approved scope for TASK-0019 is implemented.
+    description: docs/releases/v0.2.1.md exists.
   - id: AC-02
-    description: Tests or verification evidence cover the implemented behavior.
+    description: Release notes describe v0.2.1 as a patch release after v0.2.0.
   - id: AC-03
-    description: Existing Forge Validator verification still passes.
+    description: Release notes summarize the new project bootstrap guide.
   - id: AC-04
-    description: The task lifecycle artifacts are created and linked correctly.
+    description: Release notes reference docs/BOOTSTRAP_PROJECT.md.
+  - id: AC-05
+    description: Release notes include the current verification baseline.
+  - id: AC-06
+    description: Release notes include the current test count.
+  - id: AC-07
+    description: Release notes include a checklist for later v0.2.1 tag and GitHub release creation.
+  - id: AC-08
+    description: This task does not create a tag or GitHub release.
+  - id: AC-09
+    description: Existing Forge Validator verification still passes.
 
 required_checks:
   - verify
