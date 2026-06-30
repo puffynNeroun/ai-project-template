@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0015` — Add Forge artifact report scaffold command (`approved`).
+- [ ] `TASK-0015` — Add Forge artifact report scaffold command (`in_progress`).
 
 ## Next
 
-- [ ] Run Builder for `TASK-0015`.
+- [ ] Run Tester for `TASK-0015`.
 
 ## Later
 
