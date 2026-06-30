@@ -171,3 +171,32 @@ The command refuses to run when:
 - `docs/TASKS.md` does not contain the expected `Prepare PR` next step
 
 The command intentionally does not create branches, commits, pushes, pull requests, merges, releases, or lifecycle reports.
+
+## Transition a task stage
+
+Use the stage transition command to update a task contract and `docs/TASKS.md` between lifecycle stages.
+
+~~~bash
+pnpm -C tools/forge-validator run task:stage -- --id TASK-0014 --stage planner
+pnpm -C tools/forge-validator run task:stage -- --id TASK-0014 --stage builder
+pnpm -C tools/forge-validator run task:stage -- --id TASK-0014 --stage tester
+pnpm -C tools/forge-validator run task:stage -- --id TASK-0014 --stage reviewer
+~~~
+
+Supported stages:
+
+- `planner`: `proposed` -> `approved`, Next becomes `Run Builder`
+- `builder`: `approved` -> `in_progress`, Next becomes `Run Tester`
+- `tester`: keeps `in_progress`, Next becomes `Run Reviewer`
+- `reviewer`: `in_progress` -> `ready_for_pr`, Next becomes `Prepare PR`
+
+The command refuses to run when:
+
+- the task ID is invalid
+- the stage name is invalid
+- the task contract does not exist
+- the task contract status does not match the requested transition
+- `docs/TASKS.md` does not show the expected current task line
+- `docs/TASKS.md` does not show the expected current Next step
+
+The command intentionally does not create artifact reports, branches, commits, pushes, pull requests, merges, releases, or task completion updates.

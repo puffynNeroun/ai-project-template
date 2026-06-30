@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0014` — Add Forge stage transition command (`approved`).
+- [ ] `TASK-0014` — Add Forge stage transition command (`in_progress`).
 
 ## Next
 
-- [ ] Run Builder for `TASK-0014`.
+- [ ] Run Tester for `TASK-0014`.
 
 ## Later
 
