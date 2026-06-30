@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0018` — Add project bootstrap documentation (`in_progress`).
+- [ ] `TASK-0018` — Add project bootstrap documentation (`ready_for_pr`).
 
 ## Next
 
-- [ ] Run Reviewer for `TASK-0018`.
+- [ ] Prepare PR for `TASK-0018`.
 
 ## Later
 

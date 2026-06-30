@@ -2,7 +2,7 @@ schema_version: 1
 
 id: TASK-0018
 title: Add project bootstrap documentation
-status: in_progress
+status: ready_for_pr
 workflow: .forge/workflows/feature.yaml
 
 goal: Add clear project bootstrap documentation that explains how to start a real product from this template after the v0.2.0 release.
