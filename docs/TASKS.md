@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0019` — Prepare Forge v0.2.1 release notes (`ready_for_pr`).
+- [ ] No active task.
 
 ## Next
 
-- [ ] Prepare PR for `TASK-0019`.
+- [ ] Define the next task.
 
 ## Later
 
@@ -14,6 +14,7 @@
 
 ## Completed
 
+- [x] `TASK-0019` — Prepare Forge v0.2.1 release notes (`completed`, 2026-07-01).
 - [x] `TASK-0018` — Add project bootstrap documentation (`completed`, 2026-07-01).
 - [x] `TASK-0017` — Prepare Forge v0.2.0 release notes (`completed`, 2026-07-01).
 - [x] `TASK-0016` — Add Forge workflow smoke command (`completed`, 2026-07-01).
