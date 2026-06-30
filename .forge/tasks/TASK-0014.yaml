@@ -1,0 +1,101 @@
+schema_version: 1
+
+id: TASK-0014
+title: Add Forge stage transition command
+status: ready_for_pr
+workflow: .forge/workflows/feature.yaml
+
+goal: Add a controlled Forge stage transition command that automates task status and docs/TASKS.md Next-step transitions for planner, builder, tester, and reviewer lifecycle stages.
+
+in_scope:
+  - Add a Forge Validator task stage transition command.
+  - Accept a task ID from CLI arguments.
+  - Accept a lifecycle stage from CLI arguments.
+  - Validate task ID format before writing files.
+  - Validate stage name before writing files.
+  - Refuse to run when the task contract does not exist.
+  - Refuse to run when the current task status does not match the requested stage transition.
+  - Refuse to run when docs/TASKS.md does not match the expected current board state.
+  - Support planner transition from proposed to approved.
+  - Support builder transition from approved to in_progress.
+  - Support tester transition that keeps in_progress and changes Next from Tester to Reviewer.
+  - Support reviewer transition from in_progress to ready_for_pr.
+  - Document how to run the stage transition command.
+  - Add tests for successful and rejected stage transitions.
+  - Preserve existing Forge Validator verification behavior.
+
+out_of_scope:
+  - Creating lifecycle artifact report contents automatically.
+  - Creating branches, commits, pushes, pull requests, merges, or releases.
+  - Completing tasks after merge.
+  - Changing task scaffold behavior.
+  - Changing task completion behavior.
+  - Changing validator lifecycle policy.
+  - Rewriting historical TASK-0001 through TASK-0013 evidence.
+
+allowed_files:
+  - .forge/tasks/TASK-0014.yaml
+  - docs/TASKS.md
+  - .forge/artifacts/TASK-0014/plan-001.md
+  - .forge/artifacts/TASK-0014/build-report-001.md
+  - .forge/artifacts/TASK-0014/test-report-001.md
+  - .forge/artifacts/TASK-0014/review-report-001.md
+  - tools/forge-validator/src/stage-task.mjs
+  - tools/forge-validator/test/stage-task.test.mjs
+  - tools/forge-validator/package.json
+  - tools/forge-validator/README.md
+
+protected_files:
+  - tools/forge-validator/src/validate.mjs
+  - tools/forge-validator/test/validate.test.mjs
+  - tools/forge-validator/src/status.mjs
+  - tools/forge-validator/test/status.test.mjs
+  - tools/forge-validator/src/scaffold-task.mjs
+  - tools/forge-validator/test/scaffold-task.test.mjs
+  - tools/forge-validator/src/complete-task.mjs
+  - tools/forge-validator/test/complete-task.test.mjs
+  - package.json
+  - pnpm-lock.yaml
+  - .github/workflows/forge-contracts.yml
+  - .forge/workflows/feature.yaml
+  - .forge/roles/planner.md
+  - .forge/roles/builder.md
+  - .forge/roles/tester.md
+  - .forge/roles/reviewer.md
+  - completed TASK-0001..0013 contracts
+  - completed TASK-0001..0013 artifacts
+
+acceptance_criteria:
+  - id: AC-01
+    description: A controlled Forge task stage transition command is available from the Forge Validator tool.
+  - id: AC-02
+    description: The command accepts a task ID from CLI arguments.
+  - id: AC-03
+    description: The command accepts a lifecycle stage from CLI arguments.
+  - id: AC-04
+    description: The command validates task ID format before writing files.
+  - id: AC-05
+    description: The command validates stage name before writing files.
+  - id: AC-06
+    description: The planner stage transitions a task from proposed to approved and changes Next from Planner to Builder.
+  - id: AC-07
+    description: The builder stage transitions a task from approved to in_progress and changes Next from Builder to Tester.
+  - id: AC-08
+    description: The tester stage keeps the task in_progress and changes Next from Tester to Reviewer.
+  - id: AC-09
+    description: The reviewer stage transitions a task from in_progress to ready_for_pr and changes Next from Reviewer to Prepare PR.
+  - id: AC-10
+    description: The command refuses to run when the task contract status does not match the requested transition.
+  - id: AC-11
+    description: The command refuses to run when docs/TASKS.md does not match the expected current board state.
+  - id: AC-12
+    description: The command does not create branches, commits, pushes, pull requests, merges, releases, or lifecycle reports.
+  - id: AC-13
+    description: The command is documented in tools/forge-validator/README.md.
+  - id: AC-14
+    description: Tests cover successful and rejected stage transition behavior.
+  - id: AC-15
+    description: Existing Forge Validator verification still passes.
+
+required_checks:
+  - verify
