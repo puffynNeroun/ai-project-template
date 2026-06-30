@@ -92,6 +92,31 @@ test('parseArgs accepts repo root, task id, and title', async () => {
   });
 });
 
+test('parseArgs ignores a leading pnpm argument separator', async () => {
+  await withFixture(async (root) => {
+    const parsed = parseArgs([
+      '--',
+      '--repo-root',
+      root,
+      '--id',
+      'TASK-0012',
+      '--title',
+      'Example task',
+    ]);
+
+    assert.equal(parsed.repositoryRoot, path.resolve(root));
+    assert.equal(parsed.taskId, 'TASK-0012');
+    assert.equal(parsed.title, 'Example task');
+  });
+});
+
+test('parseArgs rejects unknown non-separator arguments', () => {
+  assert.throws(
+    () => parseArgs(['--unknown']),
+    /Unknown argument: --unknown/,
+  );
+});
+
 test('validateTaskId rejects invalid task IDs', () => {
   assert.throws(() => validateTaskId('TASK-12'), /TASK-0000/);
   assert.throws(() => validateTaskId('task-0012'), /TASK-0000/);

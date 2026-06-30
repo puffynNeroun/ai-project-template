@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0012` — Fix Forge task scaffold argument separator handling (`approved`).
+- [ ] `TASK-0012` — Fix Forge task scaffold argument separator handling (`in_progress`).
 
 ## Next
 
-- [ ] Run Builder for `TASK-0012`.
+- [ ] Run Tester for `TASK-0012`.
 
 ## Later
 

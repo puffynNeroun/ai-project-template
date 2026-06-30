@@ -115,9 +115,10 @@ The repository workflow runs the same frozen install command and `verify` comman
 
 ## Task scaffold command
 
-Create a new task scaffold with:
+Create a new task scaffold with either supported form:
 
 ~~~bash
+pnpm -C tools/forge-validator run task:new --id TASK-0012 --title "Example task title"
 pnpm -C tools/forge-validator run task:new -- --id TASK-0012 --title "Example task title"
 ~~~
 
