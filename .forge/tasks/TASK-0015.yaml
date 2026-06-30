@@ -1,24 +1,38 @@
 schema_version: 1
 
 id: TASK-0015
-title: "Add Forge artifact report scaffold command"
-status: proposed
+title: Add Forge artifact report scaffold command
+status: approved
 workflow: .forge/workflows/feature.yaml
 
-goal: "Define and deliver Add Forge artifact report scaffold command."
+goal: Add a controlled Forge artifact report scaffold command that creates lifecycle artifact report files for plan, build, test, and review stages with valid frontmatter and safe refusal behavior.
 
 in_scope:
-  - Clarify the implementation plan for TASK-0015.
-  - Implement the approved scope for TASK-0015.
-  - Add or update tests for TASK-0015.
-  - Update documentation when needed.
+  - Add a Forge Validator artifact scaffold command.
+  - Accept a task ID from CLI arguments.
+  - Accept an artifact type from CLI arguments.
+  - Validate task ID format before writing files.
+  - Validate artifact type before writing files.
+  - Refuse to run when the task contract does not exist.
+  - Refuse to overwrite an existing artifact report file.
+  - Create plan report scaffold.
+  - Create build report scaffold.
+  - Create test report scaffold.
+  - Create review report scaffold.
+  - Use valid artifact frontmatter for each report type.
+  - Document how to run the artifact scaffold command.
+  - Add tests for successful and rejected artifact scaffolding behavior.
   - Preserve existing Forge Validator verification behavior.
 
 out_of_scope:
-  - Automatically creating branches, commits, pushes, pull requests, merges, or releases.
-  - Modifying completed task contracts or completed task artifacts.
-  - Rewriting previous task evidence.
-  - Adding unrelated features outside TASK-0015.
+  - Generating full project-specific report content.
+  - Running planner, builder, tester, or reviewer logic automatically.
+  - Changing task status.
+  - Changing docs/TASKS.md.
+  - Creating branches, commits, pushes, pull requests, merges, or releases.
+  - Completing tasks after merge.
+  - Changing task:new, task:stage, or task:complete behavior.
+  - Rewriting historical TASK-0001 through TASK-0014 evidence.
 
 allowed_files:
   - .forge/tasks/TASK-0015.yaml
@@ -27,25 +41,66 @@ allowed_files:
   - .forge/artifacts/TASK-0015/build-report-001.md
   - .forge/artifacts/TASK-0015/test-report-001.md
   - .forge/artifacts/TASK-0015/review-report-001.md
+  - tools/forge-validator/src/scaffold-artifact.mjs
+  - tools/forge-validator/test/scaffold-artifact.test.mjs
+  - tools/forge-validator/package.json
+  - tools/forge-validator/README.md
 
 protected_files:
+  - tools/forge-validator/src/validate.mjs
+  - tools/forge-validator/test/validate.test.mjs
+  - tools/forge-validator/src/status.mjs
+  - tools/forge-validator/test/status.test.mjs
+  - tools/forge-validator/src/scaffold-task.mjs
+  - tools/forge-validator/test/scaffold-task.test.mjs
+  - tools/forge-validator/src/complete-task.mjs
+  - tools/forge-validator/test/complete-task.test.mjs
+  - tools/forge-validator/src/stage-task.mjs
+  - tools/forge-validator/test/stage-task.test.mjs
+  - package.json
+  - pnpm-lock.yaml
   - .github/workflows/forge-contracts.yml
   - .forge/workflows/feature.yaml
   - .forge/roles/planner.md
   - .forge/roles/builder.md
   - .forge/roles/tester.md
   - .forge/roles/reviewer.md
-  - completed TASK-0001..TASK-0014 contracts and artifacts
+  - completed TASK-0001..0014 contracts
+  - completed TASK-0001..0014 artifacts
 
 acceptance_criteria:
   - id: AC-01
-    description: The approved scope for TASK-0015 is implemented.
+    description: A controlled Forge artifact scaffold command is available from the Forge Validator tool.
   - id: AC-02
-    description: Tests or verification evidence cover the implemented behavior.
+    description: The command accepts a task ID from CLI arguments.
   - id: AC-03
-    description: Existing Forge Validator verification still passes.
+    description: The command accepts an artifact type from CLI arguments.
   - id: AC-04
-    description: The task lifecycle artifacts are created and linked correctly.
+    description: The command validates task ID format before writing files.
+  - id: AC-05
+    description: The command validates artifact type before writing files.
+  - id: AC-06
+    description: The command refuses to run when the task contract does not exist.
+  - id: AC-07
+    description: The command refuses to overwrite an existing artifact report.
+  - id: AC-08
+    description: The command creates valid plan report frontmatter.
+  - id: AC-09
+    description: The command creates valid build report frontmatter.
+  - id: AC-10
+    description: The command creates valid test report frontmatter.
+  - id: AC-11
+    description: The command creates valid review report frontmatter.
+  - id: AC-12
+    description: The command does not change task status or docs/TASKS.md.
+  - id: AC-13
+    description: The command does not create branches, commits, pushes, pull requests, merges, releases, or task completion updates.
+  - id: AC-14
+    description: The command is documented in tools/forge-validator/README.md.
+  - id: AC-15
+    description: Tests cover successful and rejected artifact scaffold behavior.
+  - id: AC-16
+    description: Existing Forge Validator verification still passes.
 
 required_checks:
   - verify

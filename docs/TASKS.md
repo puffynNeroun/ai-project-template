@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0015` — Add Forge artifact report scaffold command (`proposed`).
+- [ ] `TASK-0015` — Add Forge artifact report scaffold command (`approved`).
 
 ## Next
 
-- [ ] Run Planner for `TASK-0015`.
+- [ ] Run Builder for `TASK-0015`.
 
 ## Later
 
