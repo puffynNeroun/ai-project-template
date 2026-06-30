@@ -2,7 +2,7 @@ schema_version: 1
 
 id: TASK-0012
 title: Fix Forge task scaffold argument separator handling
-status: in_progress
+status: ready_for_pr
 workflow: .forge/workflows/feature.yaml
 
 goal: Fix the Forge task scaffold command so it accepts both direct script arguments and the common pnpm argument separator form with a leading --.
