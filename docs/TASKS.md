@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] No active task.
+- [ ] `TASK-0012` — Fix Forge task scaffold argument separator handling (`proposed`).
 
 ## Next
 
-- [ ] Define the next task.
+- [ ] Run Planner for `TASK-0012`.
 
 ## Later
 
