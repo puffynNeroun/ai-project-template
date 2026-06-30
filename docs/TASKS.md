@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0013` — Add Forge task completion command (`in_progress`).
+- [ ] `TASK-0013` — Add Forge task completion command (`ready_for_pr`).
 
 ## Next
 
-- [ ] Run Reviewer for `TASK-0013`.
+- [ ] Prepare PR for `TASK-0013`.
 
 ## Later
 

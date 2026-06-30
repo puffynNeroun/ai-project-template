@@ -2,7 +2,7 @@ schema_version: 1
 
 id: TASK-0013
 title: Add Forge task completion command
-status: in_progress
+status: ready_for_pr
 workflow: .forge/workflows/feature.yaml
 
 goal: Add a controlled Forge task completion command that marks a ready-for-pr task as completed, clears the active task board state, and adds the task to the Completed section without manual docs/TASKS.md editing.
