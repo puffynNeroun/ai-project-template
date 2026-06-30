@@ -2,7 +2,7 @@ schema_version: 1
 
 id: TASK-0014
 title: Add Forge stage transition command
-status: in_progress
+status: ready_for_pr
 workflow: .forge/workflows/feature.yaml
 
 goal: Add a controlled Forge stage transition command that automates task status and docs/TASKS.md Next-step transitions for planner, builder, tester, and reviewer lifecycle stages.

@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0014` — Add Forge stage transition command (`in_progress`).
+- [ ] `TASK-0014` — Add Forge stage transition command (`ready_for_pr`).
 
 ## Next
 
-- [ ] Run Reviewer for `TASK-0014`.
+- [ ] Prepare PR for `TASK-0014`.
 
 ## Later
 
