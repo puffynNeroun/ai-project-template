@@ -141,3 +141,33 @@ The command refuses to run when:
 - the artifact directory already exists.
 
 The command does not create branches, commits, pushes, pull requests, merges, releases, plans, build reports, test reports, or review reports.
+
+## Complete a task
+
+After a task implementation PR has been merged and the task is still marked as `ready_for_pr`, use the completion command to perform the final lifecycle board update.
+
+~~~bash
+pnpm -C tools/forge-validator run task:complete -- --id TASK-0013
+~~~
+
+The command updates:
+
+- `.forge/tasks/TASK-XXXX.yaml`
+- `docs/TASKS.md`
+
+It performs these lifecycle changes:
+
+- task contract status: `ready_for_pr` -> `completed`
+- task board Now: selected task -> `No active task`
+- task board Next: `Prepare PR for TASK-XXXX` -> `Define the next task`
+- task board Completed: selected task is inserted at the top
+
+The command refuses to run when:
+
+- the task ID is invalid
+- the task contract does not exist
+- the task is not `ready_for_pr`
+- `docs/TASKS.md` does not show the selected task as the active `ready_for_pr` task
+- `docs/TASKS.md` does not contain the expected `Prepare PR` next step
+
+The command intentionally does not create branches, commits, pushes, pull requests, merges, releases, or lifecycle reports.

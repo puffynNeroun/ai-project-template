@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0013` — Add Forge task completion command (`approved`).
+- [ ] `TASK-0013` — Add Forge task completion command (`in_progress`).
 
 ## Next
 
-- [ ] Run Builder for `TASK-0013`.
+- [ ] Run Tester for `TASK-0013`.
 
 ## Later
 
