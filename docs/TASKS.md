@@ -6,7 +6,7 @@
 
 ## Next
 
-- [ ] Run Tester for `TASK-0015`.
+- [ ] Run Reviewer for `TASK-0015`.
 
 ## Later
 
