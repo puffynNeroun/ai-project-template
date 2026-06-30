@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] No active task.
+- [ ] `TASK-0017` — Prepare Forge v0.2.0 release notes (`proposed`).
 
 ## Next
 
-- [ ] Define the next task.
+- [ ] Run Planner for `TASK-0017`.
 
 ## Later
 
