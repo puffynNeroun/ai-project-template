@@ -233,3 +233,26 @@ The command refuses to run when:
 - the artifact report already exists
 
 The command intentionally does not change task status, change `docs/TASKS.md`, create branches, create commits, push, create pull requests, merge pull requests, release, or complete tasks.
+
+## Run workflow smoke test
+
+Use the workflow smoke command to validate the full local Forge lifecycle in a temporary fixture repository.
+
+Command:
+
+pnpm -C tools/forge-validator run workflow:smoke
+
+The smoke workflow performs this lifecycle:
+
+1. planner stage
+2. plan artifact
+3. builder stage
+4. build_report artifact
+5. tester stage
+6. test_report artifact
+7. reviewer stage
+8. review_report artifact
+9. task completion
+10. final board and task state assertions
+
+The command uses a temporary fixture repository and intentionally does not create Git branches, commits, pushes, pull requests, merges, or releases.

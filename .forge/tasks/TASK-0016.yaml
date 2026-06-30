@@ -1,0 +1,113 @@
+schema_version: 1
+
+id: TASK-0016
+title: Add Forge workflow smoke command
+status: ready_for_pr
+workflow: .forge/workflows/feature.yaml
+
+goal: Add a controlled Forge workflow smoke command that validates the full Forge task lifecycle on a temporary fixture repository from task creation through completion.
+
+in_scope:
+  - Add a Forge Validator workflow smoke command.
+  - Run the smoke workflow in a temporary fixture repository.
+  - Exercise task:new behavior through shared implementation or direct function calls.
+  - Exercise planner stage transition.
+  - Exercise plan artifact scaffolding.
+  - Exercise builder stage transition.
+  - Exercise build_report artifact scaffolding.
+  - Exercise tester stage transition.
+  - Exercise test_report artifact scaffolding.
+  - Exercise reviewer stage transition.
+  - Exercise review_report artifact scaffolding.
+  - Exercise task completion.
+  - Assert final task status is completed.
+  - Assert final docs/TASKS.md has No active task and Define the next task.
+  - Document how to run the smoke command.
+  - Add tests for successful smoke workflow behavior.
+  - Preserve existing Forge Validator verification behavior.
+
+out_of_scope:
+  - Running Git commands.
+  - Creating branches, commits, pushes, pull requests, merges, or releases.
+  - Testing GitHub Actions remotely.
+  - Changing task:new behavior.
+  - Changing task:stage behavior.
+  - Changing artifact:new behavior.
+  - Changing task:complete behavior.
+  - Changing validator lifecycle policy.
+  - Rewriting historical TASK-0001 through TASK-0015 evidence.
+
+allowed_files:
+  - .forge/tasks/TASK-0016.yaml
+  - docs/TASKS.md
+  - .forge/artifacts/TASK-0016/plan-001.md
+  - .forge/artifacts/TASK-0016/build-report-001.md
+  - .forge/artifacts/TASK-0016/test-report-001.md
+  - .forge/artifacts/TASK-0016/review-report-001.md
+  - tools/forge-validator/src/workflow-smoke.mjs
+  - tools/forge-validator/test/workflow-smoke.test.mjs
+  - tools/forge-validator/package.json
+  - tools/forge-validator/README.md
+
+protected_files:
+  - tools/forge-validator/src/validate.mjs
+  - tools/forge-validator/test/validate.test.mjs
+  - tools/forge-validator/src/status.mjs
+  - tools/forge-validator/test/status.test.mjs
+  - tools/forge-validator/src/scaffold-task.mjs
+  - tools/forge-validator/test/scaffold-task.test.mjs
+  - tools/forge-validator/src/complete-task.mjs
+  - tools/forge-validator/test/complete-task.test.mjs
+  - tools/forge-validator/src/stage-task.mjs
+  - tools/forge-validator/test/stage-task.test.mjs
+  - tools/forge-validator/src/scaffold-artifact.mjs
+  - tools/forge-validator/test/scaffold-artifact.test.mjs
+  - package.json
+  - pnpm-lock.yaml
+  - .github/workflows/forge-contracts.yml
+  - .forge/workflows/feature.yaml
+  - .forge/roles/planner.md
+  - .forge/roles/builder.md
+  - .forge/roles/tester.md
+  - .forge/roles/reviewer.md
+  - completed TASK-0001..0015 contracts
+  - completed TASK-0001..0015 artifacts
+
+acceptance_criteria:
+  - id: AC-01
+    description: A controlled Forge workflow smoke command is available from the Forge Validator tool.
+  - id: AC-02
+    description: The command runs against a temporary fixture repository.
+  - id: AC-03
+    description: The smoke workflow creates a task.
+  - id: AC-04
+    description: The smoke workflow transitions planner stage.
+  - id: AC-05
+    description: The smoke workflow creates a plan artifact.
+  - id: AC-06
+    description: The smoke workflow transitions builder stage.
+  - id: AC-07
+    description: The smoke workflow creates a build_report artifact.
+  - id: AC-08
+    description: The smoke workflow transitions tester stage.
+  - id: AC-09
+    description: The smoke workflow creates a test_report artifact.
+  - id: AC-10
+    description: The smoke workflow transitions reviewer stage.
+  - id: AC-11
+    description: The smoke workflow creates a review_report artifact.
+  - id: AC-12
+    description: The smoke workflow completes the task.
+  - id: AC-13
+    description: The smoke workflow asserts final completed task state.
+  - id: AC-14
+    description: The command does not create Git branches, commits, pushes, pull requests, merges, or releases.
+  - id: AC-15
+    description: The command is documented in tools/forge-validator/README.md.
+  - id: AC-16
+    description: Tests cover successful smoke workflow behavior.
+  - id: AC-17
+    description: Existing Forge Validator verification still passes.
+
+required_checks:
+  - verify
