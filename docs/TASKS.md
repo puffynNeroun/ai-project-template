@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0017` — Prepare Forge v0.2.0 release notes (`approved`).
+- [ ] `TASK-0017` — Prepare Forge v0.2.0 release notes (`in_progress`).
 
 ## Next
 
-- [ ] Run Builder for `TASK-0017`.
+- [ ] Run Tester for `TASK-0017`.
 
 ## Later
 
