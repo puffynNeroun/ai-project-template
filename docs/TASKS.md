@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0015` — Add Forge artifact report scaffold command (`in_progress`).
+- [ ] `TASK-0015` — Add Forge artifact report scaffold command (`ready_for_pr`).
 
 ## Next
 
-- [ ] Run Reviewer for `TASK-0015`.
+- [ ] Prepare PR for `TASK-0015`.
 
 ## Later
 

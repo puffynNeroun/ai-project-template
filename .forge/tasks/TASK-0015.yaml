@@ -2,7 +2,7 @@ schema_version: 1
 
 id: TASK-0015
 title: Add Forge artifact report scaffold command
-status: in_progress
+status: ready_for_pr
 workflow: .forge/workflows/feature.yaml
 
 goal: Add a controlled Forge artifact report scaffold command that creates lifecycle artifact report files for plan, build, test, and review stages with valid frontmatter and safe refusal behavior.
