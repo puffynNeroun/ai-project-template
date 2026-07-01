@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] No active task.
+- [ ] `TASK-0020` — Package normal Forge CLI (`ready_for_pr`).
 
 ## Next
 
-- [ ] Define the next task.
+- [ ] Prepare PR for `TASK-0020`.
 
 ## Later
 
