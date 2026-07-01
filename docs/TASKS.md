@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0020` — Package normal Forge CLI (`proposed`).
+- [ ] `TASK-0020` — Package normal Forge CLI (`approved`).
 
 ## Next
 
-- [ ] Run Planner for `TASK-0020`.
+- [ ] Run Builder for `TASK-0020`.
 
 ## Later
 
