@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0022` — Add Forge demo scenario (`proposed`).
+- [ ] `TASK-0022` — Add Forge demo scenario (`approved`).
 
 ## Next
 
-- [ ] Run Planner for `TASK-0022`.
+- [ ] Run Builder for `TASK-0022`.
 
 ## Later
 
