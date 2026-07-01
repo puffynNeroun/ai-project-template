@@ -1,0 +1,74 @@
+schema_version: 1
+
+id: TASK-0022
+title: "Add Forge demo scenario"
+status: proposed
+workflow: .forge/workflows/feature.yaml
+
+goal: "Add a concise demo scenario that shows how Forge guides a small AI-assisted development task from task definition through planning, building, testing, review, PR readiness, and completion."
+
+in_scope:
+  - Add a demo document that explains a realistic end-to-end Forge workflow.
+  - Make the demo understandable for a first-time GitHub visitor.
+  - Show the sequence of lifecycle stages and commands.
+  - Show what artifacts are created at each stage.
+  - Show how Forge prevents chaotic AI coding through task scope, evidence, checks, and review.
+  - Reference the demo from README.md.
+  - Keep the demo grounded in current implemented commands and behavior.
+  - Preserve existing verification behavior.
+
+out_of_scope:
+  - Adding new runtime behavior.
+  - Adding new CLI commands.
+  - Adding a real agent runner.
+  - Adding a TUI, web UI, Telegram bot, or approval UI.
+  - Changing workflow contracts or role contracts.
+  - Changing CI configuration.
+  - Creating release notes, release tags, or GitHub releases.
+  - Creating a new real product repository.
+  - Editing docs/BOOTSTRAP_PROJECT.md unless a README link requires a minimal correction.
+  - Modifying completed TASK-0001..TASK-0021 contracts or artifacts.
+
+allowed_files:
+  - .forge/tasks/TASK-0022.yaml
+  - docs/TASKS.md
+  - .forge/artifacts/TASK-0022/plan-001.md
+  - .forge/artifacts/TASK-0022/build-report-001.md
+  - .forge/artifacts/TASK-0022/test-report-001.md
+  - .forge/artifacts/TASK-0022/review-report-001.md
+  - README.md
+  - docs/DEMO.md
+
+protected_files:
+  - .github/workflows/forge-contracts.yml
+  - .forge/workflows/feature.yaml
+  - .forge/roles/planner.md
+  - .forge/roles/builder.md
+  - .forge/roles/tester.md
+  - .forge/roles/reviewer.md
+  - docs/releases/v0.2.0.md
+  - docs/releases/v0.2.1.md
+  - docs/BOOTSTRAP_PROJECT.md
+  - tools/forge-validator/package.json
+  - tools/forge-validator/src/cli.mjs
+  - tools/forge-validator/test/cli.test.mjs
+  - completed TASK-0001..TASK-0021 contracts and artifacts
+
+acceptance_criteria:
+  - id: AC-01
+    description: docs/DEMO.md exists and explains a realistic end-to-end Forge workflow.
+  - id: AC-02
+    description: The demo shows the task lifecycle from definition through completion.
+  - id: AC-03
+    description: The demo documents the artifacts produced at each lifecycle stage.
+  - id: AC-04
+    description: The demo uses only currently implemented commands and does not claim unimplemented agent runner, UI, SaaS, or npm publishing features.
+  - id: AC-05
+    description: The demo explains how Forge reduces chaotic AI-assisted development through scope, evidence, checks, and review.
+  - id: AC-06
+    description: README.md links to docs/DEMO.md from an appropriate section.
+  - id: AC-07
+    description: Forge status, workflow smoke, and verify pass after the demo is added.
+
+required_checks:
+  - verify
