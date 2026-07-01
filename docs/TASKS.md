@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0021` — Rewrite README for portfolio/open-source quality (`proposed`).
+- [ ] `TASK-0021` — Rewrite README for portfolio/open-source quality (`approved`).
 
 ## Next
 
-- [ ] Run Planner for `TASK-0021`.
+- [ ] Run Builder for `TASK-0021`.
 
 ## Later
 

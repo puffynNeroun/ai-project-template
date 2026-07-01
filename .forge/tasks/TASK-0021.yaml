@@ -2,7 +2,7 @@ schema_version: 1
 
 id: TASK-0021
 title: "Rewrite README for portfolio/open-source quality"
-status: proposed
+status: approved
 workflow: .forge/workflows/feature.yaml
 
 goal: "Rewrite the root README so Forge is understandable and credible as an open-source, portfolio-grade workflow toolkit for safe AI-assisted software delivery."
