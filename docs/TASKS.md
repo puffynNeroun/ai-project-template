@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0022` — Add Forge demo scenario (`ready_for_pr`).
+- [ ] No active task.
 
 ## Next
 
-- [ ] Prepare PR for `TASK-0022`.
+- [ ] Define the next task.
 
 ## Later
 
@@ -14,6 +14,7 @@
 
 ## Completed
 
+- [x] `TASK-0022` — Add Forge demo scenario (`completed`, 2026-07-02).
 - [x] `TASK-0021` — Rewrite README for portfolio/open-source quality (`completed`, 2026-07-02).
 - [x] `TASK-0020` — Package normal Forge CLI (`completed`, 2026-07-02).
 - [x] `TASK-0019` — Prepare Forge v0.2.1 release notes (`completed`, 2026-07-01).
