@@ -1,0 +1,82 @@
+schema_version: 1
+
+id: TASK-0020
+title: "Package normal Forge CLI"
+status: proposed
+workflow: .forge/workflows/feature.yaml
+
+goal: "Add a normal packaged Forge CLI entrypoint so users can run concise Forge commands without using long pnpm -C tools/forge-validator run ... invocations."
+
+in_scope:
+  - Add a Forge CLI bin entrypoint in tools/forge-validator.
+  - Support concise command groups for the existing lifecycle commands.
+  - Map forge status to the existing status behavior.
+  - Map forge task new to the existing task scaffold behavior.
+  - Map forge task stage to the existing stage transition behavior.
+  - Map forge task complete to the existing completion behavior.
+  - Map forge artifact new to the existing artifact scaffold behavior.
+  - Map forge smoke to the existing workflow smoke behavior.
+  - Map forge verify to the existing validation behavior.
+  - Preserve all existing pnpm scripts and current CLI behavior.
+  - Add tests for CLI dispatch, help output, unknown commands, and argument forwarding where practical.
+  - Add minimal usage documentation for the new CLI entrypoint.
+  - Keep the implementation dependency-free unless a strong reason is documented in the plan.
+
+out_of_scope:
+  - Publishing the package to npm.
+  - Creating a global installer.
+  - Adding shell completion.
+  - Adding a TUI, web UI, Telegram UI, or approval UI.
+  - Adding an agent runner.
+  - Rewriting the whole README into open-source marketing documentation.
+  - Changing workflow, role, artifact, or completed task contracts.
+  - Changing release tags or GitHub releases.
+  - Automatically creating pushes, pull requests, merges, or releases.
+
+allowed_files:
+  - .forge/tasks/TASK-0020.yaml
+  - docs/TASKS.md
+  - .forge/artifacts/TASK-0020/plan-001.md
+  - .forge/artifacts/TASK-0020/build-report-001.md
+  - .forge/artifacts/TASK-0020/test-report-001.md
+  - .forge/artifacts/TASK-0020/review-report-001.md
+  - tools/forge-validator/package.json
+  - tools/forge-validator/src/cli.mjs
+  - tools/forge-validator/test/cli.test.mjs
+  - README.md
+
+protected_files:
+  - .github/workflows/forge-contracts.yml
+  - .forge/workflows/feature.yaml
+  - .forge/roles/planner.md
+  - .forge/roles/builder.md
+  - .forge/roles/tester.md
+  - .forge/roles/reviewer.md
+  - docs/releases/v0.2.0.md
+  - docs/releases/v0.2.1.md
+  - completed TASK-0001..TASK-0019 contracts and artifacts
+
+acceptance_criteria:
+  - id: AC-01
+    description: The package exposes a forge bin entrypoint from tools/forge-validator/package.json.
+  - id: AC-02
+    description: forge status runs the existing Forge status behavior.
+  - id: AC-03
+    description: forge task new, forge task stage, and forge task complete dispatch to the existing task lifecycle implementations.
+  - id: AC-04
+    description: forge artifact new dispatches to the existing artifact scaffold implementation.
+  - id: AC-05
+    description: forge smoke dispatches to the existing workflow smoke implementation.
+  - id: AC-06
+    description: forge verify dispatches to the existing validation behavior.
+  - id: AC-07
+    description: Existing pnpm scripts remain backward compatible.
+  - id: AC-08
+    description: Tests cover the new CLI entrypoint behavior.
+  - id: AC-09
+    description: Minimal documentation explains the new concise CLI commands.
+  - id: AC-10
+    description: pnpm -C tools/forge-validator run status, workflow:smoke, and verify all pass.
+
+required_checks:
+  - verify
