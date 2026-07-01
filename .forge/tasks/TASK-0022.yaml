@@ -2,7 +2,7 @@ schema_version: 1
 
 id: TASK-0022
 title: "Add Forge demo scenario"
-status: approved
+status: in_progress
 workflow: .forge/workflows/feature.yaml
 
 goal: "Add a concise demo scenario that shows how Forge guides a small AI-assisted development task from task definition through planning, building, testing, review, PR readiness, and completion."

@@ -105,6 +105,16 @@ Expected baseline:
     fail 0
     Forge contract validation passed
 
+## Demo
+
+Want to see the workflow end-to-end?
+
+Read:
+
+    docs/DEMO.md
+
+The demo walks through a small documentation task from task definition through planning, build evidence, test evidence, review evidence, PR readiness, and completion.
+
 ## Forge CLI
 
 Forge Validator now exposes a packaged `forge` bin entrypoint.
