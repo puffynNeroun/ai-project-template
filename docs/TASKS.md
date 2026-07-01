@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0022` — Add Forge demo scenario (`in_progress`).
+- [ ] `TASK-0022` — Add Forge demo scenario (`ready_for_pr`).
 
 ## Next
 
-- [ ] Run Reviewer for `TASK-0022`.
+- [ ] Prepare PR for `TASK-0022`.
 
 ## Later
 
