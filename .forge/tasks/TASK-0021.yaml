@@ -1,0 +1,82 @@
+schema_version: 1
+
+id: TASK-0021
+title: "Rewrite README for portfolio/open-source quality"
+status: ready_for_pr
+workflow: .forge/workflows/feature.yaml
+
+goal: "Rewrite the root README so Forge is understandable and credible as an open-source, portfolio-grade workflow toolkit for safe AI-assisted software delivery."
+
+in_scope:
+  - Explain what Forge is in clear product language.
+  - Explain the problem Forge solves for AI-assisted development.
+  - Explain the core lifecycle from task to completion.
+  - Document the normal Forge CLI commands added by TASK-0020.
+  - Provide a quickstart that works from a fresh clone.
+  - Explain artifacts as evidence.
+  - Explain the safety model including allowed files, protected files, reviews, checks, and PR gates.
+  - Reference the project bootstrap guide for creating real projects from the template.
+  - Include a practical comparison between chaotic AI coding and Forge workflow.
+  - Include a concise roadmap focused on CLI, demo, Pixardia bootstrap, and later agent runner.
+  - Keep the README accurate to the current implementation.
+  - Preserve existing verification behavior.
+
+out_of_scope:
+  - Changing Forge runtime behavior.
+  - Changing CLI command behavior.
+  - Adding new CLI commands.
+  - Adding tests unless needed for documentation validation.
+  - Rewriting workflow contracts, role contracts, or artifact contracts.
+  - Changing completed task evidence.
+  - Creating release tags or GitHub releases.
+  - Adding agent runner, UI, Telegram approval flow, or npm publishing.
+  - Editing docs/BOOTSTRAP_PROJECT.md unless a broken README reference requires a minimal fix.
+
+allowed_files:
+  - .forge/tasks/TASK-0021.yaml
+  - docs/TASKS.md
+  - .forge/artifacts/TASK-0021/plan-001.md
+  - .forge/artifacts/TASK-0021/build-report-001.md
+  - .forge/artifacts/TASK-0021/test-report-001.md
+  - .forge/artifacts/TASK-0021/review-report-001.md
+  - README.md
+
+protected_files:
+  - .github/workflows/forge-contracts.yml
+  - .forge/workflows/feature.yaml
+  - .forge/roles/planner.md
+  - .forge/roles/builder.md
+  - .forge/roles/tester.md
+  - .forge/roles/reviewer.md
+  - docs/releases/v0.2.0.md
+  - docs/releases/v0.2.1.md
+  - docs/BOOTSTRAP_PROJECT.md
+  - tools/forge-validator/package.json
+  - tools/forge-validator/src/cli.mjs
+  - tools/forge-validator/test/cli.test.mjs
+  - completed TASK-0001..TASK-0020 contracts and artifacts
+
+acceptance_criteria:
+  - id: AC-01
+    description: README clearly explains Forge as a local-first workflow toolkit for safe AI-assisted software delivery.
+  - id: AC-02
+    description: README explains the problem of chaotic AI coding and how Forge addresses it.
+  - id: AC-03
+    description: README includes a quickstart with current working verification commands.
+  - id: AC-04
+    description: README documents the concise Forge CLI commands introduced by TASK-0020.
+  - id: AC-05
+    description: README explains the Forge lifecycle, including task contracts, plans, build reports, test reports, review reports, PRs, merge, and completion.
+  - id: AC-06
+    description: README explains the safety model, including allowed files, protected files, required checks, and artifact evidence.
+  - id: AC-07
+    description: README references docs/BOOTSTRAP_PROJECT.md for creating a real project from the template.
+  - id: AC-08
+    description: README includes a concise roadmap without promising unimplemented features as already available.
+  - id: AC-09
+    description: README remains accurate to the current implementation and does not claim npm publishing, agent runner, UI, or SaaS features.
+  - id: AC-10
+    description: Forge status, workflow smoke, and verify pass after the README rewrite.
+
+required_checks:
+  - verify
