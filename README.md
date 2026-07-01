@@ -36,3 +36,23 @@ Use this loop for project work:
 5. Review `git status` and `git diff` before handing off.
 
 Do not commit, push, deploy, or install dependencies unless explicitly requested.
+
+## Forge CLI
+
+Forge Validator can still be run with the existing pnpm scripts, but the package now exposes a concise `forge` bin entrypoint for local CLI usage.
+
+Examples:
+
+- `forge status`
+- `forge smoke`
+- `forge verify`
+- `forge task new -- --id TASK-XXXX --title "Task title"`
+- `forge task stage -- --id TASK-XXXX --stage planner`
+- `forge task complete -- --id TASK-XXXX`
+- `forge artifact new -- --id TASK-XXXX --type plan`
+
+The existing commands remain supported for backward compatibility:
+
+- `pnpm -C tools/forge-validator run status`
+- `pnpm -C tools/forge-validator run workflow:smoke`
+- `pnpm -C tools/forge-validator verify`

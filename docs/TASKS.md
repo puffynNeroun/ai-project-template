@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0020` — Package normal Forge CLI (`approved`).
+- [ ] `TASK-0020` — Package normal Forge CLI (`in_progress`).
 
 ## Next
 
-- [ ] Run Builder for `TASK-0020`.
+- [ ] Run Tester for `TASK-0020`.
 
 ## Later
 
