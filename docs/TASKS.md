@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0020` — Package normal Forge CLI (`in_progress`).
+- [ ] `TASK-0020` — Package normal Forge CLI (`ready_for_pr`).
 
 ## Next
 
-- [ ] Run Reviewer for `TASK-0020`.
+- [ ] Prepare PR for `TASK-0020`.
 
 ## Later
 

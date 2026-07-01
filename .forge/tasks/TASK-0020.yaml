@@ -2,7 +2,7 @@ schema_version: 1
 
 id: TASK-0020
 title: "Package normal Forge CLI"
-status: in_progress
+status: ready_for_pr
 workflow: .forge/workflows/feature.yaml
 
 goal: "Add a normal packaged Forge CLI entrypoint so users can run concise Forge commands without using long pnpm -C tools/forge-validator run ... invocations."
