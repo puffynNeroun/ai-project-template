@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0026` — Redesign Pages demo as premium product walkthrough (`approved`).
+- [ ] `TASK-0026` — Redesign Pages demo as premium product walkthrough (`in_progress`).
 
 ## Next
 
-- [ ] Run Builder for `TASK-0026`.
+- [ ] Run Tester for `TASK-0026`.
 
 ## Later
 

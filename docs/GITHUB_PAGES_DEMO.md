@@ -15,6 +15,17 @@ The visual demo explains:
 - how task contracts and artifacts work under the hood;
 - why Forge makes AI-assisted development more scoped, reviewed, and verifiable.
 
+
+## Design Direction
+
+The current Pages demo is designed as a premium product-art walkthrough rather than a conventional landing page.
+
+The main experience is a single light-palette delivery machine: a scoped input request feeds a connected process diagram, active signal paths, lifecycle nodes, terminal trace, emitted evidence artifacts, live inspector, and final proof rail.
+
+The interaction is intentionally explanatory. Selecting a stage or running the walkthrough updates the full system state at once so the viewer sees how Forge moves from task contract to plan, build, test, review, implementation PR, completion PR, and auditable final state.
+
+The terminal and PR references are illustrative workflow evidence. They do not mean the static page executes commands, creates PRs, or automates delivery.
+
 ## Source Files
 
 The demo source lives in:
