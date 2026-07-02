@@ -1,0 +1,113 @@
+schema_version: 1
+
+id: TASK-0026
+title: "Redesign Pages demo as premium product walkthrough"
+status: proposed
+workflow: .forge/workflows/feature.yaml
+
+goal: "Redesign the GitHub Pages demo into a premium light-palette product walkthrough that clearly demonstrates Forge as an impressive, trustworthy, evidence-driven engineering workflow."
+
+in_scope:
+  - Redesign the existing GitHub Pages demo in a light visual palette.
+  - Replace the current card-heavy demo with a richer product walkthrough.
+  - Focus on quality, composition, clarity, motion, and product storytelling rather than adding many sections.
+  - Show a clear input -> process -> evidence -> result story.
+  - Create a central animated product diagram instead of a simple card grid.
+  - Show meaningful animation where blocks appear, connect, transform, or emit evidence artifacts.
+  - Show the input task contract as the starting point of the product story.
+  - Show lifecycle stages as a connected flow, not isolated cards.
+  - Show generated evidence artifacts as visible outputs of each stage.
+  - Show final proof state: clean main, completed task, merged PR, stored evidence, validation passed.
+  - Use a light, premium, trustworthy palette that feels confident and professional.
+  - Improve typography, spacing, hierarchy, layout rhythm, and responsive behavior.
+  - Reduce unnecessary long text blocks.
+  - Keep the page static and no-framework.
+  - Preserve the existing GitHub Pages deployment model.
+  - Preserve existing Forge validator behavior.
+  - Preserve existing CLI behavior.
+  - Preserve release v0.2.2 tag and GitHub Release.
+
+out_of_scope:
+  - Creating a separate repository.
+  - Adding a frontend framework.
+  - Adding a build step or bundler.
+  - Adding backend services.
+  - Adding authentication.
+  - Adding analytics or tracking.
+  - Publishing npm packages.
+  - Adding a SaaS dashboard.
+  - Adding Telegram approvals.
+  - Adding automatic PR creation.
+  - Adding autonomous agent runner behavior.
+  - Changing Forge lifecycle semantics.
+  - Changing validator behavior.
+  - Changing CLI behavior.
+  - Changing workflow contracts or role contracts.
+  - Changing GitHub Pages deployment workflow unless a small documentation-only correction is required.
+  - Creating a new Forge release tag.
+  - Editing completed TASK-0001..TASK-0025 contracts or artifacts.
+
+allowed_files:
+  - .forge/tasks/TASK-0026.yaml
+  - docs/TASKS.md
+  - .forge/artifacts/TASK-0026/plan-001.md
+  - .forge/artifacts/TASK-0026/build-report-001.md
+  - .forge/artifacts/TASK-0026/test-report-001.md
+  - .forge/artifacts/TASK-0026/review-report-001.md
+  - docs/pages-demo/index.html
+  - docs/pages-demo/styles.css
+  - docs/pages-demo/app.js
+  - docs/GITHUB_PAGES_DEMO.md
+  - README.md
+  - docs/DEMO.md
+
+protected_files:
+  - .github/workflows/pages.yml
+  - docs/releases/v0.2.0.md
+  - docs/releases/v0.2.1.md
+  - docs/releases/v0.2.2.md
+  - docs/BOOTSTRAP_PROJECT.md
+  - .forge/workflows/feature.yaml
+  - .forge/roles/planner.md
+  - .forge/roles/builder.md
+  - .forge/roles/tester.md
+  - .forge/roles/reviewer.md
+  - tools/forge-validator/package.json
+  - tools/forge-validator/src/cli.mjs
+  - tools/forge-validator/test/cli.test.mjs
+  - completed TASK-0001..TASK-0025 contracts and artifacts
+
+acceptance_criteria:
+  - id: AC-01
+    description: The Pages demo uses a light premium palette and no longer feels like a generic dark card grid.
+  - id: AC-02
+    description: The first screen communicates the product value clearly within roughly 10-20 seconds.
+  - id: AC-03
+    description: The demo shows input -> process -> evidence -> result as a coherent visual story.
+  - id: AC-04
+    description: The input task contract is visually represented as the starting data.
+  - id: AC-05
+    description: Lifecycle stages are shown as a connected animated flow rather than isolated equal cards.
+  - id: AC-06
+    description: Evidence artifacts visibly appear as outputs of the workflow.
+  - id: AC-07
+    description: The final state clearly shows completed task, merged PR, clean main, stored evidence, and validation passed.
+  - id: AC-08
+    description: Motion is meaningful and supports understanding, not just decorative progress-bar animation.
+  - id: AC-09
+    description: Long explanatory text is reduced and replaced with strong visual hierarchy and concise labels.
+  - id: AC-10
+    description: The design feels credible, confident, and portfolio-grade on desktop and mobile.
+  - id: AC-11
+    description: The demo remains static, no-framework, and compatible with the existing GitHub Pages deployment.
+  - id: AC-12
+    description: The demo does not claim unimplemented features such as autonomous agent runner, SaaS dashboard, npm publishing, Telegram approvals, automatic PR creation, or automatic code generation.
+  - id: AC-13
+    description: README or docs links remain valid.
+  - id: AC-14
+    description: v0.2.2 tag and GitHub Release remain intact.
+  - id: AC-15
+    description: Forge status, workflow smoke, and verify pass.
+
+required_checks:
+  - verify
