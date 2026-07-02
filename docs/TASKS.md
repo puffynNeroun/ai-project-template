@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0025` — Add GitHub Pages visual demo (`in_progress`).
+- [ ] `TASK-0025` — Add GitHub Pages visual demo (`ready_for_pr`).
 
 ## Next
 
-- [ ] Run Reviewer for `TASK-0025`.
+- [ ] Prepare PR for `TASK-0025`.
 
 ## Later
 

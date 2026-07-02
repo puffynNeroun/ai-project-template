@@ -2,7 +2,7 @@ schema_version: 1
 
 id: TASK-0025
 title: "Add GitHub Pages visual demo"
-status: in_progress
+status: ready_for_pr
 workflow: .forge/workflows/feature.yaml
 
 goal: "Add a first static GitHub Pages visual demo for Forge that explains the lifecycle visually and links from the project documentation."
