@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0025` — Add GitHub Pages visual demo (`ready_for_pr`).
+- [ ] No active task.
 
 ## Next
 
-- [ ] Prepare PR for `TASK-0025`.
+- [ ] Define the next task.
 
 ## Later
 
@@ -14,6 +14,7 @@
 
 ## Completed
 
+- [x] `TASK-0025` — Add GitHub Pages visual demo (`completed`, 2026-07-02).
 - [x] `TASK-0024` — Release Forge v0.2.2 (`completed`, 2026-07-02).
 - [x] `TASK-0023` — Prepare Forge v0.2.2 release notes (`completed`, 2026-07-02).
 - [x] `TASK-0022` — Add Forge demo scenario (`completed`, 2026-07-02).
