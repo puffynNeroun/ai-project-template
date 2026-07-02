@@ -1,186 +1,288 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Forge Visual Demo</title>
-  <meta name="description" content="A visual walkthrough of the Forge lifecycle for safe AI-assisted development.">
+  <title>Forge - Product Walkthrough</title>
+  <meta name="description" content="A visual product walkthrough showing how Forge turns AI-assisted work into scoped, reviewed, auditable delivery evidence.">
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-  <header class="hero">
-    <nav class="topbar" aria-label="Primary">
+  <div class="site-shell">
+    <header class="topbar" aria-label="Site header">
       <a class="brand" href="https://github.com/puffynNeroun/ai-project-template#readme" aria-label="Forge README">
         <span class="brand-mark" aria-hidden="true">F</span>
-        <span>Forge</span>
+        <span>
+          <strong>Forge</strong>
+          <small>Local-first delivery control</small>
+        </span>
       </a>
-      <div class="nav-links">
+
+      <nav class="nav-links" aria-label="Documentation links">
         <a href="https://github.com/puffynNeroun/ai-project-template#readme">README</a>
         <a href="https://github.com/puffynNeroun/ai-project-template/blob/main/docs/DEMO.md">Text demo</a>
         <a href="https://github.com/puffynNeroun/ai-project-template/blob/main/docs/GITHUB_PAGES_DEMO.md">Pages docs</a>
-      </div>
-    </nav>
+      </nav>
+    </header>
 
-    <section class="hero-grid">
-      <div class="hero-copy">
-        <p class="eyebrow">Local-first workflow for AI-assisted development</p>
-        <h1>See how Forge turns AI work into a verifiable delivery flow.</h1>
-        <p class="lead">
-          Forge does not replace your AI tools. It wraps them in task contracts,
-          artifacts, checks, review, and completion evidence.
-        </p>
-        <div class="hero-actions">
-          <button class="primary-button" type="button" data-action="play">Play lifecycle</button>
-          <button class="secondary-button" type="button" data-action="reset">Reset</button>
+    <main>
+      <section class="demo-stage" aria-labelledby="demo-title">
+        <div class="demo-intro">
+          <div>
+            <p class="eyebrow">Forge Pages demo</p>
+            <h1 id="demo-title">From prompt chaos to controlled delivery.</h1>
+          </div>
+          <p class="intro-copy">
+            A live schematic turns one request into scope, checks, review,
+            delivery history, and auditable proof.
+          </p>
         </div>
-      </div>
 
-      <aside class="hero-card" aria-label="Current lifecycle state">
-        <p class="card-label">Current step</p>
-        <h2 id="active-step-title">Define Task</h2>
-        <p id="active-step-description">
-          Forge starts by turning an idea into a scoped task contract.
-        </p>
-        <div class="progress-shell" aria-hidden="true">
-          <div class="progress-bar" data-progress></div>
+        <section class="machine-canvas" aria-labelledby="machine-title" data-machine>
+          <div class="machine-header">
+            <div>
+              <p class="eyebrow">Process engine</p>
+              <h2 id="machine-title">TASK-0026 delivery machine</h2>
+            </div>
+            <div class="machine-toolbar">
+              <div class="machine-status" aria-label="Current walkthrough status">
+                <span class="status-dot" aria-hidden="true"></span>
+                <span data-run-state>scope locked</span>
+              </div>
+              <div class="demo-controls" aria-label="Walkthrough controls">
+                <button class="button button-primary" type="button" data-action="run">Run walkthrough</button>
+                <button class="button button-secondary" type="button" data-action="next">Next stage</button>
+                <button class="button button-ghost" type="button" data-action="reset">Reset</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="system-map" aria-label="Connected Forge workflow diagram">
+            <svg class="signal-map" viewBox="0 0 1200 760" role="img" aria-label="Signal flow from request to auditable final state">
+              <path class="signal-path is-active is-live" data-link="0" d="M220 274 C278 206 316 132 360 95"></path>
+              <path class="signal-path" data-link="1" d="M430 96 C502 48 572 43 650 66"></path>
+              <path class="signal-path" data-link="2" d="M690 73 C780 76 832 88 858 108"></path>
+              <path class="signal-path" data-link="3" d="M892 128 C984 160 1032 204 1002 244"></path>
+              <path class="signal-path" data-link="4" d="M996 292 C972 340 910 360 852 360"></path>
+              <path class="signal-path" data-link="5" d="M780 383 C714 430 660 418 600 395"></path>
+              <path class="signal-path" data-link="6" d="M520 398 C450 398 410 370 360 342"></path>
+              <path class="signal-path" data-link="7" d="M420 342 C560 320 742 350 996 410"></path>
+            </svg>
+
+            <article class="intake-module" aria-label="Input request">
+              <span class="module-label">Input request</span>
+              <strong>Redesign the Pages demo</strong>
+              <p>Allowed files, guardrails, and acceptance criteria arrive before implementation.</p>
+              <code>docs/pages-demo/*</code>
+            </article>
+
+            <button class="stage-node is-active" type="button" data-stage="0" style="--x: 30; --y: 12;">
+              <span class="stage-index">01</span>
+              <strong>Scope</strong>
+              <small>task contract</small>
+              <span class="node-output">TASK-0026.yaml</span>
+            </button>
+            <button class="stage-node" type="button" data-stage="1" style="--x: 50; --y: 8;">
+              <span class="stage-index">02</span>
+              <strong>Plan</strong>
+              <small>delivery path</small>
+              <span class="node-output">plan-001.md</span>
+            </button>
+            <button class="stage-node" type="button" data-stage="2" style="--x: 70; --y: 13;">
+              <span class="stage-index">03</span>
+              <strong>Build</strong>
+              <small>bounded edits</small>
+              <span class="node-output">build-report-001.md</span>
+            </button>
+            <button class="stage-node" type="button" data-stage="3" style="--x: 83; --y: 31;">
+              <span class="stage-index">04</span>
+              <strong>Test</strong>
+              <small>checks pass</small>
+              <span class="node-output">verify</span>
+            </button>
+            <button class="stage-node" type="button" data-stage="4" style="--x: 71; --y: 47;">
+              <span class="stage-index">05</span>
+              <strong>Review</strong>
+              <small>human gate</small>
+              <span class="node-output">review-report-001.md</span>
+            </button>
+            <button class="stage-node" type="button" data-stage="5" style="--x: 50; --y: 52;">
+              <span class="stage-index">06</span>
+              <strong>Impl PR</strong>
+              <small>delivery history</small>
+              <span class="node-output">merged change</span>
+            </button>
+            <button class="stage-node" type="button" data-stage="6" style="--x: 30; --y: 45;">
+              <span class="stage-index">07</span>
+              <strong>Complete PR</strong>
+              <small>task archive</small>
+              <span class="node-output">completion record</span>
+            </button>
+            <button class="stage-node" type="button" data-stage="7" style="--x: 83; --y: 54;">
+              <span class="stage-index">08</span>
+              <strong>Done</strong>
+              <small>auditable state</small>
+              <span class="node-output">repo clean</span>
+            </button>
+
+            <aside class="core-module" aria-label="Proof assembler">
+              <span class="module-label">Proof assembler core</span>
+              <div class="core-meter" aria-hidden="true">
+                <span data-core-meter>1/6</span>
+              </div>
+              <strong data-core-title>Scope locked</strong>
+              <p data-core-copy>Work starts as a contract, not a loose prompt trail.</p>
+            </aside>
+
+            <section class="terminal-module" aria-labelledby="terminal-title">
+              <div class="module-heading">
+                <span class="module-label">Operator trace</span>
+                <span class="terminal-state" data-terminal-status>scoping</span>
+              </div>
+              <h3 id="terminal-title">Illustrative workflow log</h3>
+              <pre data-terminal-log>$ forge task:new --id TASK-0026
+created .forge/tasks/TASK-0026.yaml
+allowed files locked
+status: in_progress</pre>
+            </section>
+
+            <section class="evidence-module" aria-labelledby="evidence-title">
+              <div class="module-heading">
+                <span class="module-label">Evidence emitted</span>
+                <span class="artifact-count" data-artifact-count>1 / 5</span>
+              </div>
+              <h3 id="evidence-title">Repository artifacts</h3>
+              <div class="artifact-stream" aria-label="Generated evidence artifacts">
+                <article class="artifact-chip is-visible" data-artifact="0" data-emit-stage="0">
+                  <span>contract</span>
+                  <strong>TASK-0026.yaml</strong>
+                </article>
+                <article class="artifact-chip" data-artifact="1" data-emit-stage="1">
+                  <span>planner</span>
+                  <strong>plan-001.md</strong>
+                </article>
+                <article class="artifact-chip" data-artifact="2" data-emit-stage="2">
+                  <span>builder</span>
+                  <strong>build-report-001.md</strong>
+                </article>
+                <article class="artifact-chip" data-artifact="3" data-emit-stage="3">
+                  <span>tester</span>
+                  <strong>test-report-001.md</strong>
+                </article>
+                <article class="artifact-chip" data-artifact="4" data-emit-stage="4">
+                  <span>reviewer</span>
+                  <strong>review-report-001.md</strong>
+                </article>
+              </div>
+            </section>
+          </div>
+
+          <aside class="side-stack" aria-label="Live walkthrough details">
+            <section class="inspector-module" aria-labelledby="inspector-title">
+              <span class="module-label">Live inspector</span>
+              <h3 id="inspector-title" data-inspector-title>Scope</h3>
+              <p data-inspector-copy>Forge starts by making the request explicit and bounded.</p>
+              <dl class="inspector-list">
+                <div>
+                  <dt>Owner</dt>
+                  <dd data-inspector-owner>Task author</dd>
+                </div>
+                <div>
+                  <dt>Purpose</dt>
+                  <dd data-inspector-purpose>Lock scope and claims</dd>
+                </div>
+                <div>
+                  <dt>Output</dt>
+                  <dd data-inspector-output>TASK-0026.yaml</dd>
+                </div>
+                <div>
+                  <dt>Gate</dt>
+                  <dd data-inspector-gate>Allowed files declared</dd>
+                </div>
+              </dl>
+            </section>
+
+            <section class="proof-module" aria-labelledby="proof-title">
+              <div class="module-heading">
+                <span class="module-label">Final proof rail</span>
+                <span class="proof-count" data-proof-count>1 / 6</span>
+              </div>
+              <h3 id="proof-title">Auditable final state</h3>
+              <div class="proof-list" aria-label="Proof state checklist">
+                <div class="proof-item is-complete" data-proof="scope">
+                  <span aria-hidden="true"></span>
+                  <strong>Task scoped</strong>
+                </div>
+                <div class="proof-item" data-proof="checks">
+                  <span aria-hidden="true"></span>
+                  <strong>Checks passed</strong>
+                </div>
+                <div class="proof-item" data-proof="review">
+                  <span aria-hidden="true"></span>
+                  <strong>Reviewer accepted</strong>
+                </div>
+                <div class="proof-item" data-proof="pr">
+                  <span aria-hidden="true"></span>
+                  <strong>PR merged</strong>
+                </div>
+                <div class="proof-item" data-proof="completion">
+                  <span aria-hidden="true"></span>
+                  <strong>Completion recorded</strong>
+                </div>
+                <div class="proof-item" data-proof="clean">
+                  <span aria-hidden="true"></span>
+                  <strong>Repository clean</strong>
+                </div>
+              </div>
+              <p class="proof-message" data-proof-message>Proof is assembled as each gate passes.</p>
+            </section>
+          </aside>
+        </section>
+      </section>
+
+      <section class="contrast-strip" aria-labelledby="contrast-title">
+        <div>
+          <p class="eyebrow">Why Forge matters</p>
+          <h2 id="contrast-title">The difference is control.</h2>
         </div>
-      </aside>
-    </section>
-  </header>
+        <div class="contrast-grid">
+          <article class="contrast-lane without">
+            <span>Without Forge</span>
+            <ul>
+              <li>Loose prompt history</li>
+              <li>Unclear file boundaries</li>
+              <li>Uncertain review evidence</li>
+              <li>Vague done state</li>
+            </ul>
+          </article>
+          <article class="contrast-lane with">
+            <span>With Forge</span>
+            <ul>
+              <li>Scoped task contract</li>
+              <li>Role artifacts</li>
+              <li>Verifier and reviewer gates</li>
+              <li>Recorded completion state</li>
+            </ul>
+          </article>
+        </div>
+      </section>
 
-  <main>
-    <section class="section" aria-labelledby="lifecycle-title">
-      <div class="section-heading">
-        <p class="eyebrow">Lifecycle</p>
-        <h2 id="lifecycle-title">From idea to completed task</h2>
+      <section class="accuracy-block" aria-labelledby="accuracy-title">
+        <p class="eyebrow">Accuracy boundary</p>
+        <h2 id="accuracy-title">What this demo does not claim</h2>
         <p>
-          Each step creates or checks evidence. The goal is to avoid chaotic
-          copy-paste development and keep AI-assisted work reviewable.
+          This is a static visual walkthrough. It does not claim Forge includes an autonomous
+          agent runner, SaaS dashboard, npm publishing, Telegram approvals, automatic PR creation,
+          automatic code generation, backend service, authentication, or analytics.
         </p>
-      </div>
+      </section>
+    </main>
 
-      <div class="timeline" role="list" aria-label="Forge lifecycle steps">
-        <button class="step-card is-active" type="button" role="listitem" data-step="0">
-          <span class="step-number">01</span>
-          <span class="step-title">Define Task</span>
-          <span class="step-copy">Create a scoped task contract.</span>
-        </button>
-        <button class="step-card" type="button" role="listitem" data-step="1">
-          <span class="step-number">02</span>
-          <span class="step-title">Plan</span>
-          <span class="step-copy">Approve the intended implementation path.</span>
-        </button>
-        <button class="step-card" type="button" role="listitem" data-step="2">
-          <span class="step-number">03</span>
-          <span class="step-title">Build</span>
-          <span class="step-copy">Make the change and record build evidence.</span>
-        </button>
-        <button class="step-card" type="button" role="listitem" data-step="3">
-          <span class="step-number">04</span>
-          <span class="step-title">Test</span>
-          <span class="step-copy">Verify behavior and write test evidence.</span>
-        </button>
-        <button class="step-card" type="button" role="listitem" data-step="4">
-          <span class="step-number">05</span>
-          <span class="step-title">Review</span>
-          <span class="step-copy">Accept or reject the result before PR.</span>
-        </button>
-        <button class="step-card" type="button" role="listitem" data-step="5">
-          <span class="step-number">06</span>
-          <span class="step-title">Implementation PR</span>
-          <span class="step-copy">Merge the actual task work.</span>
-        </button>
-        <button class="step-card" type="button" role="listitem" data-step="6">
-          <span class="step-number">07</span>
-          <span class="step-title">Completion PR</span>
-          <span class="step-copy">Mark the task completed after merge.</span>
-        </button>
-        <button class="step-card" type="button" role="listitem" data-step="7">
-          <span class="step-number">08</span>
-          <span class="step-title">Done</span>
-          <span class="step-copy">Main is clean and the task is archived.</span>
-        </button>
-      </div>
-    </section>
-
-    <section class="section under-hood" aria-labelledby="under-hood-title">
-      <div class="section-heading">
-        <p class="eyebrow">Under the hood</p>
-        <h2 id="under-hood-title">What Forge records</h2>
-        <p>
-          Forge makes AI-assisted delivery auditable by storing task state and
-          role evidence as files in the repository.
-        </p>
-      </div>
-
-      <div class="evidence-grid">
-        <article class="evidence-card" data-evidence="task">
-          <h3>Task contract</h3>
-          <code>.forge/tasks/TASK-XXXX.yaml</code>
-          <p>Defines scope, allowed files, protected files, acceptance criteria, and required checks.</p>
-        </article>
-
-        <article class="evidence-card" data-evidence="plan">
-          <h3>Plan artifact</h3>
-          <code>.forge/artifacts/TASK-XXXX/plan-001.md</code>
-          <p>Records how the work should be done before implementation begins.</p>
-        </article>
-
-        <article class="evidence-card" data-evidence="build">
-          <h3>Build report</h3>
-          <code>.forge/artifacts/TASK-XXXX/build-report-001.md</code>
-          <p>Explains what changed and what is ready for testing.</p>
-        </article>
-
-        <article class="evidence-card" data-evidence="test">
-          <h3>Test report</h3>
-          <code>.forge/artifacts/TASK-XXXX/test-report-001.md</code>
-          <p>Records verification, checks, and test evidence.</p>
-        </article>
-
-        <article class="evidence-card" data-evidence="review">
-          <h3>Review report</h3>
-          <code>.forge/artifacts/TASK-XXXX/review-report-001.md</code>
-          <p>Confirms whether the work is acceptable before PR.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="section split" aria-labelledby="why-title">
-      <div>
-        <p class="eyebrow">Why it matters</p>
-        <h2 id="why-title">AI can help, but Forge keeps the process controlled.</h2>
-      </div>
-      <div class="principles">
-        <article>
-          <h3>Scope before code</h3>
-          <p>The task contract defines what is allowed before implementation starts.</p>
-        </article>
-        <article>
-          <h3>Evidence at each stage</h3>
-          <p>Planning, building, testing, and review leave artifacts behind.</p>
-        </article>
-        <article>
-          <h3>Checks before merge</h3>
-          <p>Forge status, smoke tests, verify, and CI keep the repo honest.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="section note" aria-labelledby="not-title">
-      <h2 id="not-title">What this demo does not claim</h2>
-      <p>
-        This visual demo is static. It does not mean Forge has an autonomous
-        agent runner, SaaS dashboard, npm publishing, Telegram approvals,
-        automatic PR creation, or automatic code generation.
-      </p>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <p>Forge visual demo. Built as a static GitHub Pages demo.</p>
-    <a href="https://github.com/puffynNeroun/ai-project-template#readme">Back to README</a>
-  </footer>
+    <footer class="footer">
+      <p>Forge product walkthrough. Static GitHub Pages demo.</p>
+      <a href="https://github.com/puffynNeroun/ai-project-template#readme">View repository</a>
+    </footer>
+  </div>
 
   <script src="./app.js"></script>
 </body>
