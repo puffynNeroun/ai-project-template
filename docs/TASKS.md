@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0025` — Add GitHub Pages visual demo (`approved`).
+- [ ] `TASK-0025` — Add GitHub Pages visual demo (`in_progress`).
 
 ## Next
 
-- [ ] Run Builder for `TASK-0025`.
+- [ ] Run Tester for `TASK-0025`.
 
 ## Later
 
