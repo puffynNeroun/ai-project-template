@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0026` — Redesign Pages demo as premium product walkthrough (`in_progress`).
+- [ ] `TASK-0026` — Redesign Pages demo as premium product walkthrough (`ready_for_pr`).
 
 ## Next
 
-- [ ] Run Reviewer for `TASK-0026`.
+- [ ] Prepare PR for `TASK-0026`.
 
 ## Later
 
