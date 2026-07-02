@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0024` — Release Forge v0.2.2 (`in_progress`).
+- [ ] `TASK-0024` — Release Forge v0.2.2 (`ready_for_pr`).
 
 ## Next
 
-- [ ] Run Reviewer for `TASK-0024`.
+- [ ] Prepare PR for `TASK-0024`.
 
 ## Later
 

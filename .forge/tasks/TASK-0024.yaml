@@ -2,7 +2,7 @@ schema_version: 1
 
 id: TASK-0024
 title: "Release Forge v0.2.2"
-status: in_progress
+status: ready_for_pr
 workflow: .forge/workflows/feature.yaml
 
 goal: "Create the Forge v0.2.2 release from the completed v0.2.2 release notes."
