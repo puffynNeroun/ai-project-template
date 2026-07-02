@@ -1,5 +1,7 @@
 # Forge Demo
 
+For a visual walkthrough of the lifecycle, see [GitHub Pages Visual Demo](GITHUB_PAGES_DEMO.md).
+
 This demo shows how Forge guides a small AI-assisted development task through a safe, reviewable workflow.
 
 The example is intentionally small:

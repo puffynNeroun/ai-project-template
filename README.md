@@ -388,3 +388,8 @@ Keep the scope tight.
 Small tasks, explicit plans, persistent evidence, and verification before merge.
 
 That is the point of Forge.
+
+
+## Visual Demo
+
+- [Visual GitHub Pages demo](docs/GITHUB_PAGES_DEMO.md)
