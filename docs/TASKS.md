@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0025` — Add GitHub Pages visual demo (`proposed`).
+- [ ] `TASK-0025` — Add GitHub Pages visual demo (`approved`).
 
 ## Next
 
-- [ ] Run Planner for `TASK-0025`.
+- [ ] Run Builder for `TASK-0025`.
 
 ## Later
 
