@@ -1,0 +1,76 @@
+schema_version: 1
+id: TASK-0027
+title: Add local operator scripts for Forge PR workflow
+status: ready_for_pr
+workflow: .forge/workflows/feature.yaml
+goal: >
+  Add reusable local operator scripts that make the Forge PR and completion
+  workflow easier to run without copying large one-off shell scripts from ChatGPT.
+
+in_scope:
+  - Add a scripts/operator directory with reusable shell scripts for common Forge operator actions.
+  - Add a shared shell helper file for repeated validation and GitHub CLI helpers.
+  - Add scripts for checking task state, creating implementation PRs, checking PR CI, merging implementation PRs, creating completion PRs, checking completion PR CI, merging completion PRs, and final post-task checks.
+  - Add documentation that explains the intended script order and required arguments.
+  - Keep the scripts local, shell-based, dependency-light, and explicit about push, PR, and merge actions.
+  - Prefer task IDs, branch names, and PR numbers as arguments instead of hard-coded values.
+
+out_of_scope:
+  - No autonomous agent runner.
+  - No direct ChatGPT or OpenAI API integration.
+  - No SaaS dashboard.
+  - No npm package publishing.
+  - No replacement of the existing forge-validator lifecycle.
+  - No automatic merge without an explicit operator command.
+  - No GitHub Actions changes unless a later approved task requires them.
+
+allowed_files:
+  - .forge/tasks/TASK-0027.yaml
+  - .forge/artifacts/TASK-0027/plan-001.md
+  - .forge/artifacts/TASK-0027/build-report-001.md
+  - .forge/artifacts/TASK-0027/test-report-001.md
+  - .forge/artifacts/TASK-0027/review-report-001.md
+  - docs/TASKS.md
+  - docs/OPERATOR_SCRIPTS.md
+  - scripts/operator/lib.sh
+  - scripts/operator/check-state.sh
+  - scripts/operator/create-implementation-pr.sh
+  - scripts/operator/check-pr.sh
+  - scripts/operator/merge-implementation-pr.sh
+  - scripts/operator/create-completion-pr.sh
+  - scripts/operator/check-completion-pr.sh
+  - scripts/operator/merge-completion-pr.sh
+  - scripts/operator/post-task-check.sh
+
+protected_files: []
+
+acceptance_criteria:
+  - id: AC-001
+    description: A scripts/operator directory exists with reusable shell scripts for common Forge operator actions.
+  - id: AC-002
+    description: A shared operator helper script exists to reduce duplicated validation logic.
+  - id: AC-003
+    description: A state-check script validates branch, working tree, active task, artifacts, and Forge verification.
+  - id: AC-004
+    description: An implementation PR creation script validates a ready_for_pr task and creates or reuses a PR.
+  - id: AC-005
+    description: A PR check script inspects PR metadata and CI checks without merging.
+  - id: AC-006
+    description: A merge implementation PR script validates PR readiness, merges the implementation PR, updates main, and verifies main.
+  - id: AC-007
+    description: A completion PR creation script completes a ready_for_pr task after implementation merge and opens or reuses a completion PR.
+  - id: AC-008
+    description: A completion PR check script inspects completion PR metadata and CI checks without merging.
+  - id: AC-009
+    description: A merge completion PR script validates, merges, updates main, and verifies that the task becomes completed.
+  - id: AC-010
+    description: A post-task check script verifies final main state, task board, Forge validation, recent commits, and Pages info when available.
+  - id: AC-011
+    description: Scripts avoid brittle content greps against implementation details unless required by task contracts.
+  - id: AC-012
+    description: Operator documentation explains the scripts, arguments, and intended order of use.
+  - id: AC-013
+    description: Existing Forge validation continues to pass.
+
+required_checks:
+  - verify
