@@ -87,3 +87,18 @@ Reason:
 - GitHub Pages deploys `docs/pages-demo` as the static artifact.
 - Relative links such as `../../README.md` may not exist in the deployed Pages artifact.
 - Repository URLs remain valid from both local source review and the deployed Pages page.
+
+## Builder Correction — Pages Action Versions
+
+After tester verification, the GitHub Pages workflow action versions were adjusted to safer documented/current major versions:
+
+- `actions/checkout@v5`
+- `actions/configure-pages@v5`
+- `actions/upload-pages-artifact@v5`
+- `actions/deploy-pages@v4`
+
+Reason:
+
+- avoid using unsupported or overly aggressive future major tags;
+- keep the Pages workflow closer to official GitHub Pages action documentation;
+- preserve the static no-framework deployment model.
