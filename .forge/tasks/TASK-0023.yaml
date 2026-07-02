@@ -2,7 +2,7 @@ schema_version: 1
 
 id: TASK-0023
 title: "Prepare Forge v0.2.2 release notes"
-status: ready_for_pr
+status: completed
 workflow: .forge/workflows/feature.yaml
 
 goal: "Prepare release notes for Forge v0.2.2, summarizing the CLI, README, and demo scenario improvements added after v0.2.1."
