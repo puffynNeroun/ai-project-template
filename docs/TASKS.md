@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0024` — Release Forge v0.2.2 (`proposed`).
+- [ ] `TASK-0024` — Release Forge v0.2.2 (`approved`).
 
 ## Next
 
-- [ ] Run Planner for `TASK-0024`.
+- [ ] Run Builder for `TASK-0024`.
 
 ## Later
 
