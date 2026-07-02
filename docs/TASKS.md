@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0027` — Add local operator scripts for Forge PR workflow (`ready_for_pr`).
+- [ ] No active task.
 
 ## Next
 
-- [ ] Prepare PR for `TASK-0027`.
+- [ ] Define the next task.
 
 ## Later
 
@@ -14,6 +14,7 @@
 
 ## Completed
 
+- [x] `TASK-0027` — Add local operator scripts for Forge PR workflow (`completed`, 2026-07-02).
 - [x] `TASK-0026` — Redesign Pages demo as premium product walkthrough (`completed`, 2026-07-02).
 - [x] `TASK-0025` — Add GitHub Pages visual demo (`completed`, 2026-07-02).
 - [x] `TASK-0024` — Release Forge v0.2.2 (`completed`, 2026-07-02).
