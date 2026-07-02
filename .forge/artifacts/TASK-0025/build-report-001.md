@@ -67,3 +67,13 @@ No new Forge release tag was created.
 ## Outcome
 
 READY_FOR_TEST
+
+## Builder Correction
+
+After the first build commit, the demo navigation links were corrected to use GitHub repository URLs instead of relative Markdown paths.
+
+Reason:
+
+- GitHub Pages deploys `docs/pages-demo` as the static artifact.
+- Relative links such as `../../README.md` may not exist in the deployed Pages artifact.
+- Repository URLs remain valid from both local source review and the deployed Pages page.
