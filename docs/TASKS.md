@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] No active task.
+- [ ] `TASK-0023` — Prepare Forge v0.2.2 release notes (`ready_for_pr`).
 
 ## Next
 
-- [ ] Define the next task.
+- [ ] Prepare PR for `TASK-0023`.
 
 ## Later
 
