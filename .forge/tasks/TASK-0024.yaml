@@ -1,0 +1,83 @@
+schema_version: 1
+
+id: TASK-0024
+title: "Release Forge v0.2.2"
+status: ready_for_pr
+workflow: .forge/workflows/feature.yaml
+
+goal: "Create the Forge v0.2.2 release from the completed v0.2.2 release notes."
+
+in_scope:
+  - Confirm main is clean and synchronized with origin.
+  - Confirm TASK-0023 is completed.
+  - Confirm docs/releases/v0.2.2.md exists.
+  - Confirm tag v0.2.2 does not already exist before release execution.
+  - Confirm GitHub release v0.2.2 does not already exist before release execution.
+  - Run Forge status, workflow smoke, and verify before release execution.
+  - Create annotated git tag v0.2.2 on the intended main commit.
+  - Push tag v0.2.2 to origin.
+  - Create GitHub release v0.2.2 using docs/releases/v0.2.2.md.
+  - Verify local tag, remote tag, and GitHub release exist after execution.
+  - Record release execution evidence in TASK-0024 artifacts.
+
+out_of_scope:
+  - Changing release notes content.
+  - Changing README.
+  - Changing docs/DEMO.md.
+  - Changing docs/BOOTSTRAP_PROJECT.md.
+  - Publishing npm packages.
+  - Adding GitHub Pages demo.
+  - Adding agent runner, UI, TUI, SaaS dashboard, or Telegram approvals.
+  - Changing CLI behavior.
+  - Changing validator behavior.
+  - Changing workflow contracts or role contracts.
+  - Editing completed TASK-0001..TASK-0023 contracts or artifacts.
+
+allowed_files:
+  - .forge/tasks/TASK-0024.yaml
+  - docs/TASKS.md
+  - .forge/artifacts/TASK-0024/plan-001.md
+  - .forge/artifacts/TASK-0024/build-report-001.md
+  - .forge/artifacts/TASK-0024/test-report-001.md
+  - .forge/artifacts/TASK-0024/review-report-001.md
+
+protected_files:
+  - README.md
+  - docs/DEMO.md
+  - docs/BOOTSTRAP_PROJECT.md
+  - docs/releases/v0.2.0.md
+  - docs/releases/v0.2.1.md
+  - docs/releases/v0.2.2.md
+  - .github/workflows/forge-contracts.yml
+  - .forge/workflows/feature.yaml
+  - .forge/roles/planner.md
+  - .forge/roles/builder.md
+  - .forge/roles/tester.md
+  - .forge/roles/reviewer.md
+  - tools/forge-validator/package.json
+  - tools/forge-validator/src/cli.mjs
+  - tools/forge-validator/test/cli.test.mjs
+  - completed TASK-0001..TASK-0023 contracts and artifacts
+
+acceptance_criteria:
+  - id: AC-01
+    description: Release plan identifies the exact main commit intended for tag v0.2.2.
+  - id: AC-02
+    description: Pre-release checks pass before release execution.
+  - id: AC-03
+    description: Annotated git tag v0.2.2 exists locally after release execution.
+  - id: AC-04
+    description: Remote tag v0.2.2 exists on origin after release execution.
+  - id: AC-05
+    description: GitHub release v0.2.2 exists after release execution.
+  - id: AC-06
+    description: GitHub release v0.2.2 uses docs/releases/v0.2.2.md as release notes.
+  - id: AC-07
+    description: Release execution evidence is recorded in TASK-0024 artifacts.
+  - id: AC-08
+    description: Forge status, workflow smoke, and verify pass after release execution.
+  - id: AC-09
+    description: No protected documentation, CLI, validator, workflow, role, CI, or completed task evidence files are changed.
+
+required_checks:
+  - verify
