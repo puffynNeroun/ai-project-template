@@ -1,0 +1,91 @@
+schema_version: 1
+
+id: TASK-0025
+title: "Add GitHub Pages visual demo"
+status: proposed
+workflow: .forge/workflows/feature.yaml
+
+goal: "Add a first static GitHub Pages visual demo for Forge that explains the lifecycle visually and links from the project documentation."
+
+in_scope:
+  - Add a lightweight static visual demo inside this repository.
+  - Prefer a no-framework static implementation unless planning discovers a strong reason otherwise.
+  - Create a visual lifecycle page showing task definition, plan, build, test, review, PR, merge, and completion.
+  - Include simple animation or progressive reveal behavior.
+  - Explain what happens under the hood with task contracts and artifacts.
+  - Add documentation explaining how the demo is intended to be deployed through GitHub Pages.
+  - Link the visual demo from README or docs where appropriate.
+  - Keep the demo accurate to the current implemented Forge behavior.
+  - Preserve existing Forge validator behavior.
+  - Preserve existing CLI behavior.
+  - Preserve release v0.2.2 tag and GitHub Release.
+
+out_of_scope:
+  - Creating a separate repository.
+  - Publishing npm packages.
+  - Adding a production SaaS site.
+  - Adding backend services.
+  - Adding analytics or tracking.
+  - Adding authentication.
+  - Adding a full documentation framework unless explicitly justified by the plan.
+  - Adding agent runner, UI app, TUI, Telegram approvals, or automatic PR creation.
+  - Changing Forge lifecycle semantics.
+  - Changing validator behavior.
+  - Changing CLI behavior.
+  - Changing workflow contracts or role contracts.
+  - Editing completed TASK-0001..TASK-0024 contracts or artifacts.
+  - Moving or rewriting existing release notes.
+  - Creating a new Forge release tag.
+
+allowed_files:
+  - .forge/tasks/TASK-0025.yaml
+  - docs/TASKS.md
+  - .forge/artifacts/TASK-0025/plan-001.md
+  - .forge/artifacts/TASK-0025/build-report-001.md
+  - .forge/artifacts/TASK-0025/test-report-001.md
+  - .forge/artifacts/TASK-0025/review-report-001.md
+  - README.md
+  - docs/DEMO.md
+  - docs/GITHUB_PAGES_DEMO.md
+  - docs/pages-demo/index.html
+  - docs/pages-demo/styles.css
+  - docs/pages-demo/app.js
+  - .github/workflows/pages.yml
+
+protected_files:
+  - docs/releases/v0.2.0.md
+  - docs/releases/v0.2.1.md
+  - docs/releases/v0.2.2.md
+  - docs/BOOTSTRAP_PROJECT.md
+  - .forge/workflows/feature.yaml
+  - .forge/roles/planner.md
+  - .forge/roles/builder.md
+  - .forge/roles/tester.md
+  - .forge/roles/reviewer.md
+  - tools/forge-validator/package.json
+  - tools/forge-validator/src/cli.mjs
+  - tools/forge-validator/test/cli.test.mjs
+  - completed TASK-0001..TASK-0024 contracts and artifacts
+
+acceptance_criteria:
+  - id: AC-01
+    description: A static visual demo exists under docs/pages-demo or another planned in-repo static location.
+  - id: AC-02
+    description: The visual demo explains the Forge lifecycle from task definition through completion.
+  - id: AC-03
+    description: The visual demo includes a clear under-the-hood explanation of task contracts and artifacts.
+  - id: AC-04
+    description: The demo includes at least one visual progression, animation, or progressive reveal behavior.
+  - id: AC-05
+    description: Documentation explains how the demo is intended to be deployed through GitHub Pages.
+  - id: AC-06
+    description: README or docs link to the visual demo or deployment instructions.
+  - id: AC-07
+    description: The demo does not claim unimplemented features such as autonomous agent runner, SaaS dashboard, npm publishing, Telegram approvals, or automatic PR creation.
+  - id: AC-08
+    description: Forge status, workflow smoke, and verify pass.
+  - id: AC-09
+    description: Existing release v0.2.2 tag and GitHub Release remain intact.
+
+required_checks:
+  - verify
