@@ -1,7 +1,7 @@
 schema_version: 1
 id: TASK-0027
 title: Add local operator scripts for Forge PR workflow
-status: proposed
+status: approved
 workflow: .forge/workflows/feature.yaml
 goal: >
   Add reusable local operator scripts that make the Forge PR and completion

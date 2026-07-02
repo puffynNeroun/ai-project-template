@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0027` — Add local operator scripts for Forge PR workflow (`proposed`).
+- [ ] `TASK-0027` — Add local operator scripts for Forge PR workflow (`approved`).
 
 ## Next
 
-- [ ] Run Planner for `TASK-0027`.
+- [ ] Run Builder for `TASK-0027`.
 
 ## Later
 
