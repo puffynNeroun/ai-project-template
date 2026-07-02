@@ -2,11 +2,11 @@
 
 ## Now
 
-- [ ] `TASK-0024` — Release Forge v0.2.2 (`approved`).
+- [ ] `TASK-0024` — Release Forge v0.2.2 (`in_progress`).
 
 ## Next
 
-- [ ] Run Builder for `TASK-0024`.
+- [ ] Run Tester for `TASK-0024`.
 
 ## Later
 
