@@ -2,7 +2,7 @@ schema_version: 1
 
 id: TASK-0026
 title: "Redesign Pages demo as premium product walkthrough"
-status: ready_for_pr
+status: completed
 workflow: .forge/workflows/feature.yaml
 
 goal: "Redesign the GitHub Pages demo into a premium light-palette product walkthrough that clearly demonstrates Forge as an impressive, trustworthy, evidence-driven engineering workflow."
