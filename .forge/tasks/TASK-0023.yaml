@@ -1,0 +1,76 @@
+schema_version: 1
+
+id: TASK-0023
+title: "Prepare Forge v0.2.2 release notes"
+status: proposed
+workflow: .forge/workflows/feature.yaml
+
+goal: "Prepare release notes for Forge v0.2.2, summarizing the CLI, README, and demo scenario improvements added after v0.2.1."
+
+in_scope:
+  - Add docs/releases/v0.2.2.md.
+  - Summarize TASK-0020 packaged Forge CLI improvements.
+  - Summarize TASK-0021 README open-source quality improvements.
+  - Summarize TASK-0022 demo scenario improvements.
+  - Include verification baseline.
+  - Include upgrade/readiness notes.
+  - Be clear that this task prepares release notes only.
+  - Do not create a git tag.
+  - Do not create a GitHub release.
+  - Preserve existing verification behavior.
+
+out_of_scope:
+  - Creating tag v0.2.2.
+  - Creating GitHub release v0.2.2.
+  - Publishing npm packages.
+  - Adding GitHub Pages demo.
+  - Changing CLI behavior.
+  - Changing validator behavior.
+  - Changing workflow contracts or role contracts.
+  - Editing completed TASK-0001..TASK-0022 contracts or artifacts.
+  - Editing prior release notes except by reference.
+
+allowed_files:
+  - .forge/tasks/TASK-0023.yaml
+  - docs/TASKS.md
+  - .forge/artifacts/TASK-0023/plan-001.md
+  - .forge/artifacts/TASK-0023/build-report-001.md
+  - .forge/artifacts/TASK-0023/test-report-001.md
+  - .forge/artifacts/TASK-0023/review-report-001.md
+  - docs/releases/v0.2.2.md
+
+protected_files:
+  - .github/workflows/forge-contracts.yml
+  - .forge/workflows/feature.yaml
+  - .forge/roles/planner.md
+  - .forge/roles/builder.md
+  - .forge/roles/tester.md
+  - .forge/roles/reviewer.md
+  - README.md
+  - docs/DEMO.md
+  - docs/BOOTSTRAP_PROJECT.md
+  - docs/releases/v0.2.0.md
+  - docs/releases/v0.2.1.md
+  - tools/forge-validator/package.json
+  - tools/forge-validator/src/cli.mjs
+  - tools/forge-validator/test/cli.test.mjs
+  - completed TASK-0001..TASK-0022 contracts and artifacts
+
+acceptance_criteria:
+  - id: AC-01
+    description: docs/releases/v0.2.2.md exists.
+  - id: AC-02
+    description: Release notes summarize TASK-0020, TASK-0021, and TASK-0022.
+  - id: AC-03
+    description: Release notes clearly state that v0.2.2 focuses on public presentation and usability.
+  - id: AC-04
+    description: Release notes include verification baseline with 214 tests passing.
+  - id: AC-05
+    description: Release notes do not claim that tag v0.2.2 or GitHub release v0.2.2 has already been created.
+  - id: AC-06
+    description: Release notes do not claim npm publishing, GitHub Pages demo, agent runner, UI, SaaS, or Telegram approvals.
+  - id: AC-07
+    description: Forge status, workflow smoke, and verify pass after release notes are added.
+
+required_checks:
+  - verify
